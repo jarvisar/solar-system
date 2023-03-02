@@ -26,12 +26,17 @@ const sphereParameters = {
 const boxParameters = {
     width: 4,
     height: 4,
-    depth: 4    
+    depth: 4,
+    color: '#ff0000'  
 }
 
-let geometry = null
-let material = null
+let sphereGeometry = null
+let sphereMaterial = null
 let sphere = null
+
+let boxGeometry = null
+let boxMaterial = null
+let box = null
 
 let light = new THREE.DirectionalLight( 0xffffff, 1 );
 light.position.set( 0, 1, 0 ); //default; light shining from top
@@ -50,10 +55,9 @@ const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
 const generateSphere = () => {
-    if (geometry != null && material != null){
-        geometry.dispose()
-        material.dispose()
-        light.dispose()
+    if (sphereGeometry != null && sphereMaterial != null){
+        sphereGeometry.dispose()
+        sphereMaterial.dispose()
         scene.remove(sphere)
     }
 
@@ -65,73 +69,58 @@ const generateSphere = () => {
     let thetaStart = sphereParameters.thetaStart;
     let thetaLength = sphereParameters.thetaLength;
 
-    geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
+    sphereGeometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
 
     // Set up the sphere to receive shadows
-    material = new THREE.MeshStandardMaterial({ color: sphereParameters.color });
-    material.roughness = 0.5;
-    material.metalness = 0.5;
-    material.receiveShadow = true;
-    sphere = new THREE.Mesh(geometry, material);
+    sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereParameters.color });
+    sphereMaterial.roughness = 0.5;
+    sphereMaterial.metalness = 0.5;
+    sphereMaterial.receiveShadow = true;
+    sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.position.y = 6;
     scene.add(sphere);
 
-    // Set up the ground plane to cast shadows
-    const groundGeometry = new THREE.PlaneGeometry(20, 20);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    groundMaterial.roughness = 1.0;
-    groundMaterial.metalness = 0.0;
-    groundMaterial.side = THREE.DoubleSide;
-    groundMaterial.receiveShadow = true;
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -5;
-    scene.add(ground);
-
 }
 
-const generateCube = () => {
-    if (geometry != null && material != null){
-        geometry.dispose()
-        material.dispose()
-        light.dispose()
-        scene.remove(sphere)
+const generateBox = () => {
+    if (boxGeometry != null && boxMaterial != null){
+        boxGeometry.dispose()
+        boxMaterial.dispose()
+        scene.remove(box)
     }
 
-    let radius = sphereParameters.radius;
-    let widthSegments = sphereParameters.widthSegments;
-    let heightSegments = sphereParameters.heightSegments;
-    let phiStart = sphereParameters.phiStart;
-    let phiLength = sphereParameters.phiLength;
-    let thetaStart = sphereParameters.thetaStart;
-    let thetaLength = sphereParameters.thetaLength;
+    let width = boxParameters.width;
+    let height = boxParameters.height;
+    let depth = boxParameters.depth;
 
-    geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
+    boxGeometry = new THREE.BoxGeometry( width, height, depth );
 
     // Set up the sphere to receive shadows
-    material = new THREE.MeshStandardMaterial({ color: sphereParameters.color });
-    material.roughness = 0.5;
-    material.metalness = 0.5;
-    material.receiveShadow = true;
-    sphere = new THREE.Mesh(geometry, material);
-    sphere.position.y = 6;
-    scene.add(sphere);
-
-    // Set up the ground plane to cast shadows
-    const groundGeometry = new THREE.PlaneGeometry(20, 20);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    groundMaterial.roughness = 1.0;
-    groundMaterial.metalness = 0.0;
-    groundMaterial.side = THREE.DoubleSide;
-    groundMaterial.receiveShadow = true;
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -5;
-    scene.add(ground);
+    boxMaterial = new THREE.MeshStandardMaterial({ color: boxParameters.color });
+    boxMaterial.roughness = 0.5;
+    boxMaterial.metalness = 0.5;
+    boxMaterial.receiveShadow = true;
+    box = new THREE.Mesh(boxGeometry, boxMaterial);
+    box.position.y = -2;
+    scene.add(box);
 
 }
+
+// Set up the ground plane to cast shadows
+const groundGeometry = new THREE.PlaneGeometry(20, 20);
+const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+groundMaterial.roughness = 1.0;
+groundMaterial.metalness = 0.0;
+groundMaterial.side = THREE.DoubleSide;
+groundMaterial.receiveShadow = true;
+const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -5;
+scene.add(ground);
 
 generateSphere()
+generateBox()
+
 const sphereFolder = gui.addFolder('Sphere')
 sphereFolder.add(sphereParameters, 'radius').min(1).max(10).step(1)
 sphereFolder.add(sphereParameters, 'widthSegments').min(3).max(64).step(1)
@@ -145,6 +134,15 @@ sphereFolder.add({ generate: () => generateSphere()}, 'generate')
 
 sphereFolder.onFinishChange(() => generateSphere())
 
+const boxFolder = gui.addFolder('Box')
+boxFolder.add(boxParameters, 'width').min(1).max(10).step(1)
+boxFolder.add(boxParameters, 'height').min(1).max(10).step(1)
+boxFolder.add(boxParameters, 'depth').min(1).max(10).step(1)
+boxFolder.addColor(boxParameters, 'color')
+boxFolder.add({ generate: () => generateBox()}, 'generate')
+
+boxFolder.onFinishChange(() => generateBox())
+
 /**
  * Camera
  */
@@ -157,7 +155,7 @@ camera.far = 5000
 scene.add(camera)
 
 const canvas = document.querySelector('.webgl');
-const renderer = new THREE.WebGLRenderer({ canvas });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 
 renderer.render(scene, camera);
 
@@ -190,6 +188,8 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
   sphere.rotation.y = elapsedTime * 0.2
+
+  box.rotation.y = -(elapsedTime * 0.2)
 
   controls.update()
   renderer.render(scene, camera)
