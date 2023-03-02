@@ -20,7 +20,7 @@ const sphereParameters = {
   phiLength: (Math.PI * 2),
   thetaStart: 0,
   thetaLength: Math.PI,
-  color: '#00ff00'
+  color: '#b3b3b3'
 }
 
 const boxParameters = {
@@ -54,6 +54,9 @@ scene.add(light);
 const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
+const earthTextureLoader = new THREE.TextureLoader();
+const earthTexture = earthTextureLoader.load('https://dl.dropbox.com/s/blhwic0aupdlv9z/earth-1.png?dl=0')
+
 const generateSphere = () => {
     if (sphereGeometry != null && sphereMaterial != null){
         sphereGeometry.dispose()
@@ -72,9 +75,9 @@ const generateSphere = () => {
     sphereGeometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
 
     // Set up the sphere to receive shadows
-    sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereParameters.color });
-    sphereMaterial.roughness = 0.5;
-    sphereMaterial.metalness = 0.5;
+    sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereParameters.color, wireframe: false, map: earthTexture });
+    sphereMaterial.roughness = 1;
+    sphereMaterial.metalness = 0;
     sphereMaterial.receiveShadow = true;
     sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.position.y = 6;
@@ -177,9 +180,6 @@ renderer.render(scene, camera);
     }
   })
 
-/*
-* Animation
-*/
 const clock = new Clock
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
