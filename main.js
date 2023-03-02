@@ -55,7 +55,7 @@ const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
 const earthTextureLoader = new THREE.TextureLoader();
-const earthTexture = earthTextureLoader.load('https://dl.dropbox.com/s/blhwic0aupdlv9z/earth-1.png?dl=0')
+const earthTexture = earthTextureLoader.load('./public/earth_daymap.jpg')
 
 const generateSphere = () => {
     if (sphereGeometry != null && sphereMaterial != null){
