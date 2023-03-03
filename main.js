@@ -79,11 +79,20 @@ const generateSphere = () => {
     sphereMaterial.metalness = 0;
     sphereMaterial.receiveShadow = false;
     sphereMaterial.castShadow = true;
-    sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.position.y = 6;
-    scene.add(sphere);
 
+    const newSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    if(sphere != null){
+        newSphere.position.copy(sphere.position); // set position to match old sphere
+        newSphere.rotation.copy(sphere.rotation); // set rotation to match old sphere
+    }   
+    
+
+    scene.remove(sphere); // remove old sphere
+    sphere = newSphere; // update sphere variable to point to new sphere
+    scene.add(sphere); // add new sphere to scene
 }
+
+
 
 const generateBox = () => {
     if (boxGeometry != null && boxMaterial != null){
@@ -105,13 +114,15 @@ const generateBox = () => {
     boxMaterial.receiveShadow = true;
     boxMaterial.castShadow = true;
     box = new THREE.Mesh(boxGeometry, boxMaterial);
-    box.position.y = -2;
     scene.add(box);
 
 }
 
 generateSphere()
 generateBox()
+
+box.position.y = -2;
+sphere.position.y = 6;
 
 // Set up the ground plane to cast shadows
 const groundGeometry = new THREE.PlaneGeometry(200, 200);
@@ -206,7 +217,7 @@ window.onload = () => {
   tick()
 }
 let movement = { x: 0, y: 0, z: 0 };
-let speed = 0.1;
+let speed = 1.1;
 
 function handleKeyDown(event) {
   if (event.key === 'w' || event.key === 'W') {
