@@ -125,7 +125,7 @@ box.position.y = -2;
 sphere.position.y = 6;
 
 // Set up the ground plane to cast shadows
-const groundGeometry = new THREE.PlaneGeometry(200, 200);
+const groundGeometry = new THREE.PlaneGeometry(50, 50);
 const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
 groundMaterial.roughness = 1.0;
 groundMaterial.metalness = 0.0;
@@ -217,7 +217,7 @@ window.onload = () => {
   tick()
 }
 let movement = { x: 0, y: 0, z: 0 };
-let speed = 1.1;
+let speed = 0.5;
 
 function handleKeyDown(event) {
   if (event.key === 'w' || event.key === 'W') {
