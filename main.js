@@ -3,15 +3,18 @@ import { MathUtils, Clock } from "https://cdn.skypack.dev/three@0.149.0";
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/OrbitControls'
 import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
+import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 
+// set up world for physics
+const world = new CANNON.World();
+world.gravity.set(0, -9.82, 0); // set gravity
+
+// create new gui (closed by default)
 const gui = new GUI()
 gui.close()
 const scene = new THREE.Scene()
 
-/**
- * Galaxy
- */
-
+// sphere controls
 const sphereParameters = {
   radius: 4,
   widthSegments: 30,
@@ -23,6 +26,7 @@ const sphereParameters = {
   color: '#b3b3b3'
 }
 
+// box controls
 const boxParameters = {
     width: 4,
     height: 4,
@@ -30,10 +34,12 @@ const boxParameters = {
     color: '#ff0000'  
 }
 
+// define sphere
 let sphereGeometry = null
 let sphereMaterial = null
 let sphere = null
 
+// defined box
 let boxGeometry = null
 let boxMaterial = null
 let box = null
@@ -50,20 +56,27 @@ light.shadow.camera.far = 500;
 light.shadow.bias = 0.001;
 scene.add(light);
 
+// ambient light
 const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
+// Set up box as Cannon.js body
+const boxShape = new CANNON.Box(new CANNON.Vec3(boxParameters.width / 2, boxParameters.height / 2, boxParameters.depth / 2));
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape });
+world.addBody(boxBody);
+
+// Load earth texture for sphere
 const earthTextureLoader = new THREE.TextureLoader();
 const earthTexture = earthTextureLoader.load('./public/earth_daymap.jpg')
 
 const generateSphere = () => {
     if (sphereGeometry != null && sphereMaterial != null){
-        sphereGeometry.dispose()
+        sphereGeometry.dispose() // Remove old sphere
         sphereMaterial.dispose()
         scene.remove(sphere)
     }
 
-    let radius = sphereParameters.radius;
+    let radius = sphereParameters.radius; // Load parameters from gui
     let widthSegments = sphereParameters.widthSegments;
     let heightSegments = sphereParameters.heightSegments;
     let phiStart = sphereParameters.phiStart;
@@ -84,38 +97,41 @@ const generateSphere = () => {
     if(sphere != null){
         newSphere.position.copy(sphere.position); // set position to match old sphere
         newSphere.rotation.copy(sphere.rotation); // set rotation to match old sphere
-    }   
-    
+    }
 
+    // Use below code to avoid having new sphere's position
     scene.remove(sphere); // remove old sphere
     sphere = newSphere; // update sphere variable to point to new sphere
     scene.add(sphere); // add new sphere to scene
 }
 
 
-
 const generateBox = () => {
-    if (boxGeometry != null && boxMaterial != null){
-        boxGeometry.dispose()
-        boxMaterial.dispose()
-        scene.remove(box)
-    }
+  if (boxGeometry != null && boxMaterial != null){
+      boxGeometry.dispose()
+      boxMaterial.dispose()
+      scene.remove(box)
+  }
 
-    let width = boxParameters.width;
-    let height = boxParameters.height;
-    let depth = boxParameters.depth;
+  let width = boxParameters.width;
+  let height = boxParameters.height;
+  let depth = boxParameters.depth;
 
-    boxGeometry = new THREE.BoxGeometry( width, height, depth );
+  boxGeometry = new THREE.BoxGeometry( width, height, depth );
 
-    // Set up the sphere to receive shadows
-    boxMaterial = new THREE.MeshStandardMaterial({ color: boxParameters.color });
-    boxMaterial.roughness = 0.5;
-    boxMaterial.metalness = 0.5;
-    boxMaterial.receiveShadow = true;
-    boxMaterial.castShadow = true;
-    box = new THREE.Mesh(boxGeometry, boxMaterial);
-    scene.add(box);
+  // Set up the sphere to receive shadows
+  boxMaterial = new THREE.MeshStandardMaterial({ color: boxParameters.color });
+  boxMaterial.roughness = 0.5;
+  boxMaterial.metalness = 0.5;
+  boxMaterial.receiveShadow = true;
+  boxMaterial.castShadow = true;
+  box = new THREE.Mesh(boxGeometry, boxMaterial);
 
+  // Set the initial position and rotation of the box based on the rigid body in the Cannon.js world
+  box.position.copy(boxBody.position);
+  box.quaternion.copy(boxBody.quaternion);
+
+  scene.add(box);
 }
 
 generateSphere()
@@ -202,15 +218,19 @@ controls.enableDamping = true
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
-  sphere.rotation.y = elapsedTime * 0.2
+  // Step the Cannon.js world forward in time
+  world.step(1 / 60);
 
-  box.rotation.y = -(elapsedTime * 0.2)
+  // Update the positions and rotations of the objects in the scene based on their rigid bodies in the Cannon.js world
+  sphere.position.copy(sphere.position);
+
+  box.position.copy(boxBody.position);
+  box.quaternion.copy(boxBody.quaternion);
 
   controls.update()
   renderer.render(scene, camera)
 
   window.requestAnimationFrame(tick)
-
 }
 
 window.onload = () => {
