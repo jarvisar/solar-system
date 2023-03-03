@@ -38,17 +38,16 @@ let boxGeometry = null
 let boxMaterial = null
 let box = null
 
-let light = new THREE.DirectionalLight( 0xffffff, 1 );
-light.position.set( 0, 1, 0 ); //default; light shining from top
-light.castShadow = true; // default false
+let light;
 // Set up the light to cast shadows
 light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(1, 1, 0);
 light.castShadow = true;
-light.shadow.mapSize.width = 1024;
-light.shadow.mapSize.height = 1024;
+light.shadow.mapSize.width = 2048;
+light.shadow.mapSize.height = 2048;
 light.shadow.camera.near = 0.5;
 light.shadow.camera.far = 500;
+light.shadow.bias = 0.001;
 scene.add(light);
 
 const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -78,7 +77,8 @@ const generateSphere = () => {
     sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereParameters.color, wireframe: false, map: earthTexture });
     sphereMaterial.roughness = 1;
     sphereMaterial.metalness = 0;
-    sphereMaterial.receiveShadow = true;
+    sphereMaterial.receiveShadow = false;
+    sphereMaterial.castShadow = true;
     sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.position.y = 6;
     scene.add(sphere);
@@ -103,15 +103,19 @@ const generateBox = () => {
     boxMaterial.roughness = 0.5;
     boxMaterial.metalness = 0.5;
     boxMaterial.receiveShadow = true;
+    boxMaterial.castShadow = true;
     box = new THREE.Mesh(boxGeometry, boxMaterial);
     box.position.y = -2;
     scene.add(box);
 
 }
 
+generateSphere()
+generateBox()
+
 // Set up the ground plane to cast shadows
-const groundGeometry = new THREE.PlaneGeometry(20, 20);
-const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+const groundGeometry = new THREE.PlaneGeometry(200, 200);
+const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
 groundMaterial.roughness = 1.0;
 groundMaterial.metalness = 0.0;
 groundMaterial.side = THREE.DoubleSide;
@@ -119,10 +123,8 @@ groundMaterial.receiveShadow = true;
 const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 ground.rotation.x = -Math.PI / 2;
 ground.position.y = -5;
+ground.receiveShadow = true;
 scene.add(ground);
-
-generateSphere()
-generateBox()
 
 const sphereFolder = gui.addFolder('Sphere')
 sphereFolder.add(sphereParameters, 'radius').min(1).max(10).step(1)
@@ -159,6 +161,8 @@ scene.add(camera)
 
 const canvas = document.querySelector('.webgl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 renderer.render(scene, camera);
 
@@ -201,3 +205,50 @@ const tick = () => {
 window.onload = () => {
   tick()
 }
+let movement = { x: 0, y: 0, z: 0 };
+let speed = 0.1;
+
+function handleKeyDown(event) {
+  if (event.key === 'w' || event.key === 'W') {
+    movement.x = speed;
+  }
+  if (event.key === 'a' || event.key === 'A') {
+    movement.z = -speed;
+  }
+  if (event.key === 's' || event.key === 'S') {
+    movement.x = -speed;
+  }
+  if (event.key === 'd' || event.key === 'D') {
+    movement.z = speed;
+  }
+  if (event.key === ' ') {
+    movement.y = speed;
+  }
+  if (event.key === 'Shift') {
+    movement.y = -speed;
+  }
+}
+
+function handleKeyUp(event) {
+  if (event.key === 'w' || event.key === 'W' || event.key === 's' || event.key === 'S') {
+    movement.x = 0;
+  }
+  if (event.key === 'a' || event.key === 'A' || event.key === 'd' || event.key === 'D') {
+    movement.z = 0;
+  }
+  if (event.key === ' ' || event.key === 'Shift') {
+    movement.y = 0;
+  }
+}
+
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
+
+function update() {
+  sphere.position.x += movement.x;
+  sphere.position.y += movement.y;
+  sphere.position.z += movement.z;
+  requestAnimationFrame(update);
+}
+
+requestAnimationFrame(update);
