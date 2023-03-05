@@ -11,7 +11,7 @@ world.gravity.set(0, -9.82, 0); // set gravity
 
 // create new gui (closed by default)
 const gui = new GUI()
-gui.close()
+gui.open()
 const scene = new THREE.Scene()
 
 // sphere controls
@@ -44,21 +44,44 @@ let boxGeometry = null
 let boxMaterial = null
 let box = null
 
-let light;
-// Set up the light to cast shadows
-light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(1, 1, 0);
-light.castShadow = true;
-light.shadow.mapSize.width = 2048;
-light.shadow.mapSize.height = 2048;
-light.shadow.camera.near = 0.5;
-light.shadow.camera.far = 500;
-light.shadow.bias = 0.001;
-scene.add(light);
+const light2 = new THREE.DirectionalLight()
+light2.position.set(1, 1, 0)
+light2.angle = Math.PI / 4
+light2.penumbra = 0.5
+light2.castShadow = true
+light2.shadow.mapSize.width = 1024
+light2.shadow.mapSize.height = 1024
+light2.shadow.camera.near = 0.5
+light2.shadow.camera.far = 20
+scene.add(light2)
+
+const normalMaterial = new THREE.MeshNormalMaterial()
 
 // ambient light
 const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
+
+
+const torusKnotGeometry = new THREE.TorusKnotGeometry()
+const torusKnotMesh = new THREE.Mesh(torusKnotGeometry, normalMaterial)
+torusKnotMesh.position.x = 4
+torusKnotMesh.position.y = 3
+torusKnotMesh.castShadow = true
+torusKnotMesh.receiveShadow = true
+scene.add(torusKnotMesh)
+const torusKnotShape = CreateTrimesh(torusKnotMesh.geometry)
+const torusKnotBody = new CANNON.Body({ mass: 1 })
+torusKnotBody.addShape(torusKnotShape)
+torusKnotBody.position.x = torusKnotMesh.position.x
+torusKnotBody.position.y = torusKnotMesh.position.y
+torusKnotBody.position.z = torusKnotMesh.position.z
+world.addBody(torusKnotBody)
+
+function CreateTrimesh(geometry) {
+  const vertices = geometry.attributes.position.array
+  const indices = Object.keys(vertices).map(Number)
+  return new CANNON.Trimesh(vertices, indices)
+}
 
 // Set up box as Cannon.js body
 const boxShape = new CANNON.Box(new CANNON.Vec3(boxParameters.width / 2, boxParameters.height / 2, boxParameters.depth / 2));
@@ -137,21 +160,22 @@ const generateBox = () => {
 generateSphere()
 generateBox()
 
-box.position.y = -2;
-sphere.position.y = 6;
-
+box.position.y = 3;
+sphere.position.y = 8;
+const phongMaterial = new THREE.MeshPhongMaterial()
 // Set up the ground plane to cast shadows
-const groundGeometry = new THREE.PlaneGeometry(50, 50);
-const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-groundMaterial.roughness = 1.0;
-groundMaterial.metalness = 0.0;
-groundMaterial.side = THREE.DoubleSide;
-groundMaterial.receiveShadow = true;
-const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-ground.rotation.x = -Math.PI / 2;
-ground.position.y = -5;
-ground.receiveShadow = true;
-scene.add(ground);
+const planeGeometry = new THREE.PlaneGeometry(25, 25)
+const planeMesh = new THREE.Mesh(planeGeometry, phongMaterial)
+planeMesh.rotateX(-Math.PI / 2)
+planeMesh.position.y = -5;
+planeMesh.receiveShadow = true
+scene.add(planeMesh)
+const planeShape = new CANNON.Plane()
+const planeBody = new CANNON.Body({ mass: 0 })
+planeBody.addShape(planeShape)
+planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
+planeBody.position.y = -5;
+world.addBody(planeBody)
 
 const sphereFolder = gui.addFolder('Sphere')
 sphereFolder.add(sphereParameters, 'radius').min(1).max(10).step(1)
@@ -223,9 +247,21 @@ const tick = () => {
 
   // Update the positions and rotations of the objects in the scene based on their rigid bodies in the Cannon.js world
   sphere.position.copy(sphere.position);
+  sphere.rotation.y += 0.005;
 
   box.position.copy(boxBody.position);
-  box.quaternion.copy(boxBody.quaternion);
+
+  torusKnotMesh.position.set(
+    torusKnotBody.position.x,
+    torusKnotBody.position.y,
+    torusKnotBody.position.z
+)
+torusKnotMesh.quaternion.set(
+    torusKnotBody.quaternion.x,
+    torusKnotBody.quaternion.y,
+    torusKnotBody.quaternion.z,
+    torusKnotBody.quaternion.w
+)
 
   controls.update()
   renderer.render(scene, camera)
