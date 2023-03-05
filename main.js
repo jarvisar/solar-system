@@ -44,8 +44,8 @@ let boxGeometry = null
 let boxMaterial = null
 let box = null
 
-const light2 = new THREE.DirectionalLight()
-light2.position.set(1, 1, 0)
+const light2 = new THREE.SpotLight()
+light2.position.set(-2.5, 5, 5)
 light2.angle = Math.PI / 4
 light2.penumbra = 0.5
 light2.castShadow = true
@@ -54,6 +54,17 @@ light2.shadow.mapSize.height = 1024
 light2.shadow.camera.near = 0.5
 light2.shadow.camera.far = 20
 scene.add(light2)
+
+const light3 = new THREE.DirectionalLight()
+light3.position.set(1, 1, 0)
+light3.angle = Math.PI / 4
+light3.penumbra = 0.5
+light3.castShadow = true
+light3.shadow.mapSize.width = 1024
+light3.shadow.mapSize.height = 1024
+light3.shadow.camera.near = 0.5
+light3.shadow.camera.far = 20
+scene.add(light3)
 
 const normalMaterial = new THREE.MeshNormalMaterial()
 
@@ -125,6 +136,7 @@ const generateSphere = () => {
     // Use below code to avoid having new sphere's position
     scene.remove(sphere); // remove old sphere
     sphere = newSphere; // update sphere variable to point to new sphere
+    sphere.castShadow = true;
     scene.add(sphere); // add new sphere to scene
 }
 
@@ -149,6 +161,7 @@ const generateBox = () => {
   boxMaterial.receiveShadow = true;
   boxMaterial.castShadow = true;
   box = new THREE.Mesh(boxGeometry, boxMaterial);
+  box.castShadow = true;
 
   // Set the initial position and rotation of the box based on the rigid body in the Cannon.js world
   box.position.copy(boxBody.position);
