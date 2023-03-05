@@ -1,6 +1,7 @@
 import GUI from "https://cdn.skypack.dev/lil-gui@0.18.0";
 import { MathUtils, Clock } from "https://cdn.skypack.dev/three@0.149.0";
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/OrbitControls'
+import { DragControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/DragControls'
 import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
@@ -72,7 +73,7 @@ const normalMaterial = new THREE.MeshNormalMaterial()
 const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
-
+// Torus Knot
 const torusKnotGeometry = new THREE.TorusKnotGeometry()
 const torusKnotMesh = new THREE.Mesh(torusKnotGeometry, normalMaterial)
 torusKnotMesh.position.x = 4
@@ -93,6 +94,9 @@ function CreateTrimesh(geometry) {
   const indices = Object.keys(vertices).map(Number)
   return new CANNON.Trimesh(vertices, indices)
 }
+
+torusKnotMesh.userData.body = torusKnotBody;
+
 
 // Set up box as Cannon.js body
 const boxShape = new CANNON.Box(new CANNON.Vec3(boxParameters.width / 2, boxParameters.height / 2, boxParameters.depth / 2));
@@ -229,6 +233,31 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 renderer.render(scene, camera);
+
+const draggableObjects = [torusKnotMesh];
+const dragControls = new DragControls(draggableObjects, camera, renderer.domElement);
+
+// Disable OrbitControls when user starts dragging an object
+dragControls.addEventListener('dragstart', function(event) {
+  const body = event.object.userData.body;
+  body.mass = 0;
+  controls.enabled = false;
+});
+
+// Re-enable OrbitControls when user stops dragging an object
+dragControls.addEventListener('dragend', function(event) {
+  const body = event.object.userData.body;
+  body.mass = 1;
+  controls.enabled = true;
+});
+
+dragControls.addEventListener('drag', function (event) {
+  const position = event.object.position;
+  const body = event.object.userData.body;
+  // set mass of cannon body to 0
+
+  body.position.set(position.x, position.y, position.z);
+});
 
 
 /**
