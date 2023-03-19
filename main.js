@@ -82,6 +82,7 @@ let mercuryAngle = 0;
 let venusAngle = 0;
 let earthAngle = 0;
 
+let focusedPlanet = undefined
 function render() {
   requestAnimationFrame(render);
   
@@ -107,8 +108,51 @@ function render() {
   mercuryAngle += 0.003;
   venusAngle += 0.002;
   earthAngle += 0.001;
-  
+
+  // Update the camera's target position to the currently focused planet
+  if (focusedPlanet == undefined) {
+    controls.target.set(0, 0, 0);
+  } else if (focusedPlanet == 'mercury') {
+    controls.target.set(mercury.position.x, mercury.position.y, mercury.position.z);
+    camera.position.set(mercury.position.x+250, mercury.position.y+200, mercury.position.z+250);
+    camera.lookAt(mercury.position.x, mercury.position.y, mercury.position.z);
+  } else if (focusedPlanet == 'venus') {
+    controls.target.set(venus.position.x, venus.position.y, venus.position.z);
+    camera.position.set(venus.position.x+250, venus.position.y+200, venus.position.z+250);
+    camera.lookAt(venus.position.x, venus.position.y, venus.position.z);
+  } else if (focusedPlanet == 'earth') {
+    controls.target.set(earth.position.x, earth.position.y, earth.position.z);
+    camera.position.set(earth.position.x+250, earth.position.y+200, earth.position.z+250);
+    camera.lookAt(earth.position.x, earth.position.y, earth.position.z);
+  }
   renderer.render(scene, camera);
 }
+
+renderer.domElement.addEventListener('click', function(event) {
+  // Calculate mouse position in normalized device coordinates
+  const mouse = new THREE.Vector2();
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  // Raycast from camera to mouse position
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera( mouse, camera );
+  const intersects = raycaster.intersectObjects( scene.children );
+
+  // If the Earth was clicked, log a message to the console
+  if ( intersects.length > 0 && intersects[0].object === earth ) {
+    console.log('Earth clicked!');
+    focusedPlanet = 'earth'
+  } else if(intersects.length > 0 && intersects[0].object === venus) {
+    console.log('Venus clicked!');
+    focusedPlanet = 'venus'
+  } else if(intersects.length > 0 && intersects[0].object === mercury) {
+    console.log('Mercury clicked!');
+    focusedPlanet = 'mercury'
+  } else {
+    focusedPlanet = undefined
+  }
+});
+
 
 render();
