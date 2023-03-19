@@ -54,7 +54,7 @@ const mercuryMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
 const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 mercury.castShadow = true;
 mercury.receiveShadow = true;
-mercury.position.set(70, 0, 70);
+mercury.position.set(70, 0, 0);
 scene.add(mercury);
 
 const venusGeometry = new THREE.SphereGeometry(10, 32, 32);
@@ -62,7 +62,7 @@ const venusMaterial = new THREE.MeshStandardMaterial({ color: 0xff8800 });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 venus.castShadow = true;
 venus.receiveShadow = true;
-venus.position.set(100, 0, 20);
+venus.position.set(100, 0, 0);
 scene.add(venus);
 
 const earthGeometry = new THREE.SphereGeometry(10, 32, 32);
@@ -77,9 +77,37 @@ scene.add(earth);
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
-// Render the scene
+// seperate angle for each planet
+let mercuryAngle = 0;
+let venusAngle = 0;
+let earthAngle = 0;
+
 function render() {
   requestAnimationFrame(render);
+  
+  // Update the position of mercury based on its distance from the center and current angle
+  const mercuryDistance = 70;
+  const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
+  const mercuryZ = mercuryDistance * Math.sin(mercuryAngle);
+  mercury.position.set(mercuryX, 0, mercuryZ);
+
+  // Update the position of venus based on its distance from the center and current angle
+  const venusDistance = 100;
+  const venusX = venusDistance * Math.cos(venusAngle);
+  const venusZ = venusDistance * Math.sin(venusAngle);
+  venus.position.set(venusX, 0, venusZ);
+
+  // Update the position of earth based on its distance from the center and current angle
+  const earthDistance = 150;
+  const earthX = earthDistance * Math.cos(earthAngle);
+  const earthZ = earthDistance * Math.sin(earthAngle);
+  earth.position.set(earthX, 0, earthZ);
+  
+  // Increase the angle for the next frame
+  mercuryAngle += 0.003;
+  venusAngle += 0.002;
+  earthAngle += 0.001;
+  
   renderer.render(scene, camera);
 }
 
