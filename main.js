@@ -86,6 +86,9 @@ let focusedPlanet = undefined
 function render() {
   requestAnimationFrame(render);
   
+  // rotate sun in place
+  sunMesh.rotation.y -= 0.0005;
+
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryDistance = 70;
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -119,17 +122,12 @@ function render() {
     cameraTarget.copy(venus.position);
   } else if (focusedPlanet == 'earth') {
     cameraTarget.copy(earth.position);
+  } else if (focusedPlanet == 'sun') {
+    cameraTarget.copy(sunMesh.position);
   }
 
   // Create a tween to animate the camera and target positions
-  new TWEEN.Tween(camera.position)
-    .to({
-      x: cameraTarget.x + 250,
-      y: cameraTarget.y + 200,
-      z: cameraTarget.z + 250,
-    }, 1000)
-    .easing(TWEEN.Easing.Quadratic.Out)
-    .start();
+
   new TWEEN.Tween(controls.target)
     .to(cameraTarget, 10)
     .easing(TWEEN.Easing.Quadratic.Out)
@@ -164,8 +162,9 @@ renderer.domElement.addEventListener('click', function(event) {
   } else if(intersects.length > 0 && intersects[0].object === mercury) {
     console.log('Mercury clicked!');
     focusedPlanet = 'mercury'
-  } else {
-
+  } else if(intersects.length > 0 && intersects[0].object === sunMesh) {
+    console.log('Sun clicked!');
+    focusedPlanet = 'sun'
   }
 });
 
