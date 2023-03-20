@@ -111,7 +111,10 @@ let venusAngle = Math.PI;
 // earth is 3/4
 let earthAngle = Math.PI * 1.5;
 
-let focusedPlanet = undefined
+let focusedPlanet = undefined;
+let cameraTarget = new THREE.Vector3();
+let lerpSpeed = 0.05; // Adjust this value to control the speed of the animation
+
 function render() {
   requestAnimationFrame(render);
   
@@ -142,33 +145,31 @@ function render() {
   venusAngle += 0.001;
   earthAngle += 0.0005;
 
-
-  // Update the camera's target position to the currently focused planet
-  const cameraTarget = new THREE.Vector3();
+  // Calculate the new camera target position
+  let newCameraTarget = new THREE.Vector3();
   if (focusedPlanet == undefined) {
-    cameraTarget.set(0, 0, 0);
+    newCameraTarget.set(0, 0, 0);
   } else if (focusedPlanet == 'mercury') {
-    cameraTarget.copy(mercury.position);
+    newCameraTarget.copy(mercury.position);
   } else if (focusedPlanet == 'venus') {
-    cameraTarget.copy(venus.position);
+    newCameraTarget.copy(venus.position);
   } else if (focusedPlanet == 'earth') {
-    cameraTarget.copy(earth.position);
+    newCameraTarget.copy(earth.position);
   } else if (focusedPlanet == 'sun') {
-    cameraTarget.copy(sunMesh.position);
+    newCameraTarget.copy(sunMesh.position);
   }
 
-  new TWEEN.Tween(controls.target)
-    .to(cameraTarget, 10)
-    .easing(TWEEN.Easing.Quadratic.Out)
-    .start();
+  // Lerp the camera target position towards the new position
+  cameraTarget.lerp(newCameraTarget, lerpSpeed);
+
+  // Set the controls target to the new camera target position
+  controls.target.copy(cameraTarget);
 
   // Update the controls and render the scene
   controls.update();
   renderer.render(scene, camera);
-
-  // Update the TWEEN library
-  TWEEN.update();
 }
+
 
 renderer.domElement.addEventListener('click', function(event) {
   // Calculate mouse position in normalized device coordinates
