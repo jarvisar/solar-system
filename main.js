@@ -47,10 +47,11 @@ sunLight.castShadow = true;
 scene.add(sunLight);
 
 const sunGeometry = new THREE.SphereGeometry(50, 32, 32);
-const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+const sunMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_sun.jpg'), emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: new THREE.TextureLoader().load('public/2k_sun.jpg') });
 const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
 sunMesh.position.set(0, 0, 0);
 scene.add(sunMesh);
+
 
 // mercury
 const mercuryGeometry = new THREE.SphereGeometry(5, 32, 32);
