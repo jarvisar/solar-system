@@ -21,7 +21,9 @@ camera.position.set(250, 250, 500);
 const mercuryDistance = 150;
 const venusDistance = 200;
 const earthDistance = 300;
+const moonDistance = 50;
 const marsDistance = 400;
+
 
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -102,6 +104,23 @@ const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 earthOrbit.rotation.x = Math.PI / 2;
 scene.add(earthOrbit);
 
+//moon
+const moonGeometry = new THREE.SphereGeometry(2, 32, 32);
+const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg') });
+const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+moon.castShadow = true;
+moon.receiveShadow = true;
+moon.position.set(0, 0, moonDistance);
+earth.add(moon);
+
+// moon orbit
+const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0.1, moonDistance + 0.1, 256);
+const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
+moonOrbit.rotation.x = Math.PI / 2;
+earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
+
+
 // mars
 const marsGeometry = new THREE.SphereGeometry(5, 32, 32);
 const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
@@ -128,8 +147,10 @@ let mercuryAngle = 0;
 let venusAngle = Math.PI;
 // earth is 3/4
 let earthAngle = Math.PI * 1.5;
+let moonAngle = 0;
 // mars is 1/4
 let marsAngle = Math.PI * 0.5;
+
 
 let focusedPlanet = undefined;
 let cameraTarget = new THREE.Vector3();
@@ -144,6 +165,7 @@ function render() {
   mercury.rotation.y -= 0.002;
   venus.rotation.y -= 0.002;
   earth.rotation.y -= 0.002;
+  moon.rotation.y -= 0.002;
   mars.rotation.y -= 0.002;
 
   // Update the position of mercury based on its distance from the center and current angle
@@ -161,6 +183,11 @@ function render() {
   const earthZ = earthDistance * Math.sin(earthAngle);
   earth.position.set(earthX, 0, earthZ);
 
+  // Update the position of the moon based on the position of the earth
+  const moonX = moonDistance * Math.cos(moonAngle);
+  const moonZ = moonDistance * Math.sin(moonAngle);
+  moon.position.set(moonX, 0, moonZ);
+
   // Update the position of mars based on its distance from the center and current angle
   const marsX = marsDistance * Math.cos(marsAngle);
   const marsZ = marsDistance * Math.sin(marsAngle);
@@ -171,6 +198,7 @@ function render() {
   venusAngle += 0.001;
   earthAngle += 0.0005;
   marsAngle += 0.00025;
+  moonAngle += 0.005; // or any other value that gives you the desired speed of the moon orbiting the earth
 
   // Calculate the new camera target position
   let newCameraTarget = new THREE.Vector3();
@@ -186,6 +214,8 @@ function render() {
     newCameraTarget.copy(mars.position);
   } else if (focusedPlanet == 'sun') {
     newCameraTarget.copy(sunMesh.position);
+  } else if (focusedPlanet == 'moon') {
+    newCameraTarget.copy(earth.position).add(moon.position);
   }
 
   // Lerp the camera target position towards the new position
@@ -274,6 +304,9 @@ renderer.domElement.addEventListener('click', function(event) {
   } else if(intersects.length > 0 && intersects[0].object === mars) {
     console.log('Mars clicked!');
     focusedPlanet = 'mars'
+  } else if(intersects.length > 0 && intersects[0].object === moon) {
+    console.log('Moon clicked!');
+    focusedPlanet = 'moon'
   }
 });
 
