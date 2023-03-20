@@ -74,7 +74,7 @@ const venusMaterial = new THREE.MeshStandardMaterial({ color: 0xff8800 });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 venus.castShadow = true;
 venus.receiveShadow = true;
-venus.position.set(venusDistance, 0, 0);
+venus.position.set(-venusDistance, 0, 0);
 scene.add(venus);
 
 // venus orbit
@@ -90,7 +90,7 @@ const earthMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.castShadow = true;
 earth.receiveShadow = true;
-earth.position.set(earthDistance, 0, 0);
+earth.position.set(0, 0, earthDistance);
 scene.add(earth);
 
 // earth orbit
@@ -106,8 +106,10 @@ controls.enableDamping = true
 
 // seperate angle for each planet
 let mercuryAngle = 0;
-let venusAngle = 0;
-let earthAngle = 0;
+// venus is haflway
+let venusAngle = Math.PI;
+// earth is 3/4
+let earthAngle = Math.PI * 1.5;
 
 let focusedPlanet = undefined
 function render() {
@@ -132,9 +134,10 @@ function render() {
   earth.position.set(earthX, 0, earthZ);
   
   // Increase the angle for the next frame
-  mercuryAngle += 0.003;
-  venusAngle += 0.002;
-  earthAngle += 0.001;
+  mercuryAngle += 0.0015;
+  venusAngle += 0.001;
+  earthAngle += 0.0005;
+
 
   // Update the camera's target position to the currently focused planet
   const cameraTarget = new THREE.Vector3();
