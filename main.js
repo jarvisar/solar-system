@@ -18,6 +18,10 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 0, 500);
 
+const mercuryDistance = 150;
+const venusDistance = 200;
+const earthDistance = 300;
+
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
 scene.add(ambientLight);
@@ -48,30 +52,53 @@ const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
 sunMesh.position.set(0, 0, 0);
 scene.add(sunMesh);
 
-// Create spheres for each planet and add them to the scene
+// mercury
 const mercuryGeometry = new THREE.SphereGeometry(5, 32, 32);
 const mercuryMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
 const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 mercury.castShadow = true;
 mercury.receiveShadow = true;
-mercury.position.set(70, 0, 0);
+mercury.position.set(mercuryDistance, 0, 0);
 scene.add(mercury);
 
+// mercury orbit
+const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .25, mercuryDistance + .25, 128);
+const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
+mercuryOrbit.rotation.x = Math.PI / 2;
+scene.add(mercuryOrbit);
+
+//venus
 const venusGeometry = new THREE.SphereGeometry(10, 32, 32);
 const venusMaterial = new THREE.MeshStandardMaterial({ color: 0xff8800 });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 venus.castShadow = true;
 venus.receiveShadow = true;
-venus.position.set(100, 0, 0);
+venus.position.set(venusDistance, 0, 0);
 scene.add(venus);
 
+// venus orbit
+const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .25, venusDistance + .25, 128);
+const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
+venusOrbit.rotation.x = Math.PI / 2;
+scene.add(venusOrbit);
+
+// earth
 const earthGeometry = new THREE.SphereGeometry(10, 32, 32);
 const earthMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.castShadow = true;
 earth.receiveShadow = true;
-earth.position.set(150, 0, 0);
+earth.position.set(earthDistance, 0, 0);
 scene.add(earth);
+
+// earth orbit
+const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .25, earthDistance + .25, 128);
+const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
+earthOrbit.rotation.x = Math.PI / 2;
+scene.add(earthOrbit);
 
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
@@ -90,19 +117,16 @@ function render() {
   sunMesh.rotation.y -= 0.0005;
 
   // Update the position of mercury based on its distance from the center and current angle
-  const mercuryDistance = 70;
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
   const mercuryZ = mercuryDistance * Math.sin(mercuryAngle);
   mercury.position.set(mercuryX, 0, mercuryZ);
 
   // Update the position of venus based on its distance from the center and current angle
-  const venusDistance = 100;
   const venusX = venusDistance * Math.cos(venusAngle);
   const venusZ = venusDistance * Math.sin(venusAngle);
   venus.position.set(venusX, 0, venusZ);
 
   // Update the position of earth based on its distance from the center and current angle
-  const earthDistance = 150;
   const earthX = earthDistance * Math.cos(earthAngle);
   const earthZ = earthDistance * Math.sin(earthAngle);
   earth.position.set(earthX, 0, earthZ);
