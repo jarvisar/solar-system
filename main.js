@@ -145,11 +145,11 @@ controls.enableDamping = true
 let mercuryAngle = 0;
 // venus is haflway
 let venusAngle = Math.PI;
-// earth is 3/4
-let earthAngle = Math.PI * 1.5;
+// earth is 1/4
+let earthAngle = Math.PI * 0.5;
 let moonAngle = 0;
-// mars is 1/4
-let marsAngle = Math.PI * 0.5;
+// mars is 3/4
+let marsAngle = Math.PI * 1.5;
 
 
 let focusedPlanet = null;
