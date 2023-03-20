@@ -18,6 +18,15 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(400, 250, -1600);
 
+window.addEventListener('resize', () => {
+  // Update the camera's aspect ratio
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  // Update the renderer's size
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
 const mercuryDistance = 300;
 const venusDistance = 400;
 const earthDistance = 600;
