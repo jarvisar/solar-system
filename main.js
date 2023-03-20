@@ -244,7 +244,7 @@ controls.enableDamping = true
 const flyControls = new FlyControls(camera, renderer.domElement);
 flyControls.movementSpeed = 100;
 flyControls.rollSpeed = Math.PI / 24;
-flyControls.autoForward = false;
+flyControls.autoForward = true;
 flyControls.dragToLook = true;
 
 // seperate angle for each planet
