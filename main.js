@@ -6,358 +6,192 @@ import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 
-// set up world for physics
-const world = new CANNON.World();
-world.gravity.set(0, -9.82, 0); // set gravity
+// Create a Three.js scene
+const scene = new THREE.Scene();
 
-// create new gui (closed by default)
-const gui = new GUI()
-gui.open()
-const scene = new THREE.Scene()
+// Create a camera and position it so it's looking at the scene center
+const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  10000
+);
+camera.position.set(250, 250, 500);
 
-// sphere controls
-const sphereParameters = {
-  radius: 4,
-  widthSegments: 30,
-  heightSegments: 15,
-  phiStart: 0,
-  phiLength: (Math.PI * 2),
-  thetaStart: 0,
-  thetaLength: Math.PI,
-  color: '#b3b3b3'
-}
+const mercuryDistance = 150;
+const venusDistance = 200;
+const earthDistance = 300;
 
-// box controls
-const boxParameters = {
-    width: 4,
-    height: 4,
-    depth: 4,
-    color: '#ff0000'  
-}
+//add faint ambient light
+const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+scene.add(ambientLight);
 
-// define sphere
-let sphereGeometry = null
-let sphereMaterial = null
-let sphere = null
-
-// defined box
-let boxGeometry = null
-let boxMaterial = null
-let box = null
-
-const light2 = new THREE.SpotLight()
-light2.position.set(-2.5, 5, 5)
-light2.angle = Math.PI / 4
-light2.penumbra = 0.5
-light2.castShadow = true
-light2.shadow.mapSize.width = 1024
-light2.shadow.mapSize.height = 1024
-light2.shadow.camera.near = 0.5
-light2.shadow.camera.far = 20
-scene.add(light2)
-
-const light3 = new THREE.DirectionalLight()
-light3.position.set(1, 1, 0)
-light3.angle = Math.PI / 4
-light3.penumbra = 0.5
-light3.castShadow = true
-light3.shadow.mapSize.width = 1024
-light3.shadow.mapSize.height = 1024
-light3.shadow.camera.near = 0.5
-light3.shadow.camera.far = 20
-scene.add(light3)
-
-const normalMaterial = new THREE.MeshNormalMaterial()
-
-// ambient light
-const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
-scene.add( ambientLight );
-
-// Torus Knot
-const torusKnotGeometry = new THREE.TorusKnotGeometry()
-const torusKnotMesh = new THREE.Mesh(torusKnotGeometry, normalMaterial)
-torusKnotMesh.position.x = 4
-torusKnotMesh.position.y = 3
-torusKnotMesh.castShadow = true
-torusKnotMesh.receiveShadow = true
-scene.add(torusKnotMesh)
-const torusKnotShape = CreateTrimesh(torusKnotMesh.geometry)
-const torusKnotBody = new CANNON.Body({ mass: 1 })
-torusKnotBody.addShape(torusKnotShape)
-torusKnotBody.position.x = torusKnotMesh.position.x
-torusKnotBody.position.y = torusKnotMesh.position.y
-torusKnotBody.position.z = torusKnotMesh.position.z
-world.addBody(torusKnotBody)
-
-function CreateTrimesh(geometry) {
-  const vertices = geometry.attributes.position.array
-  const indices = Object.keys(vertices).map(Number)
-  return new CANNON.Trimesh(vertices, indices)
-}
-
-torusKnotMesh.userData.body = torusKnotBody;
-
-
-// Set up box as Cannon.js body
-const boxShape = new CANNON.Box(new CANNON.Vec3(boxParameters.width / 2, boxParameters.height / 2, boxParameters.depth / 2));
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape });
-world.addBody(boxBody);
-
-// Load earth texture for sphere
-const earthTextureLoader = new THREE.TextureLoader();
-const earthTexture = earthTextureLoader.load('./public/earth_daymap.jpg')
-
-const generateSphere = () => {
-    if (sphereGeometry != null && sphereMaterial != null){
-        sphereGeometry.dispose() // Remove old sphere
-        sphereMaterial.dispose()
-        scene.remove(sphere)
-    }
-
-    let radius = sphereParameters.radius; // Load parameters from gui
-    let widthSegments = sphereParameters.widthSegments;
-    let heightSegments = sphereParameters.heightSegments;
-    let phiStart = sphereParameters.phiStart;
-    let phiLength = sphereParameters.phiLength;
-    let thetaStart = sphereParameters.thetaStart;
-    let thetaLength = sphereParameters.thetaLength;
-
-    sphereGeometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
-
-    // Set up the sphere to receive shadows
-    sphereMaterial = new THREE.MeshStandardMaterial({ color: sphereParameters.color, wireframe: false, map: earthTexture });
-    sphereMaterial.roughness = 1;
-    sphereMaterial.metalness = 0;
-    sphereMaterial.receiveShadow = false;
-    sphereMaterial.castShadow = true;
-
-    const newSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    if(sphere != null){
-        newSphere.position.copy(sphere.position); // set position to match old sphere
-        newSphere.rotation.copy(sphere.rotation); // set rotation to match old sphere
-    }
-
-    // Use below code to avoid having new sphere's position
-    scene.remove(sphere); // remove old sphere
-    sphere = newSphere; // update sphere variable to point to new sphere
-    sphere.castShadow = true;
-    scene.add(sphere); // add new sphere to scene
-}
-
-
-const generateBox = () => {
-  if (boxGeometry != null && boxMaterial != null){
-      boxGeometry.dispose()
-      boxMaterial.dispose()
-      scene.remove(box)
-  }
-
-  let width = boxParameters.width;
-  let height = boxParameters.height;
-  let depth = boxParameters.depth;
-
-  boxGeometry = new THREE.BoxGeometry( width, height, depth );
-
-  // Set up the sphere to receive shadows
-  boxMaterial = new THREE.MeshStandardMaterial({ color: boxParameters.color });
-  boxMaterial.roughness = 0.5;
-  boxMaterial.metalness = 0.5;
-  boxMaterial.receiveShadow = true;
-  boxMaterial.castShadow = true;
-  box = new THREE.Mesh(boxGeometry, boxMaterial);
-  box.castShadow = true;
-
-  // Set the initial position and rotation of the box based on the rigid body in the Cannon.js world
-  box.position.copy(boxBody.position);
-  box.quaternion.copy(boxBody.quaternion);
-
-  scene.add(box);
-}
-
-generateSphere()
-generateBox()
-
-box.position.y = 3;
-sphere.position.y = 8;
-const phongMaterial = new THREE.MeshPhongMaterial()
-// Set up the ground plane to cast shadows
-const planeGeometry = new THREE.PlaneGeometry(25, 25)
-const planeMesh = new THREE.Mesh(planeGeometry, phongMaterial)
-planeMesh.rotateX(-Math.PI / 2)
-planeMesh.position.y = -5;
-planeMesh.receiveShadow = true
-scene.add(planeMesh)
-const planeShape = new CANNON.Plane()
-const planeBody = new CANNON.Body({ mass: 0 })
-planeBody.addShape(planeShape)
-planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
-planeBody.position.y = -5;
-world.addBody(planeBody)
-
-const sphereFolder = gui.addFolder('Sphere')
-sphereFolder.add(sphereParameters, 'radius').min(1).max(10).step(1)
-sphereFolder.add(sphereParameters, 'widthSegments').min(3).max(64).step(1)
-sphereFolder.add(sphereParameters, 'heightSegments').min(2).max(32).step(1)
-sphereFolder.add(sphereParameters, 'phiStart').min(0.0).max(Math.PI * 2.0).step(0.01)
-sphereFolder.add(sphereParameters, 'phiLength').min(0.0).max(Math.PI * 2.0).step(0.01)
-sphereFolder.add(sphereParameters, 'thetaStart').min(0).max(Math.PI * 2.0).step(0.01)
-sphereFolder.add(sphereParameters, 'thetaLength').min(0).max(2).step(0.001)
-sphereFolder.addColor(sphereParameters, 'color')
-sphereFolder.add({ generate: () => generateSphere()}, 'generate')
-
-sphereFolder.onFinishChange(() => generateSphere())
-
-const boxFolder = gui.addFolder('Box')
-boxFolder.add(boxParameters, 'width').min(1).max(10).step(1)
-boxFolder.add(boxParameters, 'height').min(1).max(10).step(1)
-boxFolder.add(boxParameters, 'depth').min(1).max(10).step(1)
-boxFolder.addColor(boxParameters, 'color')
-boxFolder.add({ generate: () => generateBox()}, 'generate')
-
-boxFolder.onFinishChange(() => generateBox())
-
-/**
- * Camera
- */
-
-const camera = new THREE.PerspectiveCamera(75)
-camera.position.z = 18
-camera.position.y = 8
-camera.near = 0.01
-camera.far = 5000
-scene.add(camera)
-
+// Create a renderer and add it to the document
 const canvas = document.querySelector('.webgl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-renderer.render(scene, camera);
+document.body.appendChild(renderer.domElement);
 
-const draggableObjects = [torusKnotMesh];
-const dragControls = new DragControls(draggableObjects, camera, renderer.domElement);
+// Create a sphere for the Sun and add it to the scene as a light source
+const sunLight = new THREE.PointLight(0xffffff, 1, 100000);
+sunLight.shadow.mapSize.width = 2048;
+sunLight.shadow.mapSize.height = 2048;
+sunLight.shadow.camera.near = 0.1;
+sunLight.shadow.camera.far = 1000;
+sunLight.position.set(0, 0, 0);
+sunLight.castShadow = true;
+scene.add(sunLight);
 
-// Disable OrbitControls when user starts dragging an object
-dragControls.addEventListener('dragstart', function(event) {
-  const body = event.object.userData.body;
-  body.mass = 0;
-  controls.enabled = false;
-});
+const sunGeometry = new THREE.SphereGeometry(50, 32, 32);
+const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+sunMesh.position.set(0, 0, 0);
+scene.add(sunMesh);
 
-// Re-enable OrbitControls when user stops dragging an object
-dragControls.addEventListener('dragend', function(event) {
-  const body = event.object.userData.body;
-  body.mass = 1;
-  controls.enabled = true;
-});
+// mercury
+const mercuryGeometry = new THREE.SphereGeometry(5, 32, 32);
+const mercuryMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
+const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
+mercury.castShadow = true;
+mercury.receiveShadow = true;
+mercury.position.set(mercuryDistance, 0, 0);
+scene.add(mercury);
 
-dragControls.addEventListener('drag', function (event) {
-  const position = event.object.position;
-  const body = event.object.userData.body;
-  // set mass of cannon body to 0
+// mercury orbit
+const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .25, mercuryDistance + .25, 128);
+const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
+mercuryOrbit.rotation.x = Math.PI / 2;
+scene.add(mercuryOrbit);
 
-  body.position.set(position.x, position.y, position.z);
-});
+//venus
+const venusGeometry = new THREE.SphereGeometry(10, 32, 32);
+const venusMaterial = new THREE.MeshStandardMaterial({ color: 0xff8800 });
+const venus = new THREE.Mesh(venusGeometry, venusMaterial);
+venus.castShadow = true;
+venus.receiveShadow = true;
+venus.position.set(-venusDistance, 0, 0);
+scene.add(venus);
 
+// venus orbit
+const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .25, venusDistance + .25, 128);
+const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
+venusOrbit.rotation.x = Math.PI / 2;
+scene.add(venusOrbit);
 
-/**
-* Config
-*/
- camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
+// earth
+const earthGeometry = new THREE.SphereGeometry(10, 32, 32);
+const earthMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+earth.castShadow = true;
+earth.receiveShadow = true;
+earth.position.set(0, 0, earthDistance);
+scene.add(earth);
 
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+// earth orbit
+const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .25, earthDistance + .25, 128);
+const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
+earthOrbit.rotation.x = Math.PI / 2;
+scene.add(earthOrbit);
 
-  window.addEventListener('dblclick', () => {
-    if (!document.fullscreenElement) {
-      canvas.requestFullscreen()
-    } else {
-      document.exitFullscreen()
-    }
-  })
-
-const clock = new Clock
+// Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
-const tick = () => {
-  const elapsedTime = clock.getElapsedTime()
+// seperate angle for each planet
+let mercuryAngle = 0;
+// venus is haflway
+let venusAngle = Math.PI;
+// earth is 3/4
+let earthAngle = Math.PI * 1.5;
 
-  // Step the Cannon.js world forward in time
-  world.step(1 / 60);
+let focusedPlanet = undefined
+function render() {
+  requestAnimationFrame(render);
+  
+  // rotate sun in place
+  sunMesh.rotation.y -= 0.0005;
 
-  // Update the positions and rotations of the objects in the scene based on their rigid bodies in the Cannon.js world
-  sphere.position.copy(sphere.position);
-  sphere.rotation.y += 0.005;
+  // Update the position of mercury based on its distance from the center and current angle
+  const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
+  const mercuryZ = mercuryDistance * Math.sin(mercuryAngle);
+  mercury.position.set(mercuryX, 0, mercuryZ);
 
-  box.position.copy(boxBody.position);
+  // Update the position of venus based on its distance from the center and current angle
+  const venusX = venusDistance * Math.cos(venusAngle);
+  const venusZ = venusDistance * Math.sin(venusAngle);
+  venus.position.set(venusX, 0, venusZ);
 
-  torusKnotMesh.position.set(
-    torusKnotBody.position.x,
-    torusKnotBody.position.y,
-    torusKnotBody.position.z
-)
-torusKnotMesh.quaternion.set(
-    torusKnotBody.quaternion.x,
-    torusKnotBody.quaternion.y,
-    torusKnotBody.quaternion.z,
-    torusKnotBody.quaternion.w
-)
+  // Update the position of earth based on its distance from the center and current angle
+  const earthX = earthDistance * Math.cos(earthAngle);
+  const earthZ = earthDistance * Math.sin(earthAngle);
+  earth.position.set(earthX, 0, earthZ);
+  
+  // Increase the angle for the next frame
+  mercuryAngle += 0.0015;
+  venusAngle += 0.001;
+  earthAngle += 0.0005;
 
-  controls.update()
-  renderer.render(scene, camera)
 
-  window.requestAnimationFrame(tick)
+  // Update the camera's target position to the currently focused planet
+  const cameraTarget = new THREE.Vector3();
+  if (focusedPlanet == undefined) {
+    cameraTarget.set(0, 0, 0);
+  } else if (focusedPlanet == 'mercury') {
+    cameraTarget.copy(mercury.position);
+  } else if (focusedPlanet == 'venus') {
+    cameraTarget.copy(venus.position);
+  } else if (focusedPlanet == 'earth') {
+    cameraTarget.copy(earth.position);
+  } else if (focusedPlanet == 'sun') {
+    cameraTarget.copy(sunMesh.position);
+  }
+
+  new TWEEN.Tween(controls.target)
+    .to(cameraTarget, 10)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .start();
+
+  // Update the controls and render the scene
+  controls.update();
+  renderer.render(scene, camera);
+
+  // Update the TWEEN library
+  TWEEN.update();
 }
 
-window.onload = () => {
-  tick()
-}
-let movement = { x: 0, y: 0, z: 0 };
-let speed = 0.5;
+renderer.domElement.addEventListener('click', function(event) {
+  // Calculate mouse position in normalized device coordinates
+  const mouse = new THREE.Vector2();
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-function handleKeyDown(event) {
-  if (event.key === 'w' || event.key === 'W') {
-    movement.x = speed;
-  }
-  if (event.key === 'a' || event.key === 'A') {
-    movement.z = -speed;
-  }
-  if (event.key === 's' || event.key === 'S') {
-    movement.x = -speed;
-  }
-  if (event.key === 'd' || event.key === 'D') {
-    movement.z = speed;
-  }
-  if (event.key === ' ') {
-    movement.y = speed;
-  }
-  if (event.key === 'Shift') {
-    movement.y = -speed;
-  }
-}
+  // Raycast from camera to mouse position
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera( mouse, camera );
+  const intersects = raycaster.intersectObjects( scene.children );
 
-function handleKeyUp(event) {
-  if (event.key === 'w' || event.key === 'W' || event.key === 's' || event.key === 'S') {
-    movement.x = 0;
+  // If the Earth was clicked, log a message to the console
+  if ( intersects.length > 0 && intersects[0].object === earth ) {
+    console.log('Earth clicked!');
+    focusedPlanet = 'earth'
+  } else if(intersects.length > 0 && intersects[0].object === venus) {
+    console.log('Venus clicked!');
+    focusedPlanet = 'venus'
+  } else if(intersects.length > 0 && intersects[0].object === mercury) {
+    console.log('Mercury clicked!');
+    focusedPlanet = 'mercury'
+  } else if(intersects.length > 0 && intersects[0].object === sunMesh) {
+    console.log('Sun clicked!');
+    focusedPlanet = 'sun'
   }
-  if (event.key === 'a' || event.key === 'A' || event.key === 'd' || event.key === 'D') {
-    movement.z = 0;
-  }
-  if (event.key === ' ' || event.key === 'Shift') {
-    movement.y = 0;
-  }
-}
+});
 
-document.addEventListener('keydown', handleKeyDown);
-document.addEventListener('keyup', handleKeyUp);
 
-function update() {
-  sphere.position.x += movement.x;
-  sphere.position.y += movement.y;
-  sphere.position.z += movement.z;
-  requestAnimationFrame(update);
-}
-
-requestAnimationFrame(update);
+render();
