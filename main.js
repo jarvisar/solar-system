@@ -24,13 +24,13 @@ const earthDistance = 600;
 const moonDistance = 100;
 const marsDistance = 800;
 const jupiterDistance = 1200;
+const saturnDistance = 1500;
 
 // add star background to scene
 const starGeometry = new THREE.SphereGeometry(150000, 32, 32);
-// darken a bit
 const starMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/8k_stars_milky_way.jpg'), side: THREE.BackSide, depthWrite: false });
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
-// darkken a bit
+// darken a bit
 starMesh.material.color.setRGB(0.4, 0.4, 0.4);
 scene.add(starMesh);
 
@@ -75,7 +75,7 @@ mercury.position.set(mercuryDistance, 0, 0);
 scene.add(mercury);
 
 // mercury orbit
-const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .15, mercuryDistance + .15, 256);
+const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .2, mercuryDistance + .2, 256);
 const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
 const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
 mercuryOrbit.rotation.x = Math.PI / 2;
@@ -91,7 +91,7 @@ venus.position.set(-venusDistance, 0, 0);
 scene.add(venus);
 
 // venus orbit
-const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .15, venusDistance + .15, 256);
+const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .2, venusDistance + .2, 256);
 const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
 const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
 venusOrbit.rotation.x = Math.PI / 2;
@@ -107,7 +107,7 @@ earth.position.set(0, 0, earthDistance);
 scene.add(earth);
 
 // earth orbit
-const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .15, earthDistance + .15, 256);
+const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .2, earthDistance + .2, 256);
 const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 earthOrbit.rotation.x = Math.PI / 2;
@@ -139,7 +139,7 @@ mars.position.set(0, 0, marsDistance);
 scene.add(mars);
 
 // mars orbit
-const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .15, marsDistance + .15, 256);
+const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .2, marsDistance + .2, 256);
 const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
 const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
 marsOrbit.rotation.x = Math.PI / 2;
@@ -155,11 +155,34 @@ jupiter.position.set(0, 0, jupiterDistance);
 scene.add(jupiter);
 
 // jupiter orbit
-const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .15, jupiterDistance + .15, 256);
+const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .2, jupiterDistance + .2, 256);
 const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
 const jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
 jupiterOrbit.rotation.x = Math.PI / 2;
 scene.add(jupiterOrbit);
+
+// saturn
+const saturnGeometry = new THREE.SphereGeometry(40, 32, 32);
+const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
+const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
+saturn.castShadow = true;
+saturn.receiveShadow = true;
+saturn.position.set(0, 0, saturnDistance);
+scene.add(saturn);
+
+// saturn orbit
+const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - .2, saturnDistance + .2, 256);
+const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
+saturnOrbit.rotation.x = Math.PI / 2;
+scene.add(saturnOrbit);
+
+// saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
+const saturnRingGeometry = new THREE.RingGeometry(50, 85, 256);
+const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn_ring_alpha.png'), side: THREE.DoubleSide, transparent: true, repeat: 2 });
+const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
+saturnRing.rotation.x = Math.PI / 2;
+saturn.add(saturnRing);
 
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
@@ -176,6 +199,8 @@ let moonAngle = 0;
 let marsAngle = Math.PI * 1.5;
 // jupiter is 1/8
 let jupiterAngle = Math.PI * 0.25;
+// saturn is 5/8
+let saturnAngle = Math.PI * 0.625;
 
 let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
@@ -193,6 +218,7 @@ function render() {
   moon.rotation.y -= 0.002;
   mars.rotation.y -= 0.002;
   jupiter.rotation.y -= 0.001;
+  saturn.rotation.y -= 0.001;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -223,6 +249,11 @@ function render() {
   const jupiterX = jupiterDistance * Math.cos(jupiterAngle);
   const jupiterZ = jupiterDistance * Math.sin(jupiterAngle);
   jupiter.position.set(jupiterX, 0, jupiterZ);
+
+  // Update the position of saturn based on its distance from the center and current angle
+  const saturnX = saturnDistance * Math.cos(saturnAngle);
+  const saturnZ = saturnDistance * Math.sin(saturnAngle);
+  saturn.position.set(saturnX, 0, saturnZ);
   
   // Increase the angle for the next frame
   mercuryAngle += 0.00075;
@@ -231,6 +262,7 @@ function render() {
   marsAngle += 0.000125;
   moonAngle += 0.0025;
   jupiterAngle += 0.0000625;
+  saturnAngle += 0.00003125;
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
@@ -342,6 +374,9 @@ renderer.domElement.addEventListener('click', function(event) {
     } else if (intersects[0].object == jupiter) {
       console.log('jupiter')
       focusedPlanet = jupiter;
+    } else if (intersects[0].object == saturn) {
+      console.log('saturn')
+      focusedPlanet = saturn;
     }
   }
 });
