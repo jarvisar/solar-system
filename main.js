@@ -2,11 +2,11 @@ import GUI from "https://cdn.skypack.dev/lil-gui@0.18.0";
 import { MathUtils, Clock } from "https://cdn.skypack.dev/three@0.149.0";
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/OrbitControls'
 import { DragControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/DragControls'
-import { FlyControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/FlyControls'
 import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/loaders/GLTFLoader'
+import { FlyControls } from "./FlyControls.js";
 
 // Create a Three.js scene
 const scene = new THREE.Scene();
@@ -254,7 +254,7 @@ const flyControls = new FlyControls(camera, renderer.domElement);
 flyControls.movementSpeed = 100;
 flyControls.rollSpeed = Math.PI / 24;
 flyControls.autoForward = true;
-flyControls.dragToLook = true;
+
 
 // seperate angle for each planet
 let mercuryAngle = 0;
