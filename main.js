@@ -16,7 +16,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   200000
 );
-camera.position.set(250, 250, 500);
+camera.position.set(400, 250, -1600);
 
 const mercuryDistance = 300;
 const venusDistance = 400;
@@ -25,6 +25,8 @@ const moonDistance = 100;
 const marsDistance = 800;
 const jupiterDistance = 1200;
 const saturnDistance = 1500;
+const uranusDistance = 1800;
+const neptuneDistance = 2100;
 
 // add star background to scene
 const starGeometry = new THREE.SphereGeometry(150000, 32, 32);
@@ -184,6 +186,38 @@ const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
 saturnRing.rotation.x = Math.PI / 2;
 saturn.add(saturnRing);
 
+// uranus
+const uranusGeometry = new THREE.SphereGeometry(30, 32, 32);
+const uranusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_uranus.jpg') });
+const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
+uranus.castShadow = true;
+uranus.receiveShadow = true;
+uranus.position.set(0, 0, uranusDistance);
+scene.add(uranus);
+
+// uranus orbit
+const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - .2, uranusDistance + .2, 256);
+const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
+uranusOrbit.rotation.x = Math.PI / 2;
+scene.add(uranusOrbit);
+
+// neptune
+const neptuneGeometry = new THREE.SphereGeometry(30, 32, 32);
+const neptuneMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_neptune.jpg') });
+const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+neptune.castShadow = true;
+neptune.receiveShadow = true;
+neptune.position.set(0, 0, neptuneDistance);
+scene.add(neptune);
+
+// neptune orbit
+const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - .2, neptuneDistance + .2, 256);
+const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
+neptuneOrbit.rotation.x = Math.PI / 2;
+scene.add(neptuneOrbit);
+
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -201,6 +235,10 @@ let marsAngle = Math.PI * 1.5;
 let jupiterAngle = Math.PI * 0.25;
 // saturn is 5/8
 let saturnAngle = Math.PI * 0.625;
+// uranus is 3/8
+let uranusAngle = Math.PI * 0.375;
+// neptune is 7/8
+let neptuneAngle = Math.PI * 0.75;
 
 let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
@@ -219,6 +257,8 @@ function render() {
   mars.rotation.y -= 0.002;
   jupiter.rotation.y -= 0.001;
   saturn.rotation.y -= 0.001;
+  uranus.rotation.y -= 0.001;
+  neptune.rotation.y -= 0.001;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -254,6 +294,16 @@ function render() {
   const saturnX = saturnDistance * Math.cos(saturnAngle);
   const saturnZ = saturnDistance * Math.sin(saturnAngle);
   saturn.position.set(saturnX, 0, saturnZ);
+
+  // Update the position of uranus based on its distance from the center and current angle
+  const uranusX = uranusDistance * Math.cos(uranusAngle);
+  const uranusZ = uranusDistance * Math.sin(uranusAngle);
+  uranus.position.set(uranusX, 0, uranusZ);
+
+  // Update the position of neptune based on its distance from the center and current angle
+  const neptuneX = neptuneDistance * Math.cos(neptuneAngle);
+  const neptuneZ = neptuneDistance * Math.sin(neptuneAngle);
+  neptune.position.set(neptuneX, 0, neptuneZ);
   
   // Increase the angle for the next frame
   mercuryAngle += 0.00075;
@@ -263,6 +313,8 @@ function render() {
   moonAngle += 0.0025;
   jupiterAngle += 0.0000625;
   saturnAngle += 0.00003125;
+  uranusAngle += 0.000015625;
+  neptuneAngle += 0.0000078125;
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
@@ -280,9 +332,16 @@ function render() {
 
     // Update the controls target to the position of the focused planet
     if (focusedPlanet == moon) {
-      controls.target = new THREE.Vector3(earth.position.x, earth.position.y, earth.position.z);
+      //lerp controls
+      controls.target.x = lerp(controls.target.x, earth.position.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, earth.position.y, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, earth.position.z, lerpSpeed);
+
     } else {
-      controls.target = focusedPlanet.position;
+      //lerp controls
+      controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
     }
     camera.position.copy(controls.object.position);
     camera.rotation.copy(controls.object.rotation);
@@ -303,6 +362,10 @@ const keyboardState = {
   space: false,
   shift: false,
 };
+
+function lerp(start, end, t) {
+  return start * (1 - t) + end * t;
+}
 
 function updateCameraPosition() {
   const speed = 10;
@@ -377,6 +440,12 @@ renderer.domElement.addEventListener('click', function(event) {
     } else if (intersects[0].object == saturn) {
       console.log('saturn')
       focusedPlanet = saturn;
+    } else if (intersects[0].object == uranus) {
+      console.log('uranus')
+      focusedPlanet = uranus;
+    } else if (intersects[0].object == neptune) {
+      console.log('neptune')
+      focusedPlanet = neptune;
     }
   }
 });
