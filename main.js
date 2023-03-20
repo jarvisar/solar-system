@@ -21,6 +21,7 @@ camera.position.set(250, 250, 500);
 const mercuryDistance = 150;
 const venusDistance = 200;
 const earthDistance = 300;
+const marsDistance = 400;
 
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -101,6 +102,22 @@ const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 earthOrbit.rotation.x = Math.PI / 2;
 scene.add(earthOrbit);
 
+// mars
+const marsGeometry = new THREE.SphereGeometry(5, 32, 32);
+const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
+const mars = new THREE.Mesh(marsGeometry, marsMaterial);
+mars.castShadow = true;
+mars.receiveShadow = true;
+mars.position.set(0, 0, marsDistance);
+scene.add(mars);
+
+// mars orbit
+const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .15, marsDistance + .15, 256);
+const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
+marsOrbit.rotation.x = Math.PI / 2;
+scene.add(marsOrbit);
+
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -111,6 +128,8 @@ let mercuryAngle = 0;
 let venusAngle = Math.PI;
 // earth is 3/4
 let earthAngle = Math.PI * 1.5;
+// mars is 1/4
+let marsAngle = Math.PI * 0.5;
 
 let focusedPlanet = undefined;
 let cameraTarget = new THREE.Vector3();
@@ -125,6 +144,7 @@ function render() {
   mercury.rotation.y -= 0.002;
   venus.rotation.y -= 0.002;
   earth.rotation.y -= 0.002;
+  mars.rotation.y -= 0.002;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -140,11 +160,17 @@ function render() {
   const earthX = earthDistance * Math.cos(earthAngle);
   const earthZ = earthDistance * Math.sin(earthAngle);
   earth.position.set(earthX, 0, earthZ);
+
+  // Update the position of mars based on its distance from the center and current angle
+  const marsX = marsDistance * Math.cos(marsAngle);
+  const marsZ = marsDistance * Math.sin(marsAngle);
+  mars.position.set(marsX, 0, marsZ);
   
   // Increase the angle for the next frame
   mercuryAngle += 0.0015;
   venusAngle += 0.001;
   earthAngle += 0.0005;
+  marsAngle += 0.00025;
 
   // Calculate the new camera target position
   let newCameraTarget = new THREE.Vector3();
@@ -156,6 +182,8 @@ function render() {
     newCameraTarget.copy(venus.position);
   } else if (focusedPlanet == 'earth') {
     newCameraTarget.copy(earth.position);
+  } else if (focusedPlanet == 'mars') {
+    newCameraTarget.copy(mars.position);
   } else if (focusedPlanet == 'sun') {
     newCameraTarget.copy(sunMesh.position);
   }
@@ -243,6 +271,9 @@ renderer.domElement.addEventListener('click', function(event) {
   } else if(intersects.length > 0 && intersects[0].object === sunMesh) {
     console.log('Sun clicked!');
     focusedPlanet = 'sun'
+  } else if(intersects.length > 0 && intersects[0].object === mars) {
+    console.log('Mars clicked!');
+    focusedPlanet = 'mars'
   }
 });
 
