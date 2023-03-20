@@ -150,8 +150,6 @@ function render() {
     cameraTarget.copy(sunMesh.position);
   }
 
-  // Create a tween to animate the camera and target positions
-
   new TWEEN.Tween(controls.target)
     .to(cameraTarget, 10)
     .easing(TWEEN.Easing.Quadratic.Out)
