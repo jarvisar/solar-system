@@ -110,22 +110,37 @@ function render() {
   earthAngle += 0.001;
 
   // Update the camera's target position to the currently focused planet
+  const cameraTarget = new THREE.Vector3();
   if (focusedPlanet == undefined) {
-    controls.target.set(0, 0, 0);
+    cameraTarget.set(0, 0, 0);
   } else if (focusedPlanet == 'mercury') {
-    controls.target.set(mercury.position.x, mercury.position.y, mercury.position.z);
-    camera.position.set(mercury.position.x+250, mercury.position.y+200, mercury.position.z+250);
-    camera.lookAt(mercury.position.x, mercury.position.y, mercury.position.z);
+    cameraTarget.copy(mercury.position);
   } else if (focusedPlanet == 'venus') {
-    controls.target.set(venus.position.x, venus.position.y, venus.position.z);
-    camera.position.set(venus.position.x+250, venus.position.y+200, venus.position.z+250);
-    camera.lookAt(venus.position.x, venus.position.y, venus.position.z);
+    cameraTarget.copy(venus.position);
   } else if (focusedPlanet == 'earth') {
-    controls.target.set(earth.position.x, earth.position.y, earth.position.z);
-    camera.position.set(earth.position.x+250, earth.position.y+200, earth.position.z+250);
-    camera.lookAt(earth.position.x, earth.position.y, earth.position.z);
+    cameraTarget.copy(earth.position);
   }
+
+  // Create a tween to animate the camera and target positions
+  new TWEEN.Tween(camera.position)
+    .to({
+      x: cameraTarget.x + 250,
+      y: cameraTarget.y + 200,
+      z: cameraTarget.z + 250,
+    }, 1000)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .start();
+  new TWEEN.Tween(controls.target)
+    .to(cameraTarget, 10)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .start();
+
+  // Update the controls and render the scene
+  controls.update();
   renderer.render(scene, camera);
+
+  // Update the TWEEN library
+  TWEEN.update();
 }
 
 renderer.domElement.addEventListener('click', function(event) {
@@ -150,7 +165,7 @@ renderer.domElement.addEventListener('click', function(event) {
     console.log('Mercury clicked!');
     focusedPlanet = 'mercury'
   } else {
-    focusedPlanet = undefined
+
   }
 });
 
