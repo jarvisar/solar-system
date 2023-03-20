@@ -14,7 +14,7 @@ const camera = new THREE.PerspectiveCamera(
   45,
   window.innerWidth / window.innerHeight,
   0.1,
-  10000
+  200000
 );
 camera.position.set(250, 250, 500);
 
@@ -24,6 +24,15 @@ const earthDistance = 600;
 const moonDistance = 100;
 const marsDistance = 800;
 const jupiterDistance = 1200;
+
+// add star background to scene
+const starGeometry = new THREE.SphereGeometry(150000, 32, 32);
+// darken a bit
+const starMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/8k_stars_milky_way.jpg'), side: THREE.BackSide, depthWrite: false });
+const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+// darkken a bit
+starMesh.material.color.setRGB(0.4, 0.4, 0.4);
+scene.add(starMesh);
 
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
