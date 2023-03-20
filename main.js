@@ -2,6 +2,7 @@ import GUI from "https://cdn.skypack.dev/lil-gui@0.18.0";
 import { MathUtils, Clock } from "https://cdn.skypack.dev/three@0.149.0";
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/OrbitControls'
 import { DragControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/DragControls'
+import { FlyControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/FlyControls'
 import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
@@ -227,9 +228,24 @@ const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
 neptuneOrbit.rotation.x = Math.PI / 2;
 scene.add(neptuneOrbit);
 
+//spaceship (just a box for now)
+const spaceshipGeometry = new THREE.BoxGeometry(10, 10, 10);
+const spaceshipMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+const spaceship = new THREE.Mesh(spaceshipGeometry, spaceshipMaterial);
+spaceship.castShadow = true;
+spaceship.receiveShadow = true;
+spaceship.position.set(0, 0, -1000);
+scene.add(spaceship);
+
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+
+const flyControls = new FlyControls(camera, renderer.domElement);
+flyControls.movementSpeed = 100;
+flyControls.rollSpeed = Math.PI / 24;
+flyControls.autoForward = false;
+flyControls.dragToLook = true;
 
 // seperate angle for each planet
 let mercuryAngle = 0;
@@ -341,12 +357,19 @@ function render() {
 
     // Update the controls target to the position of the focused planet
     if (focusedPlanet == moon) {
+      controls.enabled = true;
+      flyControls.enabled = false;
       //lerp controls
       controls.target.x = lerp(controls.target.x, earth.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, earth.position.y, lerpSpeed);
       controls.target.z = lerp(controls.target.z, earth.position.z, lerpSpeed);
-
+    } // if target is spaceship, disable orbit controls and use flycontrols
+    else if (focusedPlanet == spaceship) {
+      controls.enabled = false;
+      flyControls.enabled = true;
     } else {
+      controls.enabled = true;
+      flyControls.enabled = false;
       //lerp controls
       controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
@@ -356,62 +379,21 @@ function render() {
     camera.rotation.copy(controls.object.rotation);
   }
   // Update the camera position
-  updateCameraPosition();
-
+  
   // Update the controls and render the scene
-  controls.update();
+  if (flyControls.enabled) {
+    flyControls.update(clock.getDelta()); // update position using fly controls
+    spaceship.position.copy(camera.position);
+  } else {
+    controls.update(clock.getDelta()); // update position using orbit controls
+  }
   renderer.render(scene, camera);
 }
+const clock = new THREE.Clock();
 
-const keyboardState = {
-  w: false,
-  a: false,
-  s: false,
-  d: false,
-  space: false,
-  shift: false,
-};
-
-function lerp(start, end, t) {
-  return start * (1 - t) + end * t;
+function lerp(start, end, alpha) {
+  return (1 - alpha) * start + alpha * end;
 }
-
-function updateCameraPosition() {
-  const speed = 10;
-  if (keyboardState.w) {
-    camera.position.z -= speed;
-  }
-  if (keyboardState.a) {
-    camera.position.x -= speed;
-  }
-  if (keyboardState.s) {
-    camera.position.z += speed;
-  }
-  if (keyboardState.d) {
-    camera.position.x += speed;
-  }
-  if (keyboardState.space) {
-    console.log('space')
-    camera.position.y += speed;
-  }
-  if (keyboardState.shift) {
-    camera.position.y -= speed;
-  }
-}
-
-document.addEventListener("keydown", (event) => {
-  const key = event.key.toLowerCase();
-  if (keyboardState.hasOwnProperty(key)) {
-    keyboardState[key] = true;
-  }
-});
-
-document.addEventListener("keyup", (event) => {
-  const key = event.key.toLowerCase();
-  if (keyboardState.hasOwnProperty(key)) {
-    keyboardState[key] = false;
-  }
-});
 
 renderer.domElement.addEventListener('click', function(event) {
   // Calculate mouse position in normalized device coordinates
@@ -455,6 +437,9 @@ renderer.domElement.addEventListener('click', function(event) {
     } else if (intersects[0].object == neptune) {
       console.log('neptune')
       focusedPlanet = neptune;
+    } else if (intersects[0].object == spaceship) {
+      console.log('spaceship')
+      focusedPlanet = spaceship;
     }
   }
 });
