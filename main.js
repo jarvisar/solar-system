@@ -18,12 +18,12 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(250, 250, 500);
 
-const mercuryDistance = 150;
-const venusDistance = 200;
-const earthDistance = 300;
-const moonDistance = 50;
-const marsDistance = 400;
-
+const mercuryDistance = 300;
+const venusDistance = 400;
+const earthDistance = 600;
+const moonDistance = 100;
+const marsDistance = 800;
+const jupiterDistance = 1200;
 
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -49,7 +49,7 @@ sunLight.position.set(0, 0, 0);
 sunLight.castShadow = true;
 scene.add(sunLight);
 
-const sunGeometry = new THREE.SphereGeometry(50, 32, 32);
+const sunGeometry = new THREE.SphereGeometry(100, 32, 32);
 const sunMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_sun.jpg'), emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: new THREE.TextureLoader().load('public/2k_sun.jpg') });
 const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
 sunMesh.position.set(0, 0, 0);
@@ -120,7 +120,6 @@ const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
 moonOrbit.rotation.x = Math.PI / 2;
 earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
 
-
 // mars
 const marsGeometry = new THREE.SphereGeometry(5, 32, 32);
 const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
@@ -137,6 +136,22 @@ const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
 marsOrbit.rotation.x = Math.PI / 2;
 scene.add(marsOrbit);
 
+// jupiter
+const jupiterGeometry = new THREE.SphereGeometry(50, 32, 32);
+const jupiterMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_jupiter.jpg') });
+const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
+jupiter.castShadow = true;
+jupiter.receiveShadow = true;
+jupiter.position.set(0, 0, jupiterDistance);
+scene.add(jupiter);
+
+// jupiter orbit
+const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .15, jupiterDistance + .15, 256);
+const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
+const jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
+jupiterOrbit.rotation.x = Math.PI / 2;
+scene.add(jupiterOrbit);
+
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -150,7 +165,8 @@ let earthAngle = Math.PI * 0.5;
 let moonAngle = 0;
 // mars is 3/4
 let marsAngle = Math.PI * 1.5;
-
+// jupiter is 1/8
+let jupiterAngle = Math.PI * 0.25;
 
 let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
@@ -167,6 +183,7 @@ function render() {
   earth.rotation.y -= 0.002;
   moon.rotation.y -= 0.002;
   mars.rotation.y -= 0.002;
+  jupiter.rotation.y -= 0.001;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -192,13 +209,19 @@ function render() {
   const marsX = marsDistance * Math.cos(marsAngle);
   const marsZ = marsDistance * Math.sin(marsAngle);
   mars.position.set(marsX, 0, marsZ);
+
+  // Update the position of jupiter based on its distance from the center and current angle
+  const jupiterX = jupiterDistance * Math.cos(jupiterAngle);
+  const jupiterZ = jupiterDistance * Math.sin(jupiterAngle);
+  jupiter.position.set(jupiterX, 0, jupiterZ);
   
   // Increase the angle for the next frame
   mercuryAngle += 0.00075;
   venusAngle += 0.0005;
   earthAngle += 0.00025;
   marsAngle += 0.000125;
-  moonAngle += 0.0025; // or any other value that gives you the desired speed of the moon orbiting the earth
+  moonAngle += 0.0025;
+  jupiterAngle += 0.0000625;
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
@@ -307,6 +330,9 @@ renderer.domElement.addEventListener('click', function(event) {
     } else if (intersects[0].object == moon) {
       console.log('moon')
       focusedPlanet = moon;
+    } else if (intersects[0].object == jupiter) {
+      console.log('jupiter')
+      focusedPlanet = jupiter;
     }
   }
 });
