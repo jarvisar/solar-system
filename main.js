@@ -6,6 +6,7 @@ import { FlyControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/
 import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
+import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/loaders/GLTFLoader'
 
 // Create a Three.js scene
 const scene = new THREE.Scene();
@@ -228,13 +229,21 @@ const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
 neptuneOrbit.rotation.x = Math.PI / 2;
 scene.add(neptuneOrbit);
 
-//spaceship (just a box for now)
-const spaceshipGeometry = new THREE.BoxGeometry(10, 10, 10);
-const spaceshipMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-const spaceship = new THREE.Mesh(spaceshipGeometry, spaceshipMaterial);
-spaceship.castShadow = true;
-spaceship.receiveShadow = true;
-spaceship.position.set(0, 0, -1000);
+// load spaceship from UFO_Empty.glb but declare it outside callback so I can uypdate position from animate function
+// spaceship from UFO_Empty.glb
+const loader = new GLTFLoader();
+const spaceship = new THREE.Object3D(); // create empty Object3D
+
+loader.load('public/UFO_Empty.glb', function (gltf) {
+  // use the loaded model to replace the empty Object3D
+  const model = gltf.scene.children[0];
+  model.scale.set(25.1, 25.1, 25.1);
+  model.position.set(0, 0, -1000);
+  model.rotation.set(0, 0, 0);
+  spaceship.add(model);
+});
+
+// add the spaceship to the scene outside of the callback function
 scene.add(spaceship);
 
 // Add orbit controls to let the user rotate the camera around the scene
@@ -404,7 +413,9 @@ renderer.domElement.addEventListener('click', function(event) {
   // Raycast from camera to mouse position
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera( mouse, camera );
-  const intersects = raycaster.intersectObjects( scene.children );
+  const intersects = raycaster.intersectObjects( scene.children, true );
+  const spaceshipIntersects = raycaster.intersectObjects( spaceship.children, true );
+intersects.push(...spaceshipIntersects);
 
   if (intersects.length > 0) {
     if (intersects[0].object == earth) {
@@ -432,14 +443,16 @@ renderer.domElement.addEventListener('click', function(event) {
       console.log('saturn')
       focusedPlanet = saturn;
     } else if (intersects[0].object == uranus) {
+      console.log(intersects[0].object)
       console.log('uranus')
       focusedPlanet = uranus;
     } else if (intersects[0].object == neptune) {
       console.log('neptune')
       focusedPlanet = neptune;
-    } else if (intersects[0].object == spaceship) {
+    } else if (intersects[0].object.name.includes("Ufo")) {
       console.log('spaceship')
       focusedPlanet = spaceship;
+    } else {
     }
   }
 });
