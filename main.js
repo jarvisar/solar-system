@@ -152,7 +152,7 @@ let moonAngle = 0;
 let marsAngle = Math.PI * 0.5;
 
 
-let focusedPlanet = undefined;
+let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
 let lerpSpeed = 0.05; // Adjust this value to control the speed of the animation
 
@@ -194,36 +194,36 @@ function render() {
   mars.position.set(marsX, 0, marsZ);
   
   // Increase the angle for the next frame
-  mercuryAngle += 0.0015;
-  venusAngle += 0.001;
-  earthAngle += 0.0005;
-  marsAngle += 0.00025;
-  moonAngle += 0.005; // or any other value that gives you the desired speed of the moon orbiting the earth
+  mercuryAngle += 0.00075;
+  venusAngle += 0.0005;
+  earthAngle += 0.00025;
+  marsAngle += 0.000125;
+  moonAngle += 0.0025; // or any other value that gives you the desired speed of the moon orbiting the earth
 
-  // Calculate the new camera target position
-  let newCameraTarget = new THREE.Vector3();
-  if (focusedPlanet == undefined) {
-    newCameraTarget.set(0, 0, 0);
-  } else if (focusedPlanet == 'mercury') {
-    newCameraTarget.copy(mercury.position);
-  } else if (focusedPlanet == 'venus') {
-    newCameraTarget.copy(venus.position);
-  } else if (focusedPlanet == 'earth') {
-    newCameraTarget.copy(earth.position);
-  } else if (focusedPlanet == 'mars') {
-    newCameraTarget.copy(mars.position);
-  } else if (focusedPlanet == 'sun') {
-    newCameraTarget.copy(sunMesh.position);
-  } else if (focusedPlanet == 'moon') {
-    newCameraTarget.copy(earth.position).add(moon.position);
+  if (focusedPlanet) {
+    // Update the camera target to the position of the focused planet
+    // if moon, add moon position to earth position
+    if (focusedPlanet === moon) {
+      cameraTarget.x = earth.position.x + 100;
+      cameraTarget.y = earth.position.y + 100;
+      cameraTarget.z = earth.position.z + 100;
+    } else {
+      cameraTarget.x = focusedPlanet.position.x + 100;
+      cameraTarget.y = focusedPlanet.position.y + 100;
+      cameraTarget.z = focusedPlanet.position.z + 100;
+    }
+    // Lerp the camera position to the camera target
+
+    // Update the controls target to the position of the focused planet
+    if (focusedPlanet == moon) {
+      controls.target = new THREE.Vector3(earth.position.x, earth.position.y, earth.position.z);
+    } else {
+      controls.target = focusedPlanet.position;
+    }
+    camera.position.copy(controls.object.position);
+    camera.rotation.copy(controls.object.rotation);
   }
-
-  // Lerp the camera target position towards the new position
-  cameraTarget.lerp(newCameraTarget, lerpSpeed);
-
-  // Set the controls target to the new camera target position
-  controls.target.copy(cameraTarget);
-
+  // Update the camera position
   updateCameraPosition();
 
   // Update the controls and render the scene
@@ -288,25 +288,26 @@ renderer.domElement.addEventListener('click', function(event) {
   raycaster.setFromCamera( mouse, camera );
   const intersects = raycaster.intersectObjects( scene.children );
 
-  // If the Earth was clicked, log a message to the console
-  if ( intersects.length > 0 && intersects[0].object === earth ) {
-    console.log('Earth clicked!');
-    focusedPlanet = 'earth'
-  } else if(intersects.length > 0 && intersects[0].object === venus) {
-    console.log('Venus clicked!');
-    focusedPlanet = 'venus'
-  } else if(intersects.length > 0 && intersects[0].object === mercury) {
-    console.log('Mercury clicked!');
-    focusedPlanet = 'mercury'
-  } else if(intersects.length > 0 && intersects[0].object === sunMesh) {
-    console.log('Sun clicked!');
-    focusedPlanet = 'sun'
-  } else if(intersects.length > 0 && intersects[0].object === mars) {
-    console.log('Mars clicked!');
-    focusedPlanet = 'mars'
-  } else if(intersects.length > 0 && intersects[0].object === moon) {
-    console.log('Moon clicked!');
-    focusedPlanet = 'moon'
+  if (intersects.length > 0) {
+    if (intersects[0].object == earth) {
+      console.log('earth')
+      focusedPlanet = earth;
+    } else if (intersects[0].object == venus) {
+      console.log('venus')
+      focusedPlanet = venus;
+    } else if (intersects[0].object == mercury) {
+      console.log('mercury')
+      focusedPlanet = mercury;
+    } else if (intersects[0].object == sunMesh) {
+      console.log('sun')
+      focusedPlanet = sunMesh;
+    } else if (intersects[0].object == mars) {
+      console.log('mars')
+      focusedPlanet = mars;
+    } else if (intersects[0].object == moon) {
+      console.log('moon')
+      focusedPlanet = moon;
+    }
   }
 });
 
