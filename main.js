@@ -355,63 +355,11 @@ function render() {
     camera.position.copy(controls.object.position);
     camera.rotation.copy(controls.object.rotation);
   }
-  // Update the camera position
-  updateCameraPosition();
 
   // Update the controls and render the scene
   controls.update();
   renderer.render(scene, camera);
 }
-
-const keyboardState = {
-  w: false,
-  a: false,
-  s: false,
-  d: false,
-  space: false,
-  shift: false,
-};
-
-function lerp(start, end, t) {
-  return start * (1 - t) + end * t;
-}
-
-function updateCameraPosition() {
-  const speed = 10;
-  if (keyboardState.w) {
-    camera.position.z -= speed;
-  }
-  if (keyboardState.a) {
-    camera.position.x -= speed;
-  }
-  if (keyboardState.s) {
-    camera.position.z += speed;
-  }
-  if (keyboardState.d) {
-    camera.position.x += speed;
-  }
-  if (keyboardState.space) {
-    console.log('space')
-    camera.position.y += speed;
-  }
-  if (keyboardState.shift) {
-    camera.position.y -= speed;
-  }
-}
-
-document.addEventListener("keydown", (event) => {
-  const key = event.key.toLowerCase();
-  if (keyboardState.hasOwnProperty(key)) {
-    keyboardState[key] = true;
-  }
-});
-
-document.addEventListener("keyup", (event) => {
-  const key = event.key.toLowerCase();
-  if (keyboardState.hasOwnProperty(key)) {
-    keyboardState[key] = false;
-  }
-});
 
 renderer.domElement.addEventListener('click', function(event) {
   // Calculate mouse position in normalized device coordinates
