@@ -63,7 +63,7 @@ mercury.position.set(mercuryDistance, 0, 0);
 scene.add(mercury);
 
 // mercury orbit
-const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .25, mercuryDistance + .25, 128);
+const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .15, mercuryDistance + .15, 256);
 const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
 const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
 mercuryOrbit.rotation.x = Math.PI / 2;
@@ -79,7 +79,7 @@ venus.position.set(-venusDistance, 0, 0);
 scene.add(venus);
 
 // venus orbit
-const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .25, venusDistance + .25, 128);
+const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .15, venusDistance + .15, 256);
 const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
 const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
 venusOrbit.rotation.x = Math.PI / 2;
@@ -95,7 +95,7 @@ earth.position.set(0, 0, earthDistance);
 scene.add(earth);
 
 // earth orbit
-const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .25, earthDistance + .25, 128);
+const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .15, earthDistance + .15, 256);
 const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.2, transparent: true, side: THREE.DoubleSide });
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 earthOrbit.rotation.x = Math.PI / 2;
