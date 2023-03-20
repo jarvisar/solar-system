@@ -33,7 +33,7 @@ const starGeometry = new THREE.SphereGeometry(150000, 32, 32);
 const starMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/8k_stars_milky_way.jpg'), side: THREE.BackSide, depthWrite: false });
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 // darken a bit
-starMesh.material.color.setRGB(0.4, 0.4, 0.4);
+starMesh.material.color.setRGB(0.5, 0.5, 0.5);
 scene.add(starMesh);
 
 //add faint ambient light
@@ -78,7 +78,7 @@ scene.add(mercury);
 
 // mercury orbit
 const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .2, mercuryDistance + .2, 256);
-const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
 mercuryOrbit.rotation.x = Math.PI / 2;
 scene.add(mercuryOrbit);
@@ -94,7 +94,7 @@ scene.add(venus);
 
 // venus orbit
 const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .2, venusDistance + .2, 256);
-const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
 venusOrbit.rotation.x = Math.PI / 2;
 scene.add(venusOrbit);
@@ -110,7 +110,7 @@ scene.add(earth);
 
 // earth orbit
 const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .2, earthDistance + .2, 256);
-const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 earthOrbit.rotation.x = Math.PI / 2;
 scene.add(earthOrbit);
@@ -126,7 +126,7 @@ earth.add(moon);
 
 // moon orbit
 const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0.1, moonDistance + 0.1, 256);
-const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
 moonOrbit.rotation.x = Math.PI / 2;
 earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
@@ -142,7 +142,7 @@ scene.add(mars);
 
 // mars orbit
 const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .2, marsDistance + .2, 256);
-const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
 marsOrbit.rotation.x = Math.PI / 2;
 scene.add(marsOrbit);
@@ -158,7 +158,7 @@ scene.add(jupiter);
 
 // jupiter orbit
 const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .2, jupiterDistance + .2, 256);
-const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
 jupiterOrbit.rotation.x = Math.PI / 2;
 scene.add(jupiterOrbit);
@@ -174,7 +174,7 @@ scene.add(saturn);
 
 // saturn orbit
 const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - .2, saturnDistance + .2, 256);
-const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
 saturnOrbit.rotation.x = Math.PI / 2;
 scene.add(saturnOrbit);
@@ -197,7 +197,7 @@ scene.add(uranus);
 
 // uranus orbit
 const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - .2, uranusDistance + .2, 256);
-const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
 uranusOrbit.rotation.x = Math.PI / 2;
 scene.add(uranusOrbit);
@@ -213,7 +213,7 @@ scene.add(neptune);
 
 // neptune orbit
 const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - .2, neptuneDistance + .2, 256);
-const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true, side: THREE.DoubleSide });
+const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
 const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
 neptuneOrbit.rotation.x = Math.PI / 2;
 scene.add(neptuneOrbit);
