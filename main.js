@@ -16,7 +16,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   10000
 );
-camera.position.set(0, 0, 500);
+camera.position.set(250, 250, 500);
 
 const mercuryDistance = 150;
 const venusDistance = 200;
