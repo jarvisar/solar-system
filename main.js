@@ -54,7 +54,7 @@ scene.add(sunMesh);
 
 // mercury
 const mercuryGeometry = new THREE.SphereGeometry(5, 32, 32);
-const mercuryMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
+const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg') });
 const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 mercury.castShadow = true;
 mercury.receiveShadow = true;
@@ -70,7 +70,7 @@ scene.add(mercuryOrbit);
 
 //venus
 const venusGeometry = new THREE.SphereGeometry(10, 32, 32);
-const venusMaterial = new THREE.MeshStandardMaterial({ color: 0xff8800 });
+const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg') });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 venus.castShadow = true;
 venus.receiveShadow = true;
@@ -86,7 +86,7 @@ scene.add(venusOrbit);
 
 // earth
 const earthGeometry = new THREE.SphereGeometry(10, 32, 32);
-const earthMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg') });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.castShadow = true;
 earth.receiveShadow = true;
@@ -117,6 +117,10 @@ function render() {
   
   // rotate sun in place
   sunMesh.rotation.y -= 0.0005;
+  // rotate all planets in place
+  mercury.rotation.y -= 0.002;
+  venus.rotation.y -= 0.002;
+  earth.rotation.y -= 0.002;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
