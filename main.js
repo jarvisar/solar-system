@@ -11,7 +11,19 @@ import { FlyControls } from "./FlyControls.js";
 // Create a Three.js scene
 const scene = new THREE.Scene();
 
-const scale = 3;
+var scale = 3;
+
+// add gui controls
+const gui = new GUI();
+const guicontrols = {
+  scale: 1
+};
+
+
+
+gui.add(guicontrols, "scale", 0, 10, 0.1).onChange((value) => {
+  scale = value;
+});
 
 // Create a camera and position it so it's looking at the scene center
 const camera = new THREE.PerspectiveCamera(
@@ -31,15 +43,15 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const mercuryDistance = 800 * scale;
-const venusDistance = 1000 * scale;
-const earthDistance = 1400 * scale;
-const moonDistance = 200 * scale;
-const marsDistance = 1800 * scale;
-const jupiterDistance = 2600 * scale;
-const saturnDistance = 3200 * scale;
-const uranusDistance = 3800 * scale;
-const neptuneDistance = 4400 * scale;
+var mercuryDistance
+var venusDistance 
+var earthDistance
+var moonDistance 
+var marsDistance 
+var jupiterDistance 
+var saturnDistance 
+var uranusDistance 
+var neptuneDistance 
 
 // add star background to scene
 const starGeometry = new THREE.SphereGeometry(300000 * scale, 32, 32);
@@ -63,8 +75,34 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
+//define all meshes
+var sunMesh;
+var mercury;
+var venus;
+var earth;
+var moon;
+var mars;
+var jupiter;
+var saturn;
+var uranus;
+var neptune;
+
+var sunLight;
+
+function createPlanets(){
+
+mercuryDistance = 800 * scale;
+venusDistance = 1000 * scale;
+earthDistance = 1400 * scale;
+moonDistance = 200 * scale;
+marsDistance = 1800 * scale;
+jupiterDistance = 2600 * scale;
+saturnDistance = 3200 * scale;
+uranusDistance = 3800 * scale;
+neptuneDistance = 4400 * scale;
+
 // Create a sphere for the Sun and add it to the scene as a light source
-const sunLight = new THREE.PointLight(0xffffff, 1, 100000);
+sunLight = new THREE.PointLight(0xffffff, 1, 100000);
 sunLight.shadow.mapSize.width = 2048;
 sunLight.shadow.mapSize.height = 2048;
 sunLight.shadow.camera.near = 0.1;
@@ -75,7 +113,7 @@ scene.add(sunLight);
 
 const sunGeometry = new THREE.SphereGeometry(200 * scale, 128, 128);
 const sunMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_sun.jpg'), emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: new THREE.TextureLoader().load('public/2k_sun.jpg') });
-const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
 sunMesh.position.set(0, 0, 0);
 scene.add(sunMesh);
 
@@ -83,7 +121,7 @@ scene.add(sunMesh);
 // mercury
 const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
 const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg') });
-const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
+mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 mercury.castShadow = true;
 mercury.receiveShadow = true;
 mercury.position.set(mercuryDistance, 0, 0);
@@ -99,7 +137,7 @@ scene.add(mercuryOrbit);
 //venus
 const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
 const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg') });
-const venus = new THREE.Mesh(venusGeometry, venusMaterial);
+venus = new THREE.Mesh(venusGeometry, venusMaterial);
 venus.castShadow = true;
 venus.receiveShadow = true;
 venus.position.set(-venusDistance, 0, 0);
@@ -115,7 +153,7 @@ scene.add(venusOrbit);
 // earth
 const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
 const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg') });
-const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.castShadow = true;
 earth.receiveShadow = true;
 earth.position.set(0, 0, earthDistance);
@@ -131,7 +169,7 @@ scene.add(earthOrbit);
 //moon
 const moonGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
 const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg') });
-const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+moon = new THREE.Mesh(moonGeometry, moonMaterial);
 moon.castShadow = true;
 moon.receiveShadow = true;
 moon.position.set(0, 0, moonDistance);
@@ -147,7 +185,7 @@ earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around th
 // mars
 const marsGeometry = new THREE.SphereGeometry(14 * scale, 32, 32);
 const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
-const mars = new THREE.Mesh(marsGeometry, marsMaterial);
+mars = new THREE.Mesh(marsGeometry, marsMaterial);
 mars.castShadow = true;
 mars.receiveShadow = true;
 mars.position.set(0, 0, marsDistance);
@@ -163,7 +201,7 @@ scene.add(marsOrbit);
 // jupiter
 const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
 const jupiterMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_jupiter.jpg') });
-const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
+jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 jupiter.castShadow = true;
 jupiter.receiveShadow = true;
 jupiter.position.set(0, 0, jupiterDistance);
@@ -179,7 +217,7 @@ scene.add(jupiterOrbit);
 // saturn
 const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
 const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
-const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
+saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
 saturn.castShadow = true;
 saturn.receiveShadow = true;
 saturn.position.set(0, 0, saturnDistance);
@@ -202,7 +240,7 @@ saturn.add(saturnRing);
 // uranus
 const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
 const uranusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_uranus.jpg') });
-const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
+uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
 uranus.castShadow = true;
 uranus.receiveShadow = true;
 uranus.position.set(0, 0, uranusDistance);
@@ -218,7 +256,7 @@ scene.add(uranusOrbit);
 // neptune
 const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
 const neptuneMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_neptune.jpg') });
-const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
 neptune.castShadow = true;
 neptune.receiveShadow = true;
 neptune.position.set(0, 0, neptuneDistance);
@@ -230,6 +268,9 @@ const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opac
 const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
 neptuneOrbit.rotation.x = Math.PI / 2;
 scene.add(neptuneOrbit);
+}
+
+createPlanets();
 
 // load spaceship from UFO_Empty.glb but declare it outside callback so I can uypdate position from animate function
 // spaceship from UFO_Empty.glb
@@ -276,9 +317,35 @@ let uranusAngle = Math.PI * 0.375;
 // neptune is 7/8
 let neptuneAngle = Math.PI * 0.75;
 
-let focusedPlanet = sunMesh;
+let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
 let lerpSpeed = 0.05; // Adjust this value to control the speed of the animation
+
+// add regenerate button to gui to reset the scene
+const regenerate = () => {
+  // remove all planets from scene
+  scene.remove(mercury);
+  scene.remove(venus);
+  scene.remove(earth);
+  scene.remove(moon);
+  scene.remove(mars);
+  scene.remove(jupiter);
+  scene.remove(saturn);
+  scene.remove(uranus);
+  scene.remove(neptune);
+  scene.remove(sunMesh);
+
+  camera.position.set(400 * scale, 250 * scale, -1600 * scale);
+
+  //reset light
+  scene.remove(sunLight);
+
+  // recreate all planets
+  createPlanets();
+}
+
+// add regenerate button to gui
+gui.add({ regenerate }, 'regenerate');
 
 function render() {
   requestAnimationFrame(render);
