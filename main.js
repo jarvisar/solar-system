@@ -12,15 +12,37 @@ import { FlyControls } from "./FlyControls.js";
 const scene = new THREE.Scene();
 
 var scale = 3;
+var enableOrbits = true;
 
 // add gui controls
 const gui = new GUI();
 const guicontrols = {
-  scale: 3
+  scale: 3,
+  enableOrbits: true,
 };
 
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
   scale = value;
+});
+
+gui.add(guicontrols, "enableOrbits").onChange((value) => {
+  if (value) {
+    enableOrbits = true;
+    // add all orbits
+    createOrbits();
+  } else {
+    enableOrbits = false;
+    // remove all orbits
+    scene.remove(mercuryOrbit);
+    scene.remove(venusOrbit);
+    scene.remove(earthOrbit);
+    scene.remove(moonOrbit);
+    scene.remove(marsOrbit);
+    scene.remove(jupiterOrbit);
+    scene.remove(saturnOrbit);
+    scene.remove(uranusOrbit);
+    scene.remove(neptuneOrbit);
+  }
 });
 
 // Create a camera and position it so it's looking at the scene center
@@ -85,6 +107,17 @@ var saturn;
 var uranus;
 var neptune;
 
+//define all orbits
+var mercuryOrbit;
+var venusOrbit;
+var earthOrbit;
+var moonOrbit;
+var marsOrbit;
+var jupiterOrbit;
+var saturnOrbit;
+var uranusOrbit;
+var neptuneOrbit;
+
 var sunLight;
 
 function createPlanets(){
@@ -125,13 +158,6 @@ function createPlanets(){
   mercury.position.set(mercuryDistance, 0, 0);
   scene.add(mercury);
 
-  // mercury orbit
-  const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .2, mercuryDistance + .2, 256);
-  const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
-  mercuryOrbit.rotation.x = Math.PI / 2;
-  scene.add(mercuryOrbit);
-
   //venus
   const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
   const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg') });
@@ -140,13 +166,6 @@ function createPlanets(){
   venus.receiveShadow = true;
   venus.position.set(-venusDistance, 0, 0);
   scene.add(venus);
-
-  // venus orbit
-  const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .2, venusDistance + .2, 256);
-  const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
-  venusOrbit.rotation.x = Math.PI / 2;
-  scene.add(venusOrbit);
 
   // earth
   const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
@@ -157,13 +176,6 @@ function createPlanets(){
   earth.position.set(0, 0, earthDistance);
   scene.add(earth);
 
-  // earth orbit
-  const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .2, earthDistance + .2, 256);
-  const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
-  earthOrbit.rotation.x = Math.PI / 2;
-  scene.add(earthOrbit);
-
   //moon
   const moonGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
   const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg') });
@@ -172,13 +184,6 @@ function createPlanets(){
   moon.receiveShadow = true;
   moon.position.set(0, 0, moonDistance);
   earth.add(moon);
-
-  // moon orbit
-  const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0.1, moonDistance + 0.1, 256);
-  const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
-  moonOrbit.rotation.x = Math.PI / 2;
-  earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
 
   // mars
   const marsGeometry = new THREE.SphereGeometry(14 * scale, 32, 32);
@@ -189,13 +194,6 @@ function createPlanets(){
   mars.position.set(0, 0, marsDistance);
   scene.add(mars);
 
-  // mars orbit
-  const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .2, marsDistance + .2, 256);
-  const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
-  marsOrbit.rotation.x = Math.PI / 2;
-  scene.add(marsOrbit);
-
   // jupiter
   const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
   const jupiterMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_jupiter.jpg') });
@@ -205,13 +203,6 @@ function createPlanets(){
   jupiter.position.set(0, 0, jupiterDistance);
   scene.add(jupiter);
 
-  // jupiter orbit
-  const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .2, jupiterDistance + .2, 256);
-  const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
-  jupiterOrbit.rotation.x = Math.PI / 2;
-  scene.add(jupiterOrbit);
-
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
   const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
@@ -220,13 +211,6 @@ function createPlanets(){
   saturn.receiveShadow = true;
   saturn.position.set(0, 0, saturnDistance);
   scene.add(saturn);
-
-  // saturn orbit
-  const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - .2, saturnDistance + .2, 256);
-  const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
-  saturnOrbit.rotation.x = Math.PI / 2;
-  scene.add(saturnOrbit);
 
   // saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
   const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 170 * scale, 256);
@@ -244,13 +228,6 @@ function createPlanets(){
   uranus.position.set(0, 0, uranusDistance);
   scene.add(uranus);
 
-  // uranus orbit
-  const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - .2, uranusDistance + .2, 256);
-  const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
-  uranusOrbit.rotation.x = Math.PI / 2;
-  scene.add(uranusOrbit);
-
   // neptune
   const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
   const neptuneMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_neptune.jpg') });
@@ -259,16 +236,75 @@ function createPlanets(){
   neptune.receiveShadow = true;
   neptune.position.set(0, 0, neptuneDistance);
   scene.add(neptune);
+}
 
+function createOrbits(){
+  // mercury orbit
+  const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - (.2 * (scale/2)), mercuryDistance + (.2 * (scale/2)), 256);
+  const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
+  mercuryOrbit.rotation.x = Math.PI / 2;
+  scene.add(mercuryOrbit);
+
+  // venus orbit
+  const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - (.2 * (scale/2)), venusDistance + (.2 * (scale/2)), 256);
+  const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
+  venusOrbit.rotation.x = Math.PI / 2;
+  scene.add(venusOrbit);
+
+  // earth orbit
+  const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - (.2 * (scale/2)), earthDistance + (.2 * (scale/2)), 256);
+  const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
+  earthOrbit.rotation.x = Math.PI / 2;
+  scene.add(earthOrbit);
+
+  // moon orbit
+  const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0(.1 * (scale/2)), moonDistance + 0(.1 * (scale/2)), 256);
+  const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
+  moonOrbit.rotation.x = Math.PI / 2;
+  earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
+
+  // mars orbit
+  const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - (.2 * (scale/2)), marsDistance + (.2 * (scale/2)), 256);
+  const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
+  marsOrbit.rotation.x = Math.PI / 2;
+  scene.add(marsOrbit);
+
+  // jupiter orbit
+  const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - (.2 * (scale/2)), jupiterDistance + (.2 * (scale/2)), 256);
+  const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
+  jupiterOrbit.rotation.x = Math.PI / 2;
+  scene.add(jupiterOrbit);
+  
+  // saturn orbit
+  const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - (.2 * (scale/2)), saturnDistance + (.2 * (scale/2)), 256);
+  const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
+  saturnOrbit.rotation.x = Math.PI / 2;
+  scene.add(saturnOrbit);
+
+  // uranus orbit
+  const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - (.2 * (scale/2)), uranusDistance + (.2 * (scale/2)), 256);
+  const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
+  uranusOrbit.rotation.x = Math.PI / 2;
+  scene.add(uranusOrbit);
+  
   // neptune orbit
-  const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - .2, neptuneDistance + .2, 256);
+  const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - (.2 * (scale/2)), neptuneDistance + (.2 * (scale/2)), 256);
   const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
+  neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
   neptuneOrbit.rotation.x = Math.PI / 2;
   scene.add(neptuneOrbit);
 }
 
 createPlanets();
+createOrbits();
 
 // load spaceship from UFO_Empty.glb but declare it outside callback so I can uypdate position from animate function
 // spaceship from UFO_Empty.glb
@@ -337,6 +373,7 @@ const regenerate = () => {
   scene.remove(mercuryOrbit);
   scene.remove(venusOrbit);
   scene.remove(earthOrbit);
+  scene.remove(moonOrbit);
   scene.remove(marsOrbit);
   scene.remove(jupiterOrbit);
   scene.remove(saturnOrbit);
@@ -350,6 +387,10 @@ const regenerate = () => {
 
   // recreate all planets
   createPlanets();
+  console.log(enableOrbits)
+  if (enableOrbits) {
+    createOrbits();
+  }
 }
 
 // add regenerate button to gui
