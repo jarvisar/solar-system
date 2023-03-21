@@ -345,11 +345,11 @@ let marsAngle = Math.PI * 1.5;
 // jupiter is 1/8
 let jupiterAngle = Math.PI * 0.25;
 // saturn is 5/8
-let saturnAngle = Math.PI * 0.625;
+let saturnAngle = 5 * (Math.PI / 4);
 // uranus is 3/8
-let uranusAngle = Math.PI * 0.375;
+let uranusAngle = 3 * (Math.PI / 4);
 // neptune is 7/8
-let neptuneAngle = Math.PI * 0.75;
+let neptuneAngle = 7 * (Math.PI / 4);
 
 let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
