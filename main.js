@@ -261,7 +261,7 @@ function createOrbits(){
   scene.add(earthOrbit);
 
   // moon orbit
-  const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0(.1 * (scale/2)), moonDistance + 0(.1 * (scale/2)), 256);
+  const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - (.1 * (scale/2)), moonDistance + (.1 * (scale/2)), 256);
   const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
   moonOrbit.rotation.x = Math.PI / 2;
