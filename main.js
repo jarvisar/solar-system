@@ -234,11 +234,11 @@ scene.add(neptuneOrbit);
 const loader = new GLTFLoader();
 const spaceship = new THREE.Object3D(); // create empty Object3D
 
-loader.load('public/UFO_Empty.glb', function (gltf) {
+loader.load('public/UFO_Empty_2.glb', function (gltf) {
   // use the loaded model to replace the empty Object3D
   const model = gltf.scene.children[0];
   model.scale.set(25.1, 25.1, 25.1);
-  model.position.set(0, 0, -1000);
+  model.position.set(0, -200, 0);
   model.rotation.set(0, 0, 0);
   spaceship.add(model);
 });
