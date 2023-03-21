@@ -389,7 +389,10 @@ function render() {
   // Update the controls and render the scene
   if (flyControls.enabled) {
     flyControls.update(clock.getDelta()); // update position using fly controls
-    spaceship.position.copy(camera.position);
+    // move spaceship inside sun to hide
+    spaceship.position.x = sunMesh.position.x;
+    spaceship.position.y = sunMesh.position.y + 200;
+    spaceship.position.z = sunMesh.position.z;
   } else {
     controls.update(clock.getDelta()); // update position using orbit controls
   }
