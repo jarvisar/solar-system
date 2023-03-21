@@ -40,44 +40,55 @@ class FlyControls extends EventDispatcher {
 		this.status = 0;
 
 		this.moveState = { up: 0, down: 0, left: 0, right: 0, forward: 0, back: 0, pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0 };
+		this.pressedKeys = {}; // initialize pressedKeys as an empty object
 		this.moveVector = new Vector3( 0, 0, 0 );
 		this.rotationVector = new Vector3( 0, 0, 0 );
 
 		this.keydown = function ( event ) {
 
 			if ( event.altKey ) {
-
-				return;
-
+			  return;
 			}
-
-			switch ( event.code ) {
-
-				case 'KeyW': this.movementSpeedMultiplier += 0.1; break;
-				case 'KeyS': this.movementSpeedMultiplier -= 0.1; break;
-
-				// right shift is faster
-				case 'ShiftLeft': this.movementSpeedMultiplier += 0.5; break;
-				// ctrl is slower
-				case 'ControlLeft': this.movementSpeedMultiplier -= 0.5; break;
-
-				case 'KeyA': this.moveState.rollLeft = 1; break;
-				case 'KeyD': this.moveState.rollRight = 1; break;
-
+		  
+			// Add pressed key to the list
+			this.pressedKeys[event.code] = true;
+		  
+			// Update movement speed multiplier based on pressed keys
+			if (this.pressedKeys['KeyW']) {
+			  this.movementSpeedMultiplier += 0.1;
 			}
-
+			if (this.pressedKeys['KeyS']) {
+			  this.movementSpeedMultiplier -= 0.1;
+			}
+			if (this.pressedKeys['ShiftLeft']) {
+			  this.movementSpeedMultiplier += 0.5;
+			}
+			if (this.pressedKeys['ControlLeft']) {
+			  this.movementSpeedMultiplier -= 0.5;
+			}
+		  
+			// Update roll state based on pressed keys
+			this.moveState.rollLeft = (this.pressedKeys['KeyA']) ? 1 : 0;
+			this.moveState.rollRight = (this.pressedKeys['KeyD']) ? 1 : 0;
+		  
 			this.updateMovementVector();
 			this.updateRotationVector();
-
-		};
+		  
+		  };
+		  
+		  this.keyup = function ( event ) {
+		  
+			// Remove released key from the list
+			delete this.pressedKeys[event.code];
+		  
+		  };
+		  
 
 		this.keyup = function ( event ) {
 
+			this.pressedKeys[event.code] = false;
+
 			switch ( event.code ) {
-
-				
-
-				
 
 				case 'KeyA': this.moveState.rollLeft = 0; break;
 				case 'KeyD': this.moveState.rollRight = 0; break;

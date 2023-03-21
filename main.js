@@ -353,7 +353,7 @@ let neptuneAngle = 7 * (Math.PI / 4);
 
 let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
-let lerpSpeed = 0.05; // Adjust this value to control the speed of the animation
+let lerpSpeed = 0.08; // Adjust this value to control the speed of the animation
 
 // add regenerate button to gui to reset the scene
 const regenerate = () => {
