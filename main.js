@@ -217,6 +217,8 @@ function createPlanets(){
   const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn_ring_alpha.png'), side: THREE.DoubleSide, transparent: true, repeat: 2 });
   const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
   saturnRing.rotation.x = Math.PI / 2;
+  saturnRing.receiveShadow = true;
+  saturnRing.castShadow = true;
   saturn.add(saturnRing);
 
   // uranus
@@ -600,3 +602,4 @@ const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft",
       konamiIndex = 0;
     }
   });
+
