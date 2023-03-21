@@ -39,6 +39,7 @@ class FlyControls extends EventDispatcher {
 
 		this.status = 0;
 
+
 		this.moveState = { up: 0, down: 0, left: 0, right: 0, forward: 0, back: 0, pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0 };
 		this.pressedKeys = {}; // initialize pressedKeys as an empty object
 		this.moveVector = new Vector3( 0, 0, 0 );
@@ -165,6 +166,18 @@ class FlyControls extends EventDispatcher {
 
 		};
 
+		this.speedUp = function ( event ) {
+			this.movementSpeedMultiplier += 0.1;
+			this.updateMovementVector();
+			this.updateRotationVector();
+		}
+
+		this.speedDown = function ( event ) {
+			this.movementSpeedMultiplier -= 0.1;
+			this.updateMovementVector();
+			this.updateRotationVector();
+		}
+
 		this.update = function ( delta ) {
 
 			const moveMult = delta * scope.movementSpeed * scope.movementSpeedMultiplier;
@@ -239,6 +252,7 @@ class FlyControls extends EventDispatcher {
 			this.domElement.removeEventListener( 'pointerdown', _pointerdown );
 			this.domElement.removeEventListener( 'pointermove', _pointermove );
 			this.domElement.removeEventListener( 'pointerup', _pointerup );
+			
 
 			window.removeEventListener( 'keydown', _keydown );
 			window.removeEventListener( 'keyup', _keyup );
@@ -250,11 +264,21 @@ class FlyControls extends EventDispatcher {
 		const _pointerup = this.pointerup.bind( this );
 		const _keydown = this.keydown.bind( this );
 		const _keyup = this.keyup.bind( this );
+		// check if speedUp or speedDown are clicked
+		const _speedUp = this.speedUp.bind( this );
+		const _speedDown = this.speedDown.bind( this );
 
 		this.domElement.addEventListener( 'contextmenu', contextmenu );
 		this.domElement.addEventListener( 'pointerdown', _pointerdown );
 		this.domElement.addEventListener( 'pointermove', _pointermove );
 		this.domElement.addEventListener( 'pointerup', _pointerup );
+		// event listener for speedUp and speedDown button on click
+
+		// get speedUp and speedDown button from html
+		const speedUp = document.getElementById("speedUp");
+		const speedDown = document.getElementById("speedDown");
+		speedUp.addEventListener( 'click', _speedUp );
+		speedDown.addEventListener( 'click', _speedDown );
 
 		window.addEventListener( 'keydown', _keydown );
 		window.addEventListener( 'keyup', _keyup );
