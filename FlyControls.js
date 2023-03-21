@@ -19,8 +19,6 @@ class FlyControls extends EventDispatcher {
 
 		this.movementSpeed = 1.0;
 		this.movementSpeedMultiplier = 1.0;
-		this.acceleration = 0.0;
-		this.speed = 1
 		this.rollSpeed = 0.005;
 
 		this.dragToLook = false;
@@ -48,68 +46,48 @@ class FlyControls extends EventDispatcher {
 		this.keydown = function ( event ) {
 
 			if ( event.altKey ) {
-		
+
 				return;
-		
+
 			}
-		
+
 			switch ( event.code ) {
-		
-				case 'KeyW':
-					this.acceleration = 0.001;
-					break;
-		
-				case 'KeyS':
-					this.acceleration = -0.001;
-					break;
-		
-				case 'rightshift':
-					this.acceleration *= 2;
-					break;
-		
-				case 'KeyA':
-					this.moveState.rollLeft = 1;
-					break;
-		
-				case 'KeyD':
-					this.moveState.rollRight = 1;
-					break;
-		
+
+				case 'KeyW': this.movementSpeedMultiplier += 0.1; break;
+				case 'KeyS': this.movementSpeedMultiplier -= 0.1; break;
+
+				// right shift is faster
+				case 'ShiftLeft': this.movementSpeedMultiplier += 0.5; break;
+				// ctrl is slower
+				case 'ControlLeft': this.movementSpeedMultiplier -= 0.5; break;
+
+				case 'KeyA': this.moveState.rollLeft = 1; break;
+				case 'KeyD': this.moveState.rollRight = 1; break;
+
 			}
-		
+
 			this.updateMovementVector();
 			this.updateRotationVector();
-		
+
 		};
-		
+
 		this.keyup = function ( event ) {
-		
+
 			switch ( event.code ) {
-		
-				case 'KeyW':
-				case 'KeyS':
-					this.acceleration = 0;
-					break;
-		
-				case 'rightshift':
-					this.acceleration /= 2;
-					break;
-		
-				case 'KeyA':
-					this.moveState.rollLeft = 0;
-					break;
-		
-				case 'KeyD':
-					this.moveState.rollRight = 0;
-					break;
-		
+
+				
+
+				
+
+				case 'KeyA': this.moveState.rollLeft = 0; break;
+				case 'KeyD': this.moveState.rollRight = 0; break;
+
 			}
-		
+
 			this.updateMovementVector();
 			this.updateRotationVector();
-		
+
 		};
-		
 
 		this.pointerdown = function ( event ) {
 
@@ -140,8 +118,10 @@ class FlyControls extends EventDispatcher {
 				const halfWidth = container.size[ 0 ] / 2;
 				const halfHeight = container.size[ 1 ] / 2;
 
-				this.moveState.yawLeft = - ( ( event.pageX - container.offset[ 0 ] ) - halfWidth ) / halfWidth;
-				this.moveState.pitchDown = ( ( event.pageY - container.offset[ 1 ] ) - halfHeight ) / halfHeight;
+				// make more sensitive
+				const sensitivity = 2.0; 
+				this.moveState.yawLeft = sensitivity * - ( ( event.pageX - container.offset[ 0 ] ) - halfWidth ) / halfWidth;
+        		this.moveState.pitchDown = sensitivity * ( ( event.pageY - container.offset[ 1 ] ) - halfHeight ) / halfHeight;
 
 				this.updateRotationVector();
 
@@ -176,34 +156,27 @@ class FlyControls extends EventDispatcher {
 
 		this.update = function ( delta ) {
 
-			// Update speed based on acceleration
-			this.speed += this.acceleration * delta;
-			if (this.speed < 0) this.speed = 0;
-		
-			// Update movement vector based on speed and direction
-			this.moveVector.z = - this.speed;
-			this.moveVector.applyQuaternion( this.object.quaternion );
-		
-			// Move the object
-			this.object.position.add( this.moveVector.multiplyScalar( delta ) );
-		
-			// Update the rotation based on mouse movement
-			this.rotationVector.x = this.moveState.pitchDown * delta * this.rollSpeed;
-			this.rotationVector.y = this.moveState.yawLeft * delta * this.rollSpeed;
-			this.rotationVector.z = this.moveState.rollRight - this.moveState.rollLeft;
-			this.object.rotateOnAxis( this.rotationVector, this.rotationVector.length() );
-		
+			const moveMult = delta * scope.movementSpeed * scope.movementSpeedMultiplier;
+			const rotMult = delta * scope.rollSpeed;
+
+			scope.object.translateX( scope.moveVector.x * moveMult );
+			scope.object.translateY( scope.moveVector.y * moveMult );
+			scope.object.translateZ( scope.moveVector.z * moveMult );
+
+			scope.tmpQuaternion.set( scope.rotationVector.x * rotMult, scope.rotationVector.y * rotMult, scope.rotationVector.z * rotMult, 1 ).normalize();
+			scope.object.quaternion.multiply( scope.tmpQuaternion );
+
 			if (
 				lastPosition.distanceToSquared( scope.object.position ) > EPS ||
 				8 * ( 1 - lastQuaternion.dot( scope.object.quaternion ) ) > EPS
 			) {
-		
+
 				scope.dispatchEvent( _changeEvent );
 				lastQuaternion.copy( scope.object.quaternion );
 				lastPosition.copy( scope.object.position );
-		
+
 			}
-		
+
 		};
 
 		this.updateMovementVector = function () {
@@ -215,7 +188,8 @@ class FlyControls extends EventDispatcher {
 			this.moveVector.z = ( - forward + this.moveState.back );
 
 			//console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
-
+			// update html p element id=speed with current speed
+			document.getElementById("speed").innerHTML = "Speed: " + this.movementSpeedMultiplier.toFixed(2);
 		};
 
 		this.updateRotationVector = function () {
