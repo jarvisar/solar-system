@@ -19,9 +19,7 @@ const guicontrols = {
   scale: 1
 };
 
-
-
-gui.add(guicontrols, "scale", 0, 10, 0.1).onChange((value) => {
+gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
   scale = value;
 });
 
@@ -91,183 +89,183 @@ var sunLight;
 
 function createPlanets(){
 
-mercuryDistance = 800 * scale;
-venusDistance = 1000 * scale;
-earthDistance = 1400 * scale;
-moonDistance = 200 * scale;
-marsDistance = 1800 * scale;
-jupiterDistance = 2600 * scale;
-saturnDistance = 3200 * scale;
-uranusDistance = 3800 * scale;
-neptuneDistance = 4400 * scale;
+  mercuryDistance = 800 * scale;
+  venusDistance = 1000 * scale;
+  earthDistance = 1400 * scale;
+  moonDistance = 200 * scale;
+  marsDistance = 1800 * scale;
+  jupiterDistance = 2600 * scale;
+  saturnDistance = 3200 * scale;
+  uranusDistance = 3800 * scale;
+  neptuneDistance = 4400 * scale;
 
-// Create a sphere for the Sun and add it to the scene as a light source
-sunLight = new THREE.PointLight(0xffffff, 1, 100000);
-sunLight.shadow.mapSize.width = 2048;
-sunLight.shadow.mapSize.height = 2048;
-sunLight.shadow.camera.near = 0.1;
-sunLight.shadow.camera.far = 1000;
-sunLight.position.set(0, 0, 0);
-sunLight.castShadow = true;
-scene.add(sunLight);
+  // Create a sphere for the Sun and add it to the scene as a light source
+  sunLight = new THREE.PointLight(0xffffff, 1, 100000 * (scale/3));
+  sunLight.shadow.mapSize.width = 4096;
+  sunLight.shadow.mapSize.height = 4096;
+  sunLight.shadow.camera.near = 0.1;
+  sunLight.shadow.camera.far = 1000;
+  sunLight.position.set(0, 0, 0);
+  sunLight.castShadow = true;
+  scene.add(sunLight);
 
-const sunGeometry = new THREE.SphereGeometry(200 * scale, 128, 128);
-const sunMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_sun.jpg'), emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: new THREE.TextureLoader().load('public/2k_sun.jpg') });
-sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
-sunMesh.position.set(0, 0, 0);
-scene.add(sunMesh);
+  const sunGeometry = new THREE.SphereGeometry(200 * scale, 128, 128);
+  const sunMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_sun.jpg'), emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: new THREE.TextureLoader().load('public/2k_sun.jpg') });
+  sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+  sunMesh.position.set(0, 0, 0);
+  scene.add(sunMesh);
 
 
-// mercury
-const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
-const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg') });
-mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
-mercury.castShadow = true;
-mercury.receiveShadow = true;
-mercury.position.set(mercuryDistance, 0, 0);
-scene.add(mercury);
+  // mercury
+  const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
+  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg') });
+  mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
+  mercury.castShadow = true;
+  mercury.receiveShadow = true;
+  mercury.position.set(mercuryDistance, 0, 0);
+  scene.add(mercury);
 
-// mercury orbit
-const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .2, mercuryDistance + .2, 256);
-const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
-mercuryOrbit.rotation.x = Math.PI / 2;
-scene.add(mercuryOrbit);
+  // mercury orbit
+  const mercuryOrbitGeometry = new THREE.RingGeometry(mercuryDistance - .2, mercuryDistance + .2, 256);
+  const mercuryOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const mercuryOrbit = new THREE.Mesh(mercuryOrbitGeometry, mercuryOrbitMaterial);
+  mercuryOrbit.rotation.x = Math.PI / 2;
+  scene.add(mercuryOrbit);
 
-//venus
-const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg') });
-venus = new THREE.Mesh(venusGeometry, venusMaterial);
-venus.castShadow = true;
-venus.receiveShadow = true;
-venus.position.set(-venusDistance, 0, 0);
-scene.add(venus);
+  //venus
+  const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
+  const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg') });
+  venus = new THREE.Mesh(venusGeometry, venusMaterial);
+  venus.castShadow = true;
+  venus.receiveShadow = true;
+  venus.position.set(-venusDistance, 0, 0);
+  scene.add(venus);
 
-// venus orbit
-const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .2, venusDistance + .2, 256);
-const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
-venusOrbit.rotation.x = Math.PI / 2;
-scene.add(venusOrbit);
+  // venus orbit
+  const venusOrbitGeometry = new THREE.RingGeometry(venusDistance - .2, venusDistance + .2, 256);
+  const venusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const venusOrbit = new THREE.Mesh(venusOrbitGeometry, venusOrbitMaterial);
+  venusOrbit.rotation.x = Math.PI / 2;
+  scene.add(venusOrbit);
 
-// earth
-const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg') });
-earth = new THREE.Mesh(earthGeometry, earthMaterial);
-earth.castShadow = true;
-earth.receiveShadow = true;
-earth.position.set(0, 0, earthDistance);
-scene.add(earth);
+  // earth
+  const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
+  const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg') });
+  earth = new THREE.Mesh(earthGeometry, earthMaterial);
+  earth.castShadow = true;
+  earth.receiveShadow = true;
+  earth.position.set(0, 0, earthDistance);
+  scene.add(earth);
 
-// earth orbit
-const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .2, earthDistance + .2, 256);
-const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
-earthOrbit.rotation.x = Math.PI / 2;
-scene.add(earthOrbit);
+  // earth orbit
+  const earthOrbitGeometry = new THREE.RingGeometry(earthDistance - .2, earthDistance + .2, 256);
+  const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
+  earthOrbit.rotation.x = Math.PI / 2;
+  scene.add(earthOrbit);
 
-//moon
-const moonGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg') });
-moon = new THREE.Mesh(moonGeometry, moonMaterial);
-moon.castShadow = true;
-moon.receiveShadow = true;
-moon.position.set(0, 0, moonDistance);
-earth.add(moon);
+  //moon
+  const moonGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
+  const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg') });
+  moon = new THREE.Mesh(moonGeometry, moonMaterial);
+  moon.castShadow = true;
+  moon.receiveShadow = true;
+  moon.position.set(0, 0, moonDistance);
+  earth.add(moon);
 
-// moon orbit
-const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0.1, moonDistance + 0.1, 256);
-const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
-moonOrbit.rotation.x = Math.PI / 2;
-earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
+  // moon orbit
+  const moonOrbitGeometry = new THREE.RingGeometry(moonDistance - 0.1, moonDistance + 0.1, 256);
+  const moonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
+  moonOrbit.rotation.x = Math.PI / 2;
+  earth.add(moonOrbit); // add moon orbit to the earth so that it orbits around the sun along with the earth
 
-// mars
-const marsGeometry = new THREE.SphereGeometry(14 * scale, 32, 32);
-const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
-mars = new THREE.Mesh(marsGeometry, marsMaterial);
-mars.castShadow = true;
-mars.receiveShadow = true;
-mars.position.set(0, 0, marsDistance);
-scene.add(mars);
+  // mars
+  const marsGeometry = new THREE.SphereGeometry(14 * scale, 32, 32);
+  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
+  mars = new THREE.Mesh(marsGeometry, marsMaterial);
+  mars.castShadow = true;
+  mars.receiveShadow = true;
+  mars.position.set(0, 0, marsDistance);
+  scene.add(mars);
 
-// mars orbit
-const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .2, marsDistance + .2, 256);
-const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
-marsOrbit.rotation.x = Math.PI / 2;
-scene.add(marsOrbit);
+  // mars orbit
+  const marsOrbitGeometry = new THREE.RingGeometry(marsDistance - .2, marsDistance + .2, 256);
+  const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
+  marsOrbit.rotation.x = Math.PI / 2;
+  scene.add(marsOrbit);
 
-// jupiter
-const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
-const jupiterMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_jupiter.jpg') });
-jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
-jupiter.castShadow = true;
-jupiter.receiveShadow = true;
-jupiter.position.set(0, 0, jupiterDistance);
-scene.add(jupiter);
+  // jupiter
+  const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
+  const jupiterMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_jupiter.jpg') });
+  jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
+  jupiter.castShadow = true;
+  jupiter.receiveShadow = true;
+  jupiter.position.set(0, 0, jupiterDistance);
+  scene.add(jupiter);
 
-// jupiter orbit
-const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .2, jupiterDistance + .2, 256);
-const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
-jupiterOrbit.rotation.x = Math.PI / 2;
-scene.add(jupiterOrbit);
+  // jupiter orbit
+  const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - .2, jupiterDistance + .2, 256);
+  const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
+  jupiterOrbit.rotation.x = Math.PI / 2;
+  scene.add(jupiterOrbit);
 
-// saturn
-const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
-const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
-saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
-saturn.castShadow = true;
-saturn.receiveShadow = true;
-saturn.position.set(0, 0, saturnDistance);
-scene.add(saturn);
+  // saturn
+  const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
+  const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
+  saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
+  saturn.castShadow = true;
+  saturn.receiveShadow = true;
+  saturn.position.set(0, 0, saturnDistance);
+  scene.add(saturn);
 
-// saturn orbit
-const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - .2, saturnDistance + .2, 256);
-const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
-saturnOrbit.rotation.x = Math.PI / 2;
-scene.add(saturnOrbit);
+  // saturn orbit
+  const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - .2, saturnDistance + .2, 256);
+  const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
+  saturnOrbit.rotation.x = Math.PI / 2;
+  scene.add(saturnOrbit);
 
-// saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
-const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 170 * scale, 256);
-const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn_ring_alpha.png'), side: THREE.DoubleSide, transparent: true, repeat: 2 });
-const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
-saturnRing.rotation.x = Math.PI / 2;
-saturn.add(saturnRing);
+  // saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
+  const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 170 * scale, 256);
+  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn_ring_alpha.png'), side: THREE.DoubleSide, transparent: true, repeat: 2 });
+  const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
+  saturnRing.rotation.x = Math.PI / 2;
+  saturn.add(saturnRing);
 
-// uranus
-const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
-const uranusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_uranus.jpg') });
-uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
-uranus.castShadow = true;
-uranus.receiveShadow = true;
-uranus.position.set(0, 0, uranusDistance);
-scene.add(uranus);
+  // uranus
+  const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
+  const uranusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_uranus.jpg') });
+  uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
+  uranus.castShadow = true;
+  uranus.receiveShadow = true;
+  uranus.position.set(0, 0, uranusDistance);
+  scene.add(uranus);
 
-// uranus orbit
-const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - .2, uranusDistance + .2, 256);
-const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
-uranusOrbit.rotation.x = Math.PI / 2;
-scene.add(uranusOrbit);
+  // uranus orbit
+  const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - .2, uranusDistance + .2, 256);
+  const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
+  uranusOrbit.rotation.x = Math.PI / 2;
+  scene.add(uranusOrbit);
 
-// neptune
-const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
-const neptuneMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_neptune.jpg') });
-neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
-neptune.castShadow = true;
-neptune.receiveShadow = true;
-neptune.position.set(0, 0, neptuneDistance);
-scene.add(neptune);
+  // neptune
+  const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
+  const neptuneMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_neptune.jpg') });
+  neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+  neptune.castShadow = true;
+  neptune.receiveShadow = true;
+  neptune.position.set(0, 0, neptuneDistance);
+  scene.add(neptune);
 
-// neptune orbit
-const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - .2, neptuneDistance + .2, 256);
-const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
-neptuneOrbit.rotation.x = Math.PI / 2;
-scene.add(neptuneOrbit);
+  // neptune orbit
+  const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - .2, neptuneDistance + .2, 256);
+  const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  const neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
+  neptuneOrbit.rotation.x = Math.PI / 2;
+  scene.add(neptuneOrbit);
 }
 
 createPlanets();
