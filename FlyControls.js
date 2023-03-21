@@ -279,6 +279,9 @@ class FlyControls extends EventDispatcher {
 		const speedDown = document.getElementById("speedDown");
 		speedUp.addEventListener( 'click', _speedUp );
 		speedDown.addEventListener( 'click', _speedDown );
+		// listen for mobile tap
+		speedUp.addEventListener( 'touchstart', _speedUp );
+		speedDown.addEventListener( 'touchstart', _speedDown );
 
 		window.addEventListener( 'keydown', _keydown );
 		window.addEventListener( 'keyup', _keyup );
