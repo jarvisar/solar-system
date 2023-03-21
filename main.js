@@ -16,7 +16,7 @@ var scale = 3;
 // add gui controls
 const gui = new GUI();
 const guicontrols = {
-  scale: 1
+  scale: 3
 };
 
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
@@ -332,6 +332,16 @@ const regenerate = () => {
   scene.remove(uranus);
   scene.remove(neptune);
   scene.remove(sunMesh);
+
+  //remove orbit lines
+  scene.remove(mercuryOrbit);
+  scene.remove(venusOrbit);
+  scene.remove(earthOrbit);
+  scene.remove(marsOrbit);
+  scene.remove(jupiterOrbit);
+  scene.remove(saturnOrbit);
+  scene.remove(uranusOrbit);
+  scene.remove(neptuneOrbit);
 
   camera.position.set(400 * scale, 250 * scale, -1600 * scale);
 
