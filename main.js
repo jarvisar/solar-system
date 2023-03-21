@@ -52,7 +52,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   400000 * scale
 );
-camera.position.set(400, 250, -1600);
+camera.position.set(400 * (scale), 300 * (scale), -1600 * (scale));
 
 window.addEventListener('resize', () => {
   // Update the camera's aspect ratio
