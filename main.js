@@ -451,6 +451,7 @@ this.update
       focusedPlanet = neptune;
     } else if (intersects[0].object.name.includes("Ufo")) {
       console.log('spaceship')
+      camera.position.copy(spaceship.position);
       focusedPlanet = spaceship;
     }
   }
