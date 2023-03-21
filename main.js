@@ -237,7 +237,7 @@ const spaceship = new THREE.Object3D(); // create empty Object3D
 loader.load('public/UFO_Empty_2.glb', function (gltf) {
   // use the loaded model to replace the empty Object3D
   const model = gltf.scene.children[0];
-  model.scale.set(25.1, 25.1, 25.1);
+  model.scale.set(18.1, 18.1, 18.1);
   model.position.set(0, -200, 0);
   model.rotation.set(0, 0, 0);
   spaceship.add(model);
@@ -274,7 +274,7 @@ let uranusAngle = Math.PI * 0.375;
 // neptune is 7/8
 let neptuneAngle = Math.PI * 0.75;
 
-let focusedPlanet = null;
+let focusedPlanet = sunMesh;
 let cameraTarget = new THREE.Vector3();
 let lerpSpeed = 0.05; // Adjust this value to control the speed of the animation
 
@@ -293,6 +293,7 @@ function render() {
   saturn.rotation.y -= 0.001;
   uranus.rotation.y -= 0.001;
   neptune.rotation.y -= 0.001;
+  spaceship.rotation.y += 0.001;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -365,15 +366,7 @@ function render() {
     // Lerp the camera position to the camera target
 
     // Update the controls target to the position of the focused planet
-    if (focusedPlanet == moon) {
-      controls.enabled = true;
-      flyControls.enabled = false;
-      //lerp controls
-      controls.target.x = lerp(controls.target.x, earth.position.x, lerpSpeed);
-      controls.target.y = lerp(controls.target.y, earth.position.y, lerpSpeed);
-      controls.target.z = lerp(controls.target.z, earth.position.z, lerpSpeed);
-    } // if target is spaceship, disable orbit controls and use flycontrols
-    else if (focusedPlanet == spaceship) {
+    if (focusedPlanet == spaceship) {
       controls.enabled = false;
       flyControls.enabled = true;
     } else {
@@ -383,6 +376,10 @@ function render() {
       controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
       controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
+      // move spaceship above planet
+      spaceship.position.x = focusedPlanet.position.x;
+      spaceship.position.y = focusedPlanet.position.y + focusedPlanet.geometry.parameters.radius + 240;
+      spaceship.position.z = focusedPlanet.position.z;
     }
     camera.position.copy(controls.object.position);
     camera.rotation.copy(controls.object.rotation);
@@ -416,7 +413,7 @@ renderer.domElement.addEventListener('click', function(event) {
   const intersects = raycaster.intersectObjects( scene.children, true );
   const spaceshipIntersects = raycaster.intersectObjects( spaceship.children, true );
 intersects.push(...spaceshipIntersects);
-
+this.update
   if (intersects.length > 0) {
     if (intersects[0].object == earth) {
       console.log('earth')
@@ -435,7 +432,7 @@ intersects.push(...spaceshipIntersects);
       focusedPlanet = mars;
     } else if (intersects[0].object == moon) {
       console.log('moon')
-      focusedPlanet = moon;
+      focusedPlanet = earth;
     } else if (intersects[0].object == jupiter) {
       console.log('jupiter')
       focusedPlanet = jupiter;
@@ -452,8 +449,16 @@ intersects.push(...spaceshipIntersects);
     } else if (intersects[0].object.name.includes("Ufo")) {
       console.log('spaceship')
       focusedPlanet = spaceship;
-    } else {
     }
+  }
+});
+
+// if escape key is pressed, change focused planet to null
+document.addEventListener('keydown', function(event) {
+  if (event.code === 'Escape') {
+    focusedPlanet = sunMesh;
+    flyControls.enabled = false;
+    controls.enabled = true;
   }
 });
 
