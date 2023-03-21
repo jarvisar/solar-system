@@ -18,6 +18,7 @@ class FlyControls extends EventDispatcher {
 		// API
 
 		this.movementSpeed = 1.0;
+		this.movementSpeedMultiplier = 1.0;
 		this.rollSpeed = 0.005;
 
 		this.dragToLook = false;
@@ -52,22 +53,13 @@ class FlyControls extends EventDispatcher {
 
 			switch ( event.code ) {
 
-				case 'ShiftLeft':
-				case 'ShiftRight': this.movementSpeedMultiplier = .1; break;
+				case 'KeyW': this.movementSpeedMultiplier = 2; break;
+				case 'KeyS': this.movementSpeedMultiplier = 0.3; break;
 
-				case 'KeyW': this.moveState.forward = 1; break;
-				case 'KeyS': this.moveState.back = 1; break;
+				case 'rightshift': this.movementSpeedMultiplier = 4; break;
 
-				
-
-				case 'ArrowUp': this.moveState.pitchUp = 1; break;
-				case 'ArrowDown': this.moveState.pitchDown = 1; break;
-
-				case 'ArrowLeft': this.moveState.yawLeft = 1; break;
-				case 'ArrowRight': this.moveState.yawRight = 1; break;
-
-				case 'KeyQ': this.moveState.rollLeft = 1; break;
-				case 'KeyE': this.moveState.rollRight = 1; break;
+				case 'KeyA': this.moveState.rollLeft = 1; break;
+				case 'KeyD': this.moveState.rollRight = 1; break;
 
 			}
 
@@ -80,22 +72,13 @@ class FlyControls extends EventDispatcher {
 
 			switch ( event.code ) {
 
-				case 'ShiftLeft':
-				case 'ShiftRight': this.movementSpeedMultiplier = 1; break;
+				case 'KeyW': this.movementSpeedMultiplier = 1; break;
+				case 'KeyS': this.movementSpeedMultiplier = 1; break;
 
-				case 'KeyW': this.moveState.forward = 0; break;
-				case 'KeyS': this.moveState.back = 0; break;
+				case 'rightshift': this.movementSpeedMultiplier = 1; break;
 
-				
-
-				case 'ArrowUp': this.moveState.pitchUp = 0; break;
-				case 'ArrowDown': this.moveState.pitchDown = 0; break;
-
-				case 'ArrowLeft': this.moveState.yawLeft = 0; break;
-				case 'ArrowRight': this.moveState.yawRight = 0; break;
-
-				case 'KeyQ': this.moveState.rollLeft = 0; break;
-				case 'KeyE': this.moveState.rollRight = 0; break;
+				case 'KeyA': this.moveState.rollLeft = 0; break;
+				case 'KeyD': this.moveState.rollRight = 0; break;
 
 			}
 
@@ -169,7 +152,7 @@ class FlyControls extends EventDispatcher {
 
 		this.update = function ( delta ) {
 
-			const moveMult = delta * scope.movementSpeed;
+			const moveMult = delta * scope.movementSpeed * scope.movementSpeedMultiplier;
 			const rotMult = delta * scope.rollSpeed;
 
 			scope.object.translateX( scope.moveVector.x * moveMult );
