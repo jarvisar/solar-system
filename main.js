@@ -492,9 +492,11 @@ function render() {
     if (focusedPlanet == spaceship) {
       controls.enabled = false;
       flyControls.enabled = true;
+      document.body.style.cursor = 'crosshair';
     } else {
       controls.enabled = true;
       flyControls.enabled = false;
+      document.body.style.cursor = 'default';
       //lerp controls
       controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
