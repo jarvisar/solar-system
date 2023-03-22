@@ -331,7 +331,7 @@ controls.enableDamping = true
 
 const flyControls = new FlyControls(camera, renderer.domElement);
 flyControls.movementSpeed = 100;
-flyControls.rollSpeed = Math.PI / 24;
+flyControls.rollSpeed = Math.PI / 12;
 flyControls.autoForward = true;
 
 
@@ -386,6 +386,9 @@ const regenerate = () => {
 
   //reset light
   scene.remove(sunLight);
+
+  flyControls.enabled = false;
+  controls.enabled = true;
 
   // recreate all planets
   createPlanets();
@@ -535,46 +538,46 @@ renderer.domElement.addEventListener('click', function(event) {
   raycaster.setFromCamera( mouse, camera );
   const intersects = raycaster.intersectObjects( scene.children, true );
   const spaceshipIntersects = raycaster.intersectObjects( spaceship.children, true );
-intersects.push(...spaceshipIntersects);
-this.update
-  if (intersects.length > 0) {
-    if (intersects[0].object == earth) {
-      console.log('earth')
-      focusedPlanet = earth;
-    } else if (intersects[0].object == venus) {
-      console.log('venus')
-      focusedPlanet = venus;
-    } else if (intersects[0].object == mercury) {
-      console.log('mercury')
-      focusedPlanet = mercury;
-    } else if (intersects[0].object == sunMesh) {
-      console.log('sun')
-      focusedPlanet = sunMesh;
-    } else if (intersects[0].object == mars) {
-      console.log('mars')
-      focusedPlanet = mars;
-    } else if (intersects[0].object == moon) {
-      console.log('moon')
-      focusedPlanet = earth;
-    } else if (intersects[0].object == jupiter) {
-      console.log('jupiter')
-      focusedPlanet = jupiter;
-    } else if (intersects[0].object == saturn) {
-      console.log('saturn')
-      focusedPlanet = saturn;
-    } else if (intersects[0].object == uranus) {
-      console.log(intersects[0].object)
-      console.log('uranus')
-      focusedPlanet = uranus;
-    } else if (intersects[0].object == neptune) {
-      console.log('neptune')
-      focusedPlanet = neptune;
-    } else if (intersects[0].object.name.includes("Ufo")) {
-      console.log('spaceship')
-      camera.position.copy(spaceship.position);
-      focusedPlanet = spaceship;
+  intersects.push(...spaceshipIntersects);
+  this.update
+    if (intersects.length > 0) {
+      if (intersects[0].object == earth) {
+        console.log('earth')
+        focusedPlanet = earth;
+      } else if (intersects[0].object == venus) {
+        console.log('venus')
+        focusedPlanet = venus;
+      } else if (intersects[0].object == mercury) {
+        console.log('mercury')
+        focusedPlanet = mercury;
+      } else if (intersects[0].object == sunMesh) {
+        console.log('sun')
+        focusedPlanet = sunMesh;
+      } else if (intersects[0].object == mars) {
+        console.log('mars')
+        focusedPlanet = mars;
+      } else if (intersects[0].object == moon) {
+        console.log('moon')
+        focusedPlanet = earth;
+      } else if (intersects[0].object == jupiter) {
+        console.log('jupiter')
+        focusedPlanet = jupiter;
+      } else if (intersects[0].object == saturn) {
+        console.log('saturn')
+        focusedPlanet = saturn;
+      } else if (intersects[0].object == uranus) {
+        console.log(intersects[0].object)
+        console.log('uranus')
+        focusedPlanet = uranus;
+      } else if (intersects[0].object == neptune) {
+        console.log('neptune')
+        focusedPlanet = neptune;
+      } else if (intersects[0].object.name.includes("Ufo")) {
+        console.log('spaceship')
+        camera.position.copy(spaceship.position);
+        focusedPlanet = spaceship;
+      }
     }
-  }
 });
 
 // if escape key is pressed, change focused planet to null
@@ -582,6 +585,7 @@ document.addEventListener('keydown', function(event) {
   if (event.code === 'Escape') {
     focusedPlanet = sunMesh;
     flyControls.enabled = false;
+    flyControls.
     controls.enabled = true;
   }
 });
