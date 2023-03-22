@@ -15,6 +15,7 @@ var scale = 3;
 var enableOrbits = true;
 var flightSensitivity = 12;
 var rotationSpeed = 1;
+var flightFov = 50;
 
 // add gui controls
 const gui = new GUI();
@@ -23,6 +24,7 @@ const guicontrols = {
   flightSensitivity: 12,
   enableOrbits: true,
   rotationSpeed: 1,
+  flightFov: 50,
 };
 
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
@@ -39,6 +41,11 @@ gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
 gui.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
   rotationSpeed = value;
 }).name("Rotation Speed");
+
+// add control for flightFov
+gui.add(guicontrols, "flightFov", 1, 100, 1).onChange((value) => {
+  flightFov = value;
+}).name("Flight FOV");
 
 gui.add(guicontrols, "enableOrbits").onChange((value) => {
   if (value) {
@@ -513,13 +520,16 @@ function render() {
       flyControls.enabled = true;
       document.body.style.cursor = 'crosshair';
       // increase fov when flying
-      camera.fov = 75
+      camera.fov = flightFov;
+      camera.updateProjectionMatrix();
+      
     } else {
       controls.enabled = true;
       flyControls.enabled = false;
       document.body.style.cursor = 'default';
       // decrease fov when not flying
       camera.fov = 45
+      camera.updateProjectionMatrix();
       //lerp controls
       controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
