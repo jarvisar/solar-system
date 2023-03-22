@@ -332,7 +332,6 @@ loader.load('public/UFO_Empty_2.glb', function (gltf) {
 
 // add the spaceship to the scene outside of the callback function
 scene.add(spaceship);
-
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -528,7 +527,7 @@ function render() {
     flyControls.update(clock.getDelta()); // update position using fly controls
     // move spaceship inside sun to hide
     spaceship.position.x = sunMesh.position.x;
-    spaceship.position.y = sunMesh.position.y + 200;
+    spaceship.position.y = sunMesh.position.y + 400000 * scale;
     spaceship.position.z = sunMesh.position.z;
   } else {
     controls.update(clock.getDelta()); // update position using orbit controls
@@ -599,7 +598,6 @@ document.addEventListener('keydown', function(event) {
   if (event.code === 'Escape') {
     focusedPlanet = sunMesh;
     flyControls.enabled = false;
-    flyControls.
     controls.enabled = true;
   }
 });
