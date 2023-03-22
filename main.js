@@ -13,12 +13,14 @@ const scene = new THREE.Scene();
 
 var scale = 3;
 var enableOrbits = true;
+var flightSensitivity = 12;
 
 // add gui controls
 const gui = new GUI();
 const guicontrols = {
   scale: 3,
   enableOrbits: true,
+  flightSensitivity: 12,
 };
 
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
@@ -43,6 +45,12 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(uranusOrbit);
     scene.remove(neptuneOrbit);
   }
+});
+
+// add control for flightSenstivity
+gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
+  flightSensitivity = value;
+  flyControls.rollSpeed = Math.PI / value;
 });
 
 // Create a camera and position it so it's looking at the scene center
@@ -493,10 +501,14 @@ function render() {
       controls.enabled = false;
       flyControls.enabled = true;
       document.body.style.cursor = 'crosshair';
+      // increase fov when flying
+      camera.fov = 75
     } else {
       controls.enabled = true;
       flyControls.enabled = false;
       document.body.style.cursor = 'default';
+      // decrease fov when not flying
+      camera.fov = 45
       //lerp controls
       controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
