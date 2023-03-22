@@ -56,16 +56,16 @@ class FlyControls extends EventDispatcher {
 		  
 			// Update movement speed multiplier based on pressed keys
 			if (this.pressedKeys['KeyW']) {
-			  this.movementSpeedMultiplier += 0.1;
-			}
-			if (this.pressedKeys['KeyS']) {
-			  this.movementSpeedMultiplier -= 0.1;
-			}
-			if (this.pressedKeys['ShiftLeft']) {
 			  this.movementSpeedMultiplier += 0.5;
 			}
-			if (this.pressedKeys['ControlLeft']) {
+			if (this.pressedKeys['KeyS']) {
 			  this.movementSpeedMultiplier -= 0.5;
+			}
+			if (this.pressedKeys['ShiftLeft']) {
+			  this.movementSpeedMultiplier += 0.1;
+			}
+			if (this.pressedKeys['ControlLeft']) {
+			  this.movementSpeedMultiplier -= 0.1;
 			}
 			// if space, then set to 0
 			if (this.pressedKeys['Space']) {
