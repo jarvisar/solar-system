@@ -14,7 +14,7 @@ const scene = new THREE.Scene();
 var scale = 3;
 var enableOrbits = true;
 var flightSensitivity = 12;
-var rotationSpeed = 1;
+var rotationSpeed = 0.5;
 var flightFov = 50;
 
 // add gui controls
@@ -23,7 +23,7 @@ const guicontrols = {
   scale: 3,
   flightSensitivity: 12,
   enableOrbits: true,
-  rotationSpeed: 1,
+  rotationSpeed: 0.5,
   flightFov: 50,
 };
 
