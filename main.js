@@ -14,6 +14,7 @@ const scene = new THREE.Scene();
 var scale = 3;
 var enableOrbits = true;
 var flightSensitivity = 12;
+var rotationSpeed = 1;
 
 // add gui controls
 const gui = new GUI();
@@ -21,6 +22,7 @@ const guicontrols = {
   scale: 3,
   flightSensitivity: 12,
   enableOrbits: true,
+  rotationSpeed: 1,
 };
 
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
@@ -32,6 +34,11 @@ gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
   flightSensitivity = value;
   flyControls.rollSpeed = Math.PI / value;
 }).name("Flight Sensitivity");
+
+// add control for rotationSpeed
+gui.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
+  rotationSpeed = value;
+}).name("Rotation Speed");
 
 gui.add(guicontrols, "enableOrbits").onChange((value) => {
   if (value) {
@@ -156,7 +163,6 @@ function createPlanets(){
   sunMesh.position.set(0, 0, 0);
   scene.add(sunMesh);
 
-
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
   const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg') });
@@ -221,8 +227,8 @@ function createPlanets(){
   scene.add(saturn);
 
   // saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
-  const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 170 * scale, 256);
-  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn_ring_alpha.png'), side: THREE.DoubleSide, transparent: true, repeat: 2 });
+  const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 180 * scale, 256);
+  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/saturn_rings.png'), side: THREE.DoubleSide, transparent: true, repeat: 2 });
   const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
   saturnRing.rotation.x = Math.PI / 2;
   saturnRing.receiveShadow = true;
@@ -334,7 +340,7 @@ loader.load('public/UFO_Empty_2.glb', function (gltf) {
 // add the spaceship to the scene outside of the callback function
 scene.add(spaceship);
 // add point light to spaceship
-const pointLight = new THREE.PointLight(0xffffff, 50, 90);
+const pointLight = new THREE.PointLight(0x3cd070 , 50, 90);
 pointLight.position.set(0, -130, 0);
 spaceship.add(pointLight);
 
@@ -418,18 +424,18 @@ function render() {
   requestAnimationFrame(render);
   
   // rotate sun in place
-  sunMesh.rotation.y -= 0.0005;
+  sunMesh.rotation.y -= 0.0005 * rotationSpeed;
   // rotate all planets in place
-  mercury.rotation.y -= 0.002;
-  venus.rotation.y -= 0.002;
-  earth.rotation.y -= 0.002;
-  moon.rotation.y -= 0.002;
-  mars.rotation.y -= 0.002;
-  jupiter.rotation.y -= 0.001;
-  saturn.rotation.y -= 0.001;
-  uranus.rotation.y -= 0.001;
-  neptune.rotation.y -= 0.001;
-  spaceship.rotation.y += 0.001;
+  mercury.rotation.y -= 0.002 * rotationSpeed;
+  venus.rotation.y -= 0.002 * rotationSpeed;
+  earth.rotation.y -= 0.002 * rotationSpeed;
+  moon.rotation.y -= 0.002 * rotationSpeed;
+  mars.rotation.y -= 0.002 * rotationSpeed;
+  jupiter.rotation.y -= 0.001 * rotationSpeed;
+  saturn.rotation.y -= 0.001 * rotationSpeed;
+  uranus.rotation.y -= 0.001 * rotationSpeed;
+  neptune.rotation.y -= 0.001 * rotationSpeed;
+  spaceship.rotation.y += 0.001 * rotationSpeed;
 
   // Update the position of mercury based on its distance from the center and current angle
   const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
@@ -477,15 +483,15 @@ function render() {
   neptune.position.set(neptuneX, 0, neptuneZ);
   
   // Increase the angle for the next frame
-  mercuryAngle += 0.00025;
-  venusAngle += 0.00025;
-  earthAngle += 0.0001;
-  marsAngle += 0.000125;
-  moonAngle += 0.001;
-  jupiterAngle += 0.0000625;
-  saturnAngle += 0.00003125;
-  uranusAngle += 0.000015625;
-  neptuneAngle += 0.000015625;
+  mercuryAngle += 0.00025 * rotationSpeed;
+  venusAngle += 0.00025 * rotationSpeed;
+  earthAngle += 0.0001 * rotationSpeed;
+  marsAngle += 0.000125 * rotationSpeed;
+  moonAngle += 0.001 * rotationSpeed;
+  jupiterAngle += 0.0000625 * rotationSpeed;
+  saturnAngle += 0.00003125 * rotationSpeed;
+  uranusAngle += 0.000015625 * rotationSpeed;
+  neptuneAngle += 0.000015625 * rotationSpeed;
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
