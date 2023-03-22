@@ -334,7 +334,7 @@ createOrbits();
 const loader = new GLTFLoader();
 const spaceship = new THREE.Object3D(); // create empty Object3D
 
-loader.load('public/UFO_Empty_2.glb', function (gltf) {
+loader.load('public/ufo.glb', function (gltf) {
   // use the loaded model to replace the empty Object3D
   const model = gltf.scene.children[0];
   model.scale.set(18.1, 18.1, 18.1);
@@ -607,7 +607,7 @@ renderer.domElement.addEventListener('click', function(event) {
       } else if (intersects[0].object == neptune) {
         console.log('neptune')
         focusedPlanet = neptune;
-      } else if (intersects[0].object.name.includes("Ufo")) {
+      } else if (intersects[0].object.name.includes("mesh_0")) { // UFO
         console.log('spaceship')
         camera.position.copy(spaceship.position);
         focusedPlanet = spaceship;
