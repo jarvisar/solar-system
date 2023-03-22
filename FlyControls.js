@@ -171,13 +171,13 @@ class FlyControls extends EventDispatcher {
 		};
 
 		this.speedUp = function ( event ) {
-			this.movementSpeedMultiplier += 0.1;
+			this.movementSpeedMultiplier += 0.5;
 			this.updateMovementVector();
 			this.updateRotationVector();
 		}
 
 		this.speedDown = function ( event ) {
-			this.movementSpeedMultiplier -= 0.1;
+			this.movementSpeedMultiplier -= 0.5;
 			this.updateMovementVector();
 			this.updateRotationVector();
 		}
