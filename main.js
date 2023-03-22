@@ -641,3 +641,11 @@ const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft",
     }
   });
 
+// event listener for toggle-flight-button
+document.getElementById('toggle-flight-button').addEventListener('click', function() {
+  if (focusedPlanet != spaceship){
+    focusedPlanet = spaceship;
+  } else {
+    focusedPlanet = sunMesh;
+  }
+});
