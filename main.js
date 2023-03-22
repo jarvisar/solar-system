@@ -327,11 +327,17 @@ loader.load('public/UFO_Empty_2.glb', function (gltf) {
   model.scale.set(18.1, 18.1, 18.1);
   model.position.set(0, -200, 0);
   model.rotation.set(0, 0, 0);
+
   spaceship.add(model);
 });
 
 // add the spaceship to the scene outside of the callback function
 scene.add(spaceship);
+// add point light to spaceship
+const pointLight = new THREE.PointLight(0xffffff, 50, 90);
+pointLight.position.set(0, -130, 0);
+spaceship.add(pointLight);
+
 // Add orbit controls to let the user rotate the camera around the scene
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
