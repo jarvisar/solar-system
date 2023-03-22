@@ -19,13 +19,19 @@ var flightSensitivity = 12;
 const gui = new GUI();
 const guicontrols = {
   scale: 3,
-  enableOrbits: true,
   flightSensitivity: 12,
+  enableOrbits: true,
 };
 
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
   scale = value;
-});
+}).name("System Scale");
+
+// add control for flightSenstivity
+gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
+  flightSensitivity = value;
+  flyControls.rollSpeed = Math.PI / value;
+}).name("Flight Sensitivity");
 
 gui.add(guicontrols, "enableOrbits").onChange((value) => {
   if (value) {
@@ -45,13 +51,7 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(uranusOrbit);
     scene.remove(neptuneOrbit);
   }
-});
-
-// add control for flightSenstivity
-gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
-  flightSensitivity = value;
-  flyControls.rollSpeed = Math.PI / value;
-});
+}).name("Enable Orbits");
 
 // Create a camera and position it so it's looking at the scene center
 const camera = new THREE.PerspectiveCamera(
