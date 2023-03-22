@@ -67,6 +67,10 @@ class FlyControls extends EventDispatcher {
 			if (this.pressedKeys['ControlLeft']) {
 			  this.movementSpeedMultiplier -= 0.5;
 			}
+			// if space, then set to 0
+			if (this.pressedKeys['Space']) {
+				this.movementSpeedMultiplier = 0;
+			}				
 		  
 			// Update roll state based on pressed keys
 			this.moveState.rollLeft = (this.pressedKeys['KeyA']) ? 1 : 0;
