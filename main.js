@@ -407,7 +407,7 @@ const regenerate = () => {
 }
 
 // add regenerate button to gui
-gui.add({ regenerate }, 'regenerate');
+gui.add({ regenerate }, 'regenerate').name("Regenerate System");
 
 function render() {
   requestAnimationFrame(render);
