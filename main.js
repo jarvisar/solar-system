@@ -11,6 +11,7 @@ import { FlyControls } from "./FlyControls.js";
 // Create a Three.js scene
 const scene = new THREE.Scene();
 
+// define control variables
 var scale = 3;
 var enableOrbits = true;
 var flightSensitivity = 12;
@@ -27,6 +28,7 @@ const guicontrols = {
   flightFov: 50,
 };
 
+// add control for scale
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
   scale = value;
 }).name("System Scale");
@@ -47,6 +49,7 @@ gui.add(guicontrols, "flightFov", 1, 100, 1).onChange((value) => {
   flightFov = value;
 }).name("Flight FOV");
 
+// add control for enableOrbits
 gui.add(guicontrols, "enableOrbits").onChange((value) => {
   if (value) {
     enableOrbits = true;
@@ -58,7 +61,7 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(mercuryOrbit);
     scene.remove(venusOrbit);
     scene.remove(earthOrbit);
-    scene.remove(moonOrbit);
+    earth.remove(moonOrbit);
     scene.remove(marsOrbit);
     scene.remove(jupiterOrbit);
     scene.remove(saturnOrbit);
