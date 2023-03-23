@@ -291,7 +291,7 @@ function createPlanets(){
 function createAsteroidBelts() {
   // asteroid ring between mars and jupiter
   const asteroidRingGeometry = new THREE.BufferGeometry();
-  const asteroidRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
+  const asteroidRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.45, transparent: true });
 
   const vertices = [];
   for (let i = 0; i < 3500 * numAsteroids; i++) {
@@ -523,8 +523,10 @@ function render() {
   saturn.rotation.y -= 0.001 * rotationSpeed;
   uranus.rotation.y -= 0.001 * rotationSpeed;
   neptune.rotation.y -= 0.001 * rotationSpeed;
-  asteroidRing.rotation.y -= 0.0001 * rotationSpeed;
+
+  asteroidRing.rotation.y -= 0.00004 * rotationSpeed;
   kuiperRing.rotation.y -= 0.00001 * rotationSpeed;
+
   spaceship.rotation.y += 0.001 * rotationSpeed;
 
   // Update the position of mercury based on its distance from the center and current angle
