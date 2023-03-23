@@ -497,6 +497,7 @@ const regenerate = () => {
 
   // recreate all planets
   createPlanets();
+  createOrbits();
   console.log(enableOrbits)
   if (enableOrbits) {
     createOrbits();
