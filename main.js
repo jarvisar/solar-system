@@ -715,7 +715,6 @@ render();
 
 const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"];
   let konamiIndex = 0;
-
   document.addEventListener("keydown", function(event) {
     if (event.code === konamiCode[konamiIndex]) {
       konamiIndex++;
