@@ -11,6 +11,14 @@ body {
   height: 100%;
 }
 
+button:hover {
+	filter: brightness(1.2);
+}
+
+button:active {
+	filter: brightness(0.8);
+}
+
 #toggle-flight-button {
 	position: fixed;
 	top: 10px;
