@@ -5,7 +5,7 @@
 <meta name="description" content="Solar System created with Three.js">
 <meta name="keywords" content="Three.js, Solar System, Space">
 <meta name="author" content="Jarvisar">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#000220">
 <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <link rel="apple-touch-icon" sizes="180x180" href="public/icon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="public/icon/favicon-32x32.png">
@@ -22,8 +22,13 @@
 <script type="module" src="main.js"></script>
 
 <!-- Add square button to top left corner with public/ufo.svg inside (change ufo to white) -->
-<button id="toggle-flight-button" title="Toggle Flight Mode" style="position: fixed; top: 10px; left: 10px; z-index: 10; background-color: #000000; border-radius: 5px; border: 1px solid white; cursor: pointer;" cursor="pointer">
+<button id="toggle-flight-button" title="Toggle Flight Mode" style="position: fixed; top: 10px; left: 10px; z-index: 10; background-color: #000220; border-radius: 5px; border: 1px solid white; cursor: pointer;" cursor="pointer">
 	<img src="public/ufo.svg" style="width: 45px; height: 45px; "></button>
+
+<!-- Add large horizontally centered white paragraph element to top of screen -->
+<div style="position: fixed; top: -15px; left: 50%; transform: translateX(-50%); z-index: 10;">
+	<p id="title" style="color: white; font-family: Roboto; border-radius: 5px; border: 1px solid white; padding: 5px; background-color: #000220; font-size: 24px;">Solar System</p></div>
+
 
 <!-- Display FlyControls Speed -->
 <div style="position: fixed; bottom: 10px; left: 10px; z-index: 10;">
@@ -33,6 +38,6 @@
 
 <!-- Add increase speed and decrease speed buttons if on screen less than 600 px wide. emit event if clicked-->
 <div id="speedButtons" style="position: fixed; bottom: 10px; right: 10px; z-index: 10;">
-	<button id="speedUp" style="background-color: #000000; color: white; border: 1px solid white; border-radius: 5px; padding: 5px; margin: 5px; cursor: pointer;" >Speed Up</button>
-	<button id="speedDown" style="background-color: #000000; color: white; border: 1px solid white; border-radius: 5px; padding: 5px; margin: 5px; cursor: pointer;" >Speed Down</button>
+	<button id="speedUp" style="background-color: #000220; color: white; border: 1px solid white; border-radius: 5px; padding: 5px; margin: 5px; cursor: pointer;" >Speed Up</button>
+	<button id="speedDown" style="background-color: #000220; color: white; border: 1px solid white; border-radius: 5px; padding: 5px; margin: 5px; cursor: pointer;" >Speed Down</button>
 </div>
