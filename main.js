@@ -164,15 +164,16 @@ var sunLight;
 
 function createPlanets(){
 
-  mercuryDistance = 800 * scale;
-  venusDistance = 1000 * scale;
-  earthDistance = 1400 * scale;
-  moonDistance = 200 * scale;
-  marsDistance = 1800 * scale;
-  jupiterDistance = 2600 * scale;
-  saturnDistance = 3200 * scale;
-  uranusDistance = 3800 * scale;
-  neptuneDistance = 4400 * scale;
+  mercuryDistance = 1200 * scale;
+venusDistance = 1500 * scale;
+earthDistance = 2100 * scale;
+moonDistance = 300 * scale;
+marsDistance = 2700 * scale;
+jupiterDistance = 3900 * scale;
+saturnDistance = 4800 * scale;
+uranusDistance = 5700 * scale;
+neptuneDistance = 6600 * scale;
+
 
   // Create a sphere for the Sun and add it to the scene as a light source
   sunLight = new THREE.PointLight(0xffffff, 1, 100000 * (scale/3));
