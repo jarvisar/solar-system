@@ -132,7 +132,8 @@ var saturn;
 var uranus;
 var neptune;
 
-var ring;
+var asteroidRing;
+var kuiperRing;
 
 //define all orbits
 var mercuryOrbit;
@@ -230,26 +231,26 @@ function createPlanets(){
   scene.add(jupiter);
 
   // asteroid ring
-  const ringGeometry = new THREE.BufferGeometry();
-  const ringMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
+  const asteroidRingGeometry = new THREE.BufferGeometry();
+  const asteroidRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
 
   const vertices = [];
   for (let i = 0; i < 3500; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const deviation = 200 * scale; // adjust this value to control the amount of deviation
-    const distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
-    const deviationX = THREE.MathUtils.randFloatSpread(deviation);
-    const deviationZ = THREE.MathUtils.randFloatSpread(deviation);
-    const x = Math.cos(angle) * distance + deviationX;
-    const y = THREE.MathUtils.randFloatSpread(20 * scale);
-    const z = Math.sin(angle) * distance + deviationZ;
+    var angle = Math.random() * Math.PI * 2;
+    var deviation = 200 * scale; // adjust this value to control the amount of deviation
+    var distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
+    var deviationX = THREE.MathUtils.randFloatSpread(deviation);
+    var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
+    var x = Math.cos(angle) * distance + deviationX;
+    var y = THREE.MathUtils.randFloatSpread(20 * scale);
+    var z = Math.sin(angle) * distance + deviationZ;
     vertices.push(x, y, z);
   }
 
-  ringGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-  ring = new THREE.Points(ringGeometry, ringMaterial);
-  ring.position.set(0, 0, 0); // place the ring between Mars and Jupiter
-  scene.add(ring);
+  asteroidRingGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  asteroidRing = new THREE.Points(asteroidRingGeometry, asteroidRingMaterial);
+  asteroidRing.position.set(0, 0, 0); // place the ring between Mars and Jupiter
+  scene.add(asteroidRing);
 
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
@@ -286,6 +287,28 @@ function createPlanets(){
   neptune.receiveShadow = true;
   neptune.position.set(0, 0, neptuneDistance);
   scene.add(neptune);
+
+  // asteroid ring
+  const kuiperRingGeometry = new THREE.BufferGeometry();
+  const kuiperRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.45, transparent: true });
+
+  const kuipervertices = [];
+  for (let i = 0; i < 3500; i++) {
+    var angle = Math.random() * Math.PI * 2;
+    var deviation = 750 * scale; // adjust this value to control the amount of deviation
+    var distance = THREE.MathUtils.randFloat(neptuneDistance + neptune.geometry.parameters.radius + (50 * scale), neptuneDistance + (scale * 1000));
+    var deviationX = THREE.MathUtils.randFloatSpread(deviation);
+    var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
+    var x = Math.cos(angle) * distance + deviationX;
+    var y = THREE.MathUtils.randFloatSpread(200 * scale);
+    var z = Math.sin(angle) * distance + deviationZ;
+    kuipervertices.push(x, y, z);
+  }
+
+  kuiperRingGeometry.setAttribute('position', new THREE.Float32BufferAttribute(kuipervertices, 3));
+  kuiperRing = new THREE.Points(kuiperRingGeometry, kuiperRingMaterial);
+  kuiperRing.position.set(0, 0, 0); // place the ring between Mars and Jupiter
+  scene.add(kuiperRing);
 }
 
 function createOrbits(){
@@ -423,7 +446,8 @@ const regenerate = () => {
   scene.remove(uranus);
   scene.remove(neptune);
   scene.remove(sunMesh);
-  scene.remove(ring)
+  scene.remove(asteroidRing);
+  scene.remove(kuiperRing);
 
   //remove orbit lines
   scene.remove(mercuryOrbit);
@@ -470,7 +494,7 @@ function render() {
   saturn.rotation.y -= 0.001 * rotationSpeed;
   uranus.rotation.y -= 0.001 * rotationSpeed;
   neptune.rotation.y -= 0.001 * rotationSpeed;
-  ring.rotation.y -= 0.0001 * rotationSpeed;
+  asteroidRing.rotation.y -= 0.0001 * rotationSpeed;
   spaceship.rotation.y += 0.001 * rotationSpeed;
 
   // Update the position of mercury based on its distance from the center and current angle
