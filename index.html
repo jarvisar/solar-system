@@ -20,18 +20,20 @@
 }</script>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script type="module" src="main.js"></script>
+<body style="background-color: black;">
+	<button id="toggle-flight-button" title="Toggle Flight Mode">
+		<img src="public/ufo.svg"></button>
+	<div>
+		<p id="title">Solar System</p>
+	</div>
+	<div>
+		<p id="speed"></p>
+	</div>
+	
+	<!-- Add increase speed and decrease speed buttons if on screen less than 600 px wide. emit event if clicked-->
+	<div id="speedButtons">
+		<button id="speedUp">Speed Up</button>
+		<button id="speedDown">Speed Down</button>
+	</div>
+</body>
 
-<button id="toggle-flight-button" title="Toggle Flight Mode">
-	<img src="public/ufo.svg"></button>
-<div>
-	<p id="title">Solar System</p>
-</div>
-<div>
-	<p id="speed"></p>
-</div>
-
-<!-- Add increase speed and decrease speed buttons if on screen less than 600 px wide. emit event if clicked-->
-<div id="speedButtons">
-	<button id="speedUp">Speed Up</button>
-	<button id="speedDown">Speed Down</button>
-</div>

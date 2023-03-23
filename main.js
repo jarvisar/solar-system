@@ -217,7 +217,7 @@ function createPlanets(){
 
   //add sphere for cloud layer just barely bigger than earth
   const cloudGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
-  const cloudMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/earth_clouds.png'), transparent: true, opacity: 0.7 });
+  const cloudMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/earth_clouds.png'), transparent: true, opacity: 0.6 });
   cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
   cloudMesh.position.set(0, 0, 0);
   earth.add(cloudMesh);
@@ -515,7 +515,7 @@ function render() {
   venus.rotation.y -= 0.002 * rotationSpeed;
 
   earth.rotation.y -= 0.002 * rotationSpeed;
-  cloudMesh.rotation.y += 0.00005 * rotationSpeed;
+  cloudMesh.rotation.y += 0.0001 * rotationSpeed;
   moon.rotation.y -= 0.002 * rotationSpeed;
 
   mars.rotation.y -= 0.002 * rotationSpeed;
