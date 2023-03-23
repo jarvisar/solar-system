@@ -14,20 +14,20 @@ const scene = new THREE.Scene();
 // define control variables
 var scale = 3;
 var enableOrbits = true;
-var flightSensitivity = 12;
+var flightSensitivity = 10;
 var rotationSpeed = 0.5;
 var flightFov = 50;
-var enableAsteroids = true;
+var numAsteroids = 1;
 
 // add gui controls
 const gui = new GUI();
 const guicontrols = {
   scale: 3,
-  flightSensitivity: 12,
+  flightSensitivity: 10,
   enableOrbits: true,
   rotationSpeed: 0.5,
   flightFov: 50,
-  enableAsteroids: true,
+  numAsteroids: 1,
 };
 
 // add control for scale
@@ -44,12 +44,20 @@ gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
 // add control for rotationSpeed
 gui.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
   rotationSpeed = value;
-}).name("Rotation Speed");
+}).name("Orbit Rotation Speed");
 
 // add control for flightFov
 gui.add(guicontrols, "flightFov", 1, 100, 1).onChange((value) => {
   flightFov = value;
 }).name("Flight FOV");
+
+// add control for numAsteroids
+gui.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
+  scene.remove(asteroidRing);
+  scene.remove(kuiperRing);
+  numAsteroids = value;
+  createAsteroidBelts();
+}).name("Asteroid Belt Density");
 
 // add control for enableOrbits
 gui.add(guicontrols, "enableOrbits").onChange((value) => {
@@ -71,18 +79,6 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(neptuneOrbit);
   }
 }).name("Enable Orbits");
-
-// add control for enableAsteroids
-gui.add(guicontrols, "enableAsteroids").onChange((value) => {
-  if (value) {
-    enableAsteroids = true;
-    createAsteroidBelts();
-  } else {
-    enableAsteroids = false;
-    scene.remove(asteroidRing);
-    scene.remove(kuiperRing);
-  }
-}).name("Enable Asteroids");
 
 // Create a camera and position it so it's looking at the scene center
 const camera = new THREE.PerspectiveCamera(
@@ -167,7 +163,7 @@ function createPlanets(){
   mercuryDistance = 1200 * scale;
 venusDistance = 1500 * scale;
 earthDistance = 2100 * scale;
-moonDistance = 300 * scale;
+moonDistance = 200 * scale;
 marsDistance = 2700 * scale;
 jupiterDistance = 3900 * scale;
 saturnDistance = 4800 * scale;
@@ -285,12 +281,12 @@ neptuneDistance = 6600 * scale;
 }
 
 function createAsteroidBelts() {
-  // asteroid ring
+  // asteroid ring between mars and jupiter
   const asteroidRingGeometry = new THREE.BufferGeometry();
   const asteroidRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
 
   const vertices = [];
-  for (let i = 0; i < 3500; i++) {
+  for (let i = 0; i < 3500 * numAsteroids; i++) {
     var angle = Math.random() * Math.PI * 2;
     var deviation = 200 * scale; // adjust this value to control the amount of deviation
     var distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
@@ -307,12 +303,12 @@ function createAsteroidBelts() {
   asteroidRing.position.set(0, 0, 0); // place the ring between Mars and Jupiter
   scene.add(asteroidRing);
 
-  // asteroid ring
+  // kuiper belt past neptune
   const kuiperRingGeometry = new THREE.BufferGeometry();
   const kuiperRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.45, transparent: true });
 
   const kuipervertices = [];
-  for (let i = 0; i < 3500; i++) {
+  for (let i = 0; i < 3500  * numAsteroids; i++) {
     var angle = Math.random() * Math.PI * 2;
     var deviation = 750 * scale; // adjust this value to control the amount of deviation
     var distance = THREE.MathUtils.randFloat(neptuneDistance + neptune.geometry.parameters.radius + (50 * scale), neptuneDistance + (scale * 1000));
