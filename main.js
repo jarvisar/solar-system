@@ -234,7 +234,7 @@ function createPlanets(){
   const ringMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
 
   const vertices = [];
-  for (let i = 0; i < 5000; i++) {
+  for (let i = 0; i < 3500; i++) {
     const angle = Math.random() * Math.PI * 2;
     const deviation = 200 * scale; // adjust this value to control the amount of deviation
     const distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
