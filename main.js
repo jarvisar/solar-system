@@ -17,6 +17,7 @@ var enableOrbits = true;
 var flightSensitivity = 12;
 var rotationSpeed = 0.5;
 var flightFov = 50;
+var enableAsteroids = true;
 
 // add gui controls
 const gui = new GUI();
@@ -26,6 +27,7 @@ const guicontrols = {
   enableOrbits: true,
   rotationSpeed: 0.5,
   flightFov: 50,
+  enableAsteroids: true,
 };
 
 // add control for scale
@@ -69,6 +71,18 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(neptuneOrbit);
   }
 }).name("Enable Orbits");
+
+// add control for enableAsteroids
+gui.add(guicontrols, "enableAsteroids").onChange((value) => {
+  if (value) {
+    enableAsteroids = true;
+    createAsteroidBelts();
+  } else {
+    enableAsteroids = false;
+    scene.remove(asteroidRing);
+    scene.remove(kuiperRing);
+  }
+}).name("Enable Asteroids");
 
 // Create a camera and position it so it's looking at the scene center
 const camera = new THREE.PerspectiveCamera(
@@ -230,28 +244,6 @@ function createPlanets(){
   jupiter.position.set(0, 0, jupiterDistance);
   scene.add(jupiter);
 
-  // asteroid ring
-  const asteroidRingGeometry = new THREE.BufferGeometry();
-  const asteroidRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
-
-  const vertices = [];
-  for (let i = 0; i < 3500; i++) {
-    var angle = Math.random() * Math.PI * 2;
-    var deviation = 200 * scale; // adjust this value to control the amount of deviation
-    var distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
-    var deviationX = THREE.MathUtils.randFloatSpread(deviation);
-    var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
-    var x = Math.cos(angle) * distance + deviationX;
-    var y = THREE.MathUtils.randFloatSpread(20 * scale);
-    var z = Math.sin(angle) * distance + deviationZ;
-    vertices.push(x, y, z);
-  }
-
-  asteroidRingGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-  asteroidRing = new THREE.Points(asteroidRingGeometry, asteroidRingMaterial);
-  asteroidRing.position.set(0, 0, 0); // place the ring between Mars and Jupiter
-  scene.add(asteroidRing);
-
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
   const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
@@ -288,6 +280,32 @@ function createPlanets(){
   neptune.position.set(0, 0, neptuneDistance);
   scene.add(neptune);
 
+  
+}
+
+function createAsteroidBelts() {
+  // asteroid ring
+  const asteroidRingGeometry = new THREE.BufferGeometry();
+  const asteroidRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
+
+  const vertices = [];
+  for (let i = 0; i < 3500; i++) {
+    var angle = Math.random() * Math.PI * 2;
+    var deviation = 200 * scale; // adjust this value to control the amount of deviation
+    var distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
+    var deviationX = THREE.MathUtils.randFloatSpread(deviation);
+    var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
+    var x = Math.cos(angle) * distance + deviationX;
+    var y = THREE.MathUtils.randFloatSpread(20 * scale);
+    var z = Math.sin(angle) * distance + deviationZ;
+    vertices.push(x, y, z);
+  }
+
+  asteroidRingGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  asteroidRing = new THREE.Points(asteroidRingGeometry, asteroidRingMaterial);
+  asteroidRing.position.set(0, 0, 0); // place the ring between Mars and Jupiter
+  scene.add(asteroidRing);
+
   // asteroid ring
   const kuiperRingGeometry = new THREE.BufferGeometry();
   const kuiperRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.45, transparent: true });
@@ -310,6 +328,7 @@ function createPlanets(){
   kuiperRing.position.set(0, 0, 0); // place the ring between Mars and Jupiter
   scene.add(kuiperRing);
 }
+
 
 function createOrbits(){
   // mercury orbit
@@ -378,6 +397,7 @@ function createOrbits(){
 
 createPlanets();
 createOrbits();
+createAsteroidBelts();
 
 // load spaceship from UFO_Empty.glb but declare it outside callback so I can uypdate position from animate function
 // spaceship from UFO_Empty.glb
@@ -495,6 +515,7 @@ function render() {
   uranus.rotation.y -= 0.001 * rotationSpeed;
   neptune.rotation.y -= 0.001 * rotationSpeed;
   asteroidRing.rotation.y -= 0.0001 * rotationSpeed;
+  kuiperRing.rotation.y -= 0.00001 * rotationSpeed;
   spaceship.rotation.y += 0.001 * rotationSpeed;
 
   // Update the position of mercury based on its distance from the center and current angle
