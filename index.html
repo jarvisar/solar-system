@@ -21,23 +21,17 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 <script type="module" src="main.js"></script>
 
-<!-- Add square button to top left corner with public/ufo.svg inside (change ufo to white) -->
-<button id="toggle-flight-button" title="Toggle Flight Mode" style="position: fixed; top: 10px; left: 10px; z-index: 10; background-color: #000220; border-radius: 5px; border: 1px solid white; cursor: pointer;" cursor="pointer">
-	<img src="public/ufo.svg" style="width: 45px; height: 45px; "></button>
-
-<!-- Add large horizontally centered white paragraph element to top of screen -->
-<div style="position: fixed; top: -15px; left: 50%; transform: translateX(-50%); z-index: 10;">
-	<p id="title" style="color: white; font-family: Roboto; border-radius: 5px; border: 1px solid white; padding: 5px; background-color: #000220; font-size: 24px;">Solar System</p></div>
-
-
-<!-- Display FlyControls Speed -->
-<div style="position: fixed; bottom: 10px; left: 10px; z-index: 10;">
-	<p id="speed" style="color: white; font-family: Roboto; border-radius: 5px; border: 1px solid white; padding: 5px;"></p>
+<button id="toggle-flight-button" title="Toggle Flight Mode">
+	<img src="public/ufo.svg"></button>
+<div>
+	<p id="title">Solar System</p>
+</div>
+<div>
+	<p id="speed"></p>
 </div>
 
-
 <!-- Add increase speed and decrease speed buttons if on screen less than 600 px wide. emit event if clicked-->
-<div id="speedButtons" style="position: fixed; bottom: 10px; right: 10px; z-index: 10;">
-	<button id="speedUp" style="background-color: #000220; color: white; border: 1px solid white; border-radius: 5px; padding: 5px; margin: 5px; cursor: pointer;" >Speed Up</button>
-	<button id="speedDown" style="background-color: #000220; color: white; border: 1px solid white; border-radius: 5px; padding: 5px; margin: 5px; cursor: pointer;" >Speed Down</button>
+<div id="speedButtons">
+	<button id="speedUp">Speed Up</button>
+	<button id="speedDown">Speed Down</button>
 </div>

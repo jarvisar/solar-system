@@ -10,3 +10,63 @@ body {
   width: 100%;
   height: 100%;
 }
+
+#toggle-flight-button {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	background-color: #000220;
+	border-radius: 5px;
+	border: 1px solid white;
+	cursor: pointer;
+}
+
+#toggle-flight-button img {
+	width: 45px;
+	height: 45px;
+}
+
+#title {
+	color: white;
+	font-family: Roboto;
+	border-radius: 5px;
+	border: 1px solid white;
+	padding: 5px;
+	background-color: #000220;
+	font-size: 24px;
+	position: fixed;
+	top: -15px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10;
+}
+
+#speed {
+	color: white;
+	font-family: Roboto;
+	border-radius: 5px;
+	border: 1px solid white;
+	padding: 5px;
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
+	z-index: 10;
+}
+
+#speedButtons {
+  position: fixed; 
+  bottom: 10px; 
+  right: 10px; 
+  z-index: 10;
+}
+
+#speedUp, #speedDown {
+  background-color: #000220; 
+  color: white; 
+  border: 1px solid white; 
+  border-radius: 5px; 
+  padding: 5px; 
+  margin: 5px; 
+  cursor: pointer;
+}
