@@ -132,6 +132,8 @@ var saturn;
 var uranus;
 var neptune;
 
+var ring;
+
 //define all orbits
 var mercuryOrbit;
 var venusOrbit;
@@ -226,6 +228,28 @@ function createPlanets(){
   jupiter.receiveShadow = true;
   jupiter.position.set(0, 0, jupiterDistance);
   scene.add(jupiter);
+
+  // asteroid ring
+  const ringGeometry = new THREE.BufferGeometry();
+  const ringMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.5, transparent: true });
+
+  const vertices = [];
+  for (let i = 0; i < 5000; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const deviation = 200 * scale; // adjust this value to control the amount of deviation
+    const distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
+    const deviationX = THREE.MathUtils.randFloatSpread(deviation);
+    const deviationZ = THREE.MathUtils.randFloatSpread(deviation);
+    const x = Math.cos(angle) * distance + deviationX;
+    const y = THREE.MathUtils.randFloatSpread(20 * scale);
+    const z = Math.sin(angle) * distance + deviationZ;
+    vertices.push(x, y, z);
+  }
+
+  ringGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  ring = new THREE.Points(ringGeometry, ringMaterial);
+  ring.position.set(0, 0, 0); // place the ring between Mars and Jupiter
+  scene.add(ring);
 
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
@@ -445,6 +469,7 @@ function render() {
   saturn.rotation.y -= 0.001 * rotationSpeed;
   uranus.rotation.y -= 0.001 * rotationSpeed;
   neptune.rotation.y -= 0.001 * rotationSpeed;
+  ring.rotation.y -= 0.0001 * rotationSpeed;
   spaceship.rotation.y += 0.001 * rotationSpeed;
 
   // Update the position of mercury based on its distance from the center and current angle
