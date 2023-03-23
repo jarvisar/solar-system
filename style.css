@@ -12,11 +12,19 @@ body {
 }
 
 button:hover {
-	filter: brightness(1.2);
+	filter: brightness(1.35);
 }
 
 button:active {
-	filter: brightness(0.8);
+	filter: brightness(0.7);
+}
+
+#dat-gui-container {
+	background-color: #000220;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	z-index: 10;
 }
 
 #toggle-flight-button {
@@ -25,7 +33,7 @@ button:active {
 	left: 10px;
 	z-index: 10;
 	background-color: #000220;
-	border-radius: 5px;
+	border-radius: 7.5px;
 	border: 1px solid white;
 	cursor: pointer;
 }
@@ -38,9 +46,9 @@ button:active {
 #title {
 	color: white;
 	font-family: Roboto;
-	border-radius: 5px;
+	border-radius: 7.5px;
 	border: 1px solid white;
-	padding: 5px;
+	padding: 4px 8px;
 	background-color: #000220;
 	font-size: 24px;
 	position: fixed;
@@ -53,7 +61,7 @@ button:active {
 #speed {
 	color: white;
 	font-family: Roboto;
-	border-radius: 5px;
+	border-radius: 7.5px;
 	border: 1px solid white;
 	padding: 5px;
 	position: fixed;
@@ -73,7 +81,7 @@ button:active {
   background-color: #000220; 
   color: white; 
   border: 1px solid white; 
-  border-radius: 5px; 
+  border-radius: 7.5px; 
   padding: 5px; 
   margin: 5px; 
   cursor: pointer;
