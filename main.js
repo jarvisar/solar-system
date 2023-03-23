@@ -301,7 +301,7 @@ function createAsteroidBelts() {
     var deviationX = THREE.MathUtils.randFloatSpread(deviation);
     var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
     var x = Math.cos(angle) * distance + deviationX;
-    var y = THREE.MathUtils.randFloatSpread(20 * scale);
+    var y = THREE.MathUtils.randFloatSpread(50 * scale);
     var z = Math.sin(angle) * distance + deviationZ;
     vertices.push(x, y, z);
   }
