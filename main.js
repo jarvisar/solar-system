@@ -161,14 +161,14 @@ var sunLight;
 function createPlanets(){
 
   mercuryDistance = 1200 * scale;
-venusDistance = 1500 * scale;
-earthDistance = 2100 * scale;
-moonDistance = 200 * scale;
-marsDistance = 2700 * scale;
-jupiterDistance = 3900 * scale;
-saturnDistance = 4800 * scale;
-uranusDistance = 5700 * scale;
-neptuneDistance = 6600 * scale;
+  venusDistance = 1500 * scale;
+  earthDistance = 2100 * scale;
+  moonDistance = 200 * scale;
+  marsDistance = 2700 * scale;
+  jupiterDistance = 3900 * scale;
+  saturnDistance = 4800 * scale;
+  uranusDistance = 5700 * scale;
+  neptuneDistance = 6600 * scale;
 
 
   // Create a sphere for the Sun and add it to the scene as a light source
