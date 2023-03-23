@@ -217,7 +217,7 @@ function createPlanets(){
 
   //add sphere for cloud layer just barely bigger than earth
   const cloudGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
-  const cloudMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/earth_clouds.png'), transparent: true, opacity: 0.5 });
+  const cloudMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/earth_clouds.png'), transparent: true, opacity: 0.7 });
   cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
   cloudMesh.position.set(0, 0, 0);
   earth.add(cloudMesh);
@@ -464,6 +464,7 @@ const regenerate = () => {
   scene.remove(mercury);
   scene.remove(venus);
   scene.remove(earth);
+  scene.remove(cloudMesh)
   scene.remove(moon);
   scene.remove(mars);
   scene.remove(jupiter);
@@ -658,7 +659,7 @@ renderer.domElement.addEventListener('click', function(event) {
   intersects.push(...spaceshipIntersects);
   this.update
     if (intersects.length > 0) {
-      if (intersects[0].object == earth) {
+      if (intersects[0].object == earth || intersects[0].object == cloudMesh) {
         console.log('earth')
         focusedPlanet = earth;
         document.getElementById("title").innerHTML = "Earth";
