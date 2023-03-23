@@ -34,23 +34,23 @@ const guicontrols = {
 // add control for scale
 gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
   scale = value;
-}).name("System Scale");
+}).name("System Scale").listen();
 
 // add control for flightSenstivity
 gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
   flightSensitivity = value;
   flyControls.rollSpeed = Math.PI / value;
-}).name("Flight Sensitivity");
+}).name("Flight Sensitivity").listen();
 
 // add control for rotationSpeed
 gui.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
   rotationSpeed = value;
-}).name("Orbit Rotation Speed");
+}).name("Orbit Rotation Speed").listen();
 
 // add control for flightFov
 gui.add(guicontrols, "flightFov", 1, 100, 1).onChange((value) => {
   flightFov = value;
-}).name("Flight FOV");
+}).name("Flight FOV").listen();
 
 // add control for numAsteroids
 gui.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
@@ -58,7 +58,7 @@ gui.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
   scene.remove(kuiperRing);
   numAsteroids = value;
   createAsteroidBelts();
-}).name("Asteroid Belt Density");
+}).name("Asteroid Belt Density").listen();
 
 // add control for enableOrbits
 gui.add(guicontrols, "enableOrbits").onChange((value) => {
@@ -79,7 +79,7 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(uranusOrbit);
     scene.remove(neptuneOrbit);
   }
-}).name("Enable Orbits");
+}).name("Enable Orbits").listen();
 
 // Create a camera and position it so it's looking at the scene center
 const camera = new THREE.PerspectiveCamera(
@@ -504,8 +504,27 @@ const regenerate = () => {
   }
 }
 
+const defaultSettings = () => {
+  // reset all values to default
+  scale = 3;
+  flightSensitivity = 10;
+  enableOrbits = true;
+  rotationSpeed = 0.5;
+  flightFov = 50;
+  numAsteroids = 1;
+  // reset controls
+  guicontrols.scale = scale;
+  guicontrols.flightSensitivity = flightSensitivity;
+  guicontrols.enableOrbits = enableOrbits;
+  guicontrols.rotationSpeed = rotationSpeed;
+  guicontrols.flightFov = flightFov;
+  guicontrols.numAsteroids = numAsteroids;
+  regenerate()
+}
+
 // add regenerate button to gui
 gui.add({ regenerate }, 'regenerate').name("Regenerate System");
+gui.add({ defaultSettings }, 'defaultSettings').name("Restore Default Settings");
 
 function render() {
   requestAnimationFrame(render);
