@@ -20,7 +20,8 @@ var flightFov = 50;
 var numAsteroids = 1;
 
 // add gui controls
-const gui = new GUI();
+const gui = new GUI({ autoPlace: false });
+document.getElementById('dat-gui-container').appendChild(gui.domElement); 
 const guicontrols = {
   scale: 3,
   flightSensitivity: 10,
