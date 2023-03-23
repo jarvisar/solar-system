@@ -665,7 +665,7 @@ renderer.domElement.addEventListener('click', function(event) {
       } else if (intersects[0].object == sunMesh) {
         console.log('sun')
         focusedPlanet = sunMesh;
-        document.getElementById("title").innerHTML = "Sol";
+        document.getElementById("title").innerHTML = "Sun";
       } else if (intersects[0].object == mars) {
         console.log('mars')
         focusedPlanet = mars;
