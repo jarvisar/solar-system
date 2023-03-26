@@ -11,3 +11,8 @@ Use W/S to increase and decrease the UFO. Use A/D to roll. Use the mouse to cont
 Press the escape key at any time to reset the camera and switch the focus back to the Sun.
 
 Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to access the latest deployment.
+
+
+<p align="center">
+  <img src="https://github.com/jarvisar/solar-system/blob/main/public/icon/android-chrome-192x192.png">
+</p>
