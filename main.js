@@ -186,7 +186,7 @@ function createPlanets(){
   mercuryDistance = 1200 * scale * 1.2
   venusDistance = 1500 * scale * 1.2
   earthDistance = 2100 * scale * 1.2
-  moonDistance = 200 * scale * 1.2
+  moonDistance = 200 * scale
   marsDistance = 2700 * scale * 1.2
   jupiterDistance = 4400 * scale * 1.2
   saturnDistance = 5300 * scale * 1.2
