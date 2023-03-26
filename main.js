@@ -503,7 +503,7 @@ const regenerate = () => {
     createOrbits();
   }
   focusedPlanet = sunMesh;
-  
+  dropdown.value = "sun";
 }
 
 const defaultSettings = () => {
