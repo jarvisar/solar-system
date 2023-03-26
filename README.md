@@ -1,6 +1,6 @@
 # Solar System & Flight Simulator
 
-ThreeJS Solar System
+My first real [Three.js](https://threejs.org/) project.
 
 Click on individual planets to move the camera and focus on that planet.
 
