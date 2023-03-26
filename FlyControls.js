@@ -18,7 +18,7 @@ class FlyControls extends EventDispatcher {
 		// API
 
 		this.movementSpeed = 1.0;
-		this.movementSpeedMultiplier = 3.0;
+		this.movementSpeedMultiplier = 5.0;
 		this.rollSpeed = 0.005;
 
 		this.rotationSpeed = 1;
