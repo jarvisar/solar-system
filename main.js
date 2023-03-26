@@ -527,6 +527,19 @@ gui.add({ regenerate }, 'regenerate').name("Regenerate System");
 gui.add({ defaultSettings }, 'defaultSettings').name("Restore Default Settings");
 gui.close()
 
+
+var reticule = document.getElementById("reticule");
+var reticuleX = window.innerWidth / 2;
+var reticuleY = window.innerHeight / 2;
+reticule.style.display = 'none';
+var xMouse;
+var yMouse;
+document.addEventListener("mousemove", function(event) {
+  xMouse = event.clientX;
+  yMouse = event.clientY;
+  // Update the position of the reticule here
+});
+
 function render() {
   requestAnimationFrame(render);
   
@@ -625,7 +638,13 @@ function render() {
     if (focusedPlanet == spaceship) {
       controls.enabled = false;
       flyControls.enabled = true;
+      reticule.style.display = 'block';
       document.body.style.cursor = 'crosshair';
+      //move reticule to mouse position 
+      reticuleX += (xMouse - reticuleX) * 0.06;
+      reticuleY += (yMouse - reticuleY) * 0.06;
+      reticule.style.left = reticuleX + "px";
+      reticule.style.top = reticuleY + "px";
       // increase fov when flying
       camera.fov = flightFov;
       camera.updateProjectionMatrix();
@@ -633,6 +652,7 @@ function render() {
     } else {
       controls.enabled = true;
       flyControls.enabled = false;
+      reticule.display = 'none';
       document.body.style.cursor = 'default';
       // decrease fov when not flying
       camera.fov = 45
@@ -727,18 +747,24 @@ renderer.domElement.addEventListener('click', function(event) {
       } else if (intersects[0].object.name.includes("mesh_0")) { // UFO
         console.log('spaceship')
         camera.position.copy(spaceship.position);
+        // enable flight reticule
+        reticule.style.display = "block";
         focusedPlanet = spaceship;
         document.getElementById("title").value = "spaceship";
       }
     }
 });
 
-// if escape key is pressed, change focused planet to null
+// if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Escape') {
+    // reset back to sun
     focusedPlanet = sunMesh;
     flyControls.enabled = false;
     controls.enabled = true;
+    // hide reticule
+    reticule.style.display = "none";
+    // change dropdown back to sun
     document.getElementById("title").value = "sun";
   }
 });
