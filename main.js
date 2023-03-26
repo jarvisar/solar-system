@@ -210,7 +210,7 @@ function createPlanets(){
 
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
-  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.3 * scale });
+  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.2 * scale });
   mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
   mercury.castShadow = true;
   mercury.receiveShadow = true;
@@ -228,7 +228,7 @@ function createPlanets(){
 
   // earth
   const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-  const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg'), bumpMap: new THREE.TextureLoader().load('public/earth_elevation.jpg'), bumpScale: 0.3 * scale });
+  const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg'), bumpMap: new THREE.TextureLoader().load('public/earth_elevation.jpg'), bumpScale: 0.2 * scale });
   earth = new THREE.Mesh(earthGeometry, earthMaterial);
   earth.castShadow = true;
   earth.receiveShadow = true;
@@ -244,7 +244,7 @@ function createPlanets(){
 
   //moon
   const moonGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-  const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg'), bumpMap: new THREE.TextureLoader().load('public/moon_elevation.jpg'), bumpScale: 0.2 * scale });
+  const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg'), bumpMap: new THREE.TextureLoader().load('public/moon_elevation.jpg'), bumpScale: 0.1 * scale });
   moon = new THREE.Mesh(moonGeometry, moonMaterial);
   moon.castShadow = true;
   moon.receiveShadow = true;
@@ -253,7 +253,7 @@ function createPlanets(){
 
   // mars
   const marsGeometry = new THREE.SphereGeometry(14 * scale, 128, 128);
-  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.3 * scale });
+  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.2 * scale });
   mars = new THREE.Mesh(marsGeometry, marsMaterial);
   mars.castShadow = true;
   mars.receiveShadow = true;
