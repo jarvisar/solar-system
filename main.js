@@ -525,6 +525,7 @@ const defaultSettings = () => {
 // add regenerate button to gui
 gui.add({ regenerate }, 'regenerate').name("Regenerate System");
 gui.add({ defaultSettings }, 'defaultSettings').name("Restore Default Settings");
+gui.close()
 
 function render() {
   requestAnimationFrame(render);
