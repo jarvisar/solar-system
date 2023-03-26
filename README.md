@@ -14,5 +14,5 @@ Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to acces
 
 
 <p align="left">
-  <img src="https://github.com/jarvisar/solar-system/blob/main/public/icon/android-chrome-192x192.png" alt="Three.js" title"Three.js">
+  [<img src="https://github.com/jarvisar/solar-system/blob/main/public/icon/android-chrome-192x192.png" alt="Three.js" title"Three.js">](https://threejs.org/)
 </p>
