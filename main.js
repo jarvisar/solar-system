@@ -51,7 +51,7 @@ systemSettings.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
 }).name("System Scale").listen();
 
 // add control for rotationSpeed
-systemSettings.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "rotationSpeed", 0, 10, 0.1).onChange((value) => {
   rotationSpeed = value;
 }).name("Orbit Rotation Speed").listen();
 
@@ -210,7 +210,7 @@ function createPlanets(){
 
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
-  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg') });
+  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.4 * scale });
   mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
   mercury.castShadow = true;
   mercury.receiveShadow = true;
@@ -252,8 +252,8 @@ function createPlanets(){
   earth.add(moon);
 
   // mars
-  const marsGeometry = new THREE.SphereGeometry(14 * scale, 32, 32);
-  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg') });
+  const marsGeometry = new THREE.SphereGeometry(14 * scale, 128, 128);
+  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.4 * scale });
   mars = new THREE.Mesh(marsGeometry, marsMaterial);
   mars.castShadow = true;
   mars.receiveShadow = true;
