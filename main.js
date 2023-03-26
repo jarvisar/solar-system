@@ -172,7 +172,6 @@ function createPlanets(){
   uranusDistance = 5700 * scale;
   neptuneDistance = 6600 * scale;
 
-
   // Create a sphere for the Sun and add it to the scene as a light source
   sunLight = new THREE.PointLight(0xffffff, 1, 100000 * (scale/3));
   sunLight.shadow.mapSize.width = 4096;
@@ -216,7 +215,7 @@ function createPlanets(){
   earth.position.set(0, 0, earthDistance);
   scene.add(earth);
 
-  //add sphere for cloud layer just barely bigger than earth
+  // add sphere for cloud layer just barely bigger than earth
   const cloudGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
   const cloudMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/earth_clouds.png'), transparent: true, opacity: 0.6 });
   cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
@@ -285,7 +284,6 @@ function createPlanets(){
   neptune.receiveShadow = true;
   neptune.position.set(0, 0, neptuneDistance);
   scene.add(neptune);
-
   
 }
 
@@ -576,8 +574,7 @@ function render() {
     { distance: saturnDistance, angle: saturnAngle, object: saturn },
     { distance: uranusDistance, angle: uranusAngle, object: uranus },
     { distance: neptuneDistance, angle: neptuneAngle, object: neptune }
-  ]
-
+  ];
   
   planets.forEach(planet => {
     const x = planet.distance * Math.cos(planet.angle);
