@@ -15,7 +15,7 @@ const scene = new THREE.Scene();
 var scale = 3;
 var enableOrbits = true;
 var flightSensitivity = 10;
-var rotationSpeed = 0.5;
+var rotationSpeed = 0.2;
 var flightFov = 50;
 var numAsteroids = 1;
 var flightRotationSpeed = 1;
@@ -39,7 +39,7 @@ const guicontrols = {
   scale: 3,
   flightSensitivity: 10,
   enableOrbits: true,
-  rotationSpeed: 0.5,
+  rotationSpeed: 0.2,
   flightFov: 50,
   numAsteroids: 1,
   flightRotationSpeed: 1,
