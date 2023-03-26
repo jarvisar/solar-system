@@ -21,6 +21,8 @@ class FlyControls extends EventDispatcher {
 		this.movementSpeedMultiplier = 3.0;
 		this.rollSpeed = 0.005;
 
+		this.rotationSpeed = 1;
+
 		this.dragToLook = false;
 		this.autoForward = false;
 
@@ -224,7 +226,7 @@ class FlyControls extends EventDispatcher {
 
 			this.rotationVector.x = ( - this.moveState.pitchDown + this.moveState.pitchUp );
 			this.rotationVector.y = ( - this.moveState.yawRight + this.moveState.yawLeft );
-			this.rotationVector.z = ( - this.moveState.rollRight + this.moveState.rollLeft );
+			this.rotationVector.z = ( - this.moveState.rollRight + this.moveState.rollLeft ) * scope.rotationSpeed;
 
 			//console.log( 'rotate:', [ this.rotationVector.x, this.rotationVector.y, this.rotationVector.z ] );
 

@@ -18,11 +18,14 @@ var flightSensitivity = 10;
 var rotationSpeed = 0.5;
 var flightFov = 50;
 var numAsteroids = 1;
+var flightRotationSpeed = 1;
 
 var dropdown = document.getElementById("title");
 
 // add gui controls
 const gui = new GUI({ autoPlace: false });
+const flightSettings = gui.addFolder("Flight Settings");
+const systemSettings = gui.addFolder("System Settings");
 document.getElementById('dat-gui-container').appendChild(gui.domElement); 
 const guicontrols = {
   scale: 3,
@@ -31,31 +34,21 @@ const guicontrols = {
   rotationSpeed: 0.5,
   flightFov: 50,
   numAsteroids: 1,
+  flightRotationSpeed: 1,
 };
 
 // add control for scale
-gui.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
   scale = value;
 }).name("System Scale").listen();
 
-// add control for flightSenstivity
-gui.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
-  flightSensitivity = value;
-  flyControls.rollSpeed = Math.PI / value;
-}).name("Flight Sensitivity").listen();
-
 // add control for rotationSpeed
-gui.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "rotationSpeed", 0.1, 10, 0.1).onChange((value) => {
   rotationSpeed = value;
 }).name("Orbit Rotation Speed").listen();
 
-// add control for flightFov
-gui.add(guicontrols, "flightFov", 1, 100, 1).onChange((value) => {
-  flightFov = value;
-}).name("Flight FOV").listen();
-
 // add control for numAsteroids
-gui.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
   scene.remove(asteroidRing);
   scene.remove(kuiperRing);
   numAsteroids = value;
@@ -63,7 +56,7 @@ gui.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
 }).name("Asteroid Belt Density").listen();
 
 // add control for enableOrbits
-gui.add(guicontrols, "enableOrbits").onChange((value) => {
+systemSettings.add(guicontrols, "enableOrbits").onChange((value) => {
   if (value) {
     enableOrbits = true;
     // add all orbits
@@ -82,6 +75,23 @@ gui.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(neptuneOrbit);
   }
 }).name("Enable Orbits").listen();
+
+// add control for flightSenstivity
+flightSettings.add(guicontrols, "flightSensitivity", 1, 20, 1).onChange((value) => {
+  flightSensitivity = value;
+  flyControls.rollSpeed = Math.PI / value;
+}).name("Flight Sensitivity").listen();
+
+// add control for flightFov
+flightSettings.add(guicontrols, "flightFov", 1, 100, 1).onChange((value) => {
+  flightFov = value;
+}).name("Flight FOV").listen();
+
+// add control for flightRotationSpeed
+flightSettings.add(guicontrols, "flightRotationSpeed", 0.1, 5, 0.1).onChange((value) => {
+  flightRotationSpeed = value;
+  flyControls.rotationSpeed = flightRotationSpeed;
+}).name("Flight Rotation Speed").listen();
 
 // Create a camera and position it so it's looking at the scene center
 const camera = new THREE.PerspectiveCamera(
