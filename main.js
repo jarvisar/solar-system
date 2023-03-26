@@ -22,10 +22,18 @@ var flightRotationSpeed = 1;
 
 var dropdown = document.getElementById("title");
 
+const customTheme = {
+  color: '#ffffff', // white text
+  backgroundColor: '#000220', // dark blue background
+  borderRadius: '7.5px',
+  borderColor: '#ffffff', // white border
+  fontSize: '24px',
+};
+
 // add gui controls
-const gui = new GUI({ autoPlace: false });
+const gui = new GUI({ autoPlace: false, theme: customTheme });
 const flightSettings = gui.addFolder("Flight Settings");
-const systemSettings = gui.addFolder("System Settings");
+const systemSettings = gui.addFolder("Solar System Settings");
 document.getElementById('dat-gui-container').appendChild(gui.domElement); 
 const guicontrols = {
   scale: 3,
