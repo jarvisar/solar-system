@@ -525,21 +525,22 @@ const defaultSettings = () => {
 // add regenerate button to gui
 gui.add({ regenerate }, 'regenerate').name("Regenerate System");
 gui.add({ defaultSettings }, 'defaultSettings').name("Restore Default Settings");
-gui.close()
+gui.close() // close gui by default
 
-
+// flight crosshair
 var reticule = document.getElementById("reticule");
 var reticuleX = window.innerWidth / 2;
 var reticuleY = window.innerHeight / 2;
-reticule.style.display = 'none';
+reticule.style.display = 'none'; // hide crosshair by default
 var xMouse;
 var yMouse;
 document.addEventListener("mousemove", function(event) {
   xMouse = event.clientX;
   yMouse = event.clientY;
-  // Update the position of the reticule here
+  // move crosshair in render()
 });
 
+// animate function (very important)
 function render() {
   requestAnimationFrame(render);
   
@@ -564,50 +565,25 @@ function render() {
 
   spaceship.rotation.y += 0.001 * rotationSpeed;
 
-  // Update the position of mercury based on its distance from the center and current angle
-  const mercuryX = mercuryDistance * Math.cos(mercuryAngle);
-  const mercuryZ = mercuryDistance * Math.sin(mercuryAngle);
-  mercury.position.set(mercuryX, 0, mercuryZ);
+  // create array of planets
+  const planets = [
+    { distance: mercuryDistance, angle: mercuryAngle, object: mercury },
+    { distance: venusDistance, angle: venusAngle, object: venus },
+    { distance: earthDistance, angle: earthAngle, object: earth },
+    { distance: moonDistance, angle: moonAngle, object: moon },
+    { distance: marsDistance, angle: marsAngle, object: mars },
+    { distance: jupiterDistance, angle: jupiterAngle, object: jupiter },
+    { distance: saturnDistance, angle: saturnAngle, object: saturn },
+    { distance: uranusDistance, angle: uranusAngle, object: uranus },
+    { distance: neptuneDistance, angle: neptuneAngle, object: neptune }
+  ]
 
-  // Update the position of venus based on its distance from the center and current angle
-  const venusX = venusDistance * Math.cos(venusAngle);
-  const venusZ = venusDistance * Math.sin(venusAngle);
-  venus.position.set(venusX, 0, venusZ);
-
-  // Update the position of earth based on its distance from the center and current angle
-  const earthX = earthDistance * Math.cos(earthAngle);
-  const earthZ = earthDistance * Math.sin(earthAngle);
-  earth.position.set(earthX, 0, earthZ);
-
-  // Update the position of the moon based on the position of the earth
-  const moonX = moonDistance * Math.cos(moonAngle);
-  const moonZ = moonDistance * Math.sin(moonAngle);
-  moon.position.set(moonX, 0, moonZ);
-
-  // Update the position of mars based on its distance from the center and current angle
-  const marsX = marsDistance * Math.cos(marsAngle);
-  const marsZ = marsDistance * Math.sin(marsAngle);
-  mars.position.set(marsX, 0, marsZ);
-
-  // Update the position of jupiter based on its distance from the center and current angle
-  const jupiterX = jupiterDistance * Math.cos(jupiterAngle);
-  const jupiterZ = jupiterDistance * Math.sin(jupiterAngle);
-  jupiter.position.set(jupiterX, 0, jupiterZ);
-
-  // Update the position of saturn based on its distance from the center and current angle
-  const saturnX = saturnDistance * Math.cos(saturnAngle);
-  const saturnZ = saturnDistance * Math.sin(saturnAngle);
-  saturn.position.set(saturnX, 0, saturnZ);
-
-  // Update the position of uranus based on its distance from the center and current angle
-  const uranusX = uranusDistance * Math.cos(uranusAngle);
-  const uranusZ = uranusDistance * Math.sin(uranusAngle);
-  uranus.position.set(uranusX, 0, uranusZ);
-
-  // Update the position of neptune based on its distance from the center and current angle
-  const neptuneX = neptuneDistance * Math.cos(neptuneAngle);
-  const neptuneZ = neptuneDistance * Math.sin(neptuneAngle);
-  neptune.position.set(neptuneX, 0, neptuneZ);
+  
+  planets.forEach(planet => {
+    const x = planet.distance * Math.cos(planet.angle);
+    const z = planet.distance * Math.sin(planet.angle);
+    planet.object.position.set(x, 0, z);
+  });
   
   // Increase the angle for the next frame
   mercuryAngle += 0.00025 * rotationSpeed;
@@ -622,8 +598,7 @@ function render() {
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
-    // if moon, add moon position to earth position
-    if (focusedPlanet === moon) {
+    if (focusedPlanet === moon) {    // if moon, add moon position to earth position
       cameraTarget.x = earth.position.x + 100;
       cameraTarget.y = earth.position.y + 100;
       cameraTarget.z = earth.position.z + 100;
@@ -632,10 +607,9 @@ function render() {
       cameraTarget.y = focusedPlanet.position.y + 100;
       cameraTarget.z = focusedPlanet.position.z + 100;
     }
-    // Lerp the camera position to the camera target
 
     // Update the controls target to the position of the focused planet
-    if (focusedPlanet == spaceship) {
+    if (focusedPlanet == spaceship) { // Flight enabled
       controls.enabled = false;
       flyControls.enabled = true;
       reticule.style.display = 'block';
@@ -648,11 +622,10 @@ function render() {
       // increase fov when flying
       camera.fov = flightFov;
       camera.updateProjectionMatrix();
-      
-    } else {
-      controls.enabled = true;
+    } else { // Flight disabled
+      controls.enabled = true; // enable orbit controls
       flyControls.enabled = false;
-      reticule.display = 'none';
+      reticule.display = 'none'; // hide reticule
       document.body.style.cursor = 'default';
       // decrease fov when not flying
       camera.fov = 45
@@ -685,6 +658,7 @@ function render() {
 }
 const clock = new THREE.Clock();
 
+// Lerp function for smooth transitions
 function lerp(start, end, alpha) {
   return (1 - alpha) * start + alpha * end;
 }
@@ -703,6 +677,7 @@ renderer.domElement.addEventListener('click', function(event) {
   intersects.push(...spaceshipIntersects);
   this.update
     if (intersects.length > 0) {
+      // Hide reticule by default
       reticule.style.display = 'none';
       if (intersects[0].object == earth || intersects[0].object == cloudMesh) {
         console.log('earth')
