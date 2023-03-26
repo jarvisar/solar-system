@@ -94,7 +94,7 @@ button:active {
   margin: 5px; 
   cursor: pointer;
 }
-
+ /* Flight Crosshair */
 #reticule {
 	width: 20px;
 	height: 20px;
@@ -112,6 +112,7 @@ button:active {
 	box-sizing: border-box;
 }
 
+/* Draw vertical and horizontal bars */
 #reticule::before, #reticule::after {
 	content: "";
 	position: absolute;
