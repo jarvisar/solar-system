@@ -703,6 +703,7 @@ renderer.domElement.addEventListener('click', function(event) {
   intersects.push(...spaceshipIntersects);
   this.update
     if (intersects.length > 0) {
+      reticule.style.display = 'none';
       if (intersects[0].object == earth || intersects[0].object == cloudMesh) {
         console.log('earth')
         focusedPlanet = earth;
