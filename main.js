@@ -155,6 +155,7 @@ document.body.appendChild(renderer.domElement);
 var sunMesh;
 var mercury;
 var venus;
+var venusAtmo;
 var earth;
 var cloudMesh;
 var moon;
@@ -219,12 +220,18 @@ function createPlanets(){
 
   //venus
   const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-  const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg') });
+  const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_surface.jpg'), bumpMap: new THREE.TextureLoader().load('public/venus_elevation.jpg'), bumpScale: 0.2 * scale });
   venus = new THREE.Mesh(venusGeometry, venusMaterial);
   venus.castShadow = true;
   venus.receiveShadow = true;
   venus.position.set(-venusDistance, 0, 0);
   scene.add(venus);
+
+  const venusAtmoGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
+  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg'), transparent: true, opacity: 0.75 });
+  venusAtmo = new THREE.Mesh(venusAtmoGeometry, venusAtmoMaterial);
+  venusAtmo.position.set(0, 0, 0);
+  venus.add(venusAtmo);
 
   // earth
   const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
@@ -482,6 +489,7 @@ const regenerate = () => {
   // remove all planets from scene
   scene.remove(mercury);
   scene.remove(venus);
+  scene.remove(venusAtmo);
   scene.remove(earth);
   scene.remove(cloudMesh)
   scene.remove(moon);
@@ -569,6 +577,7 @@ function render() {
   // rotate all planets in place
   mercury.rotation.y -= 0.002 * rotationSpeed;
   venus.rotation.y -= 0.002 * rotationSpeed;
+  venusAtmo.rotation.y += 0.0001 * rotationSpeed;
 
   earth.rotation.y -= 0.002 * rotationSpeed;
   cloudMesh.rotation.y += 0.0001 * rotationSpeed;
@@ -702,7 +711,7 @@ renderer.domElement.addEventListener('click', function(event) {
         console.log('earth')
         focusedPlanet = earth;
         dropdown.value = "earth";
-      } else if (intersects[0].object == venus) {
+      } else if (intersects[0].object == venus || intersects[0].object == venusAtmo) {
         console.log('venus')
         focusedPlanet = venus;
         dropdown.value = "venus";
