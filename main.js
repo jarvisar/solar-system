@@ -183,15 +183,15 @@ var sunLight;
 
 function createPlanets(){
 
-  mercuryDistance = 1200 * scale;
-  venusDistance = 1500 * scale;
-  earthDistance = 2100 * scale;
-  moonDistance = 200 * scale;
-  marsDistance = 2700 * scale;
-  jupiterDistance = 3900 * scale;
-  saturnDistance = 4800 * scale;
-  uranusDistance = 5700 * scale;
-  neptuneDistance = 6600 * scale;
+  mercuryDistance = 1200 * scale * 1.2
+  venusDistance = 1500 * scale * 1.2
+  earthDistance = 2100 * scale * 1.2
+  moonDistance = 200 * scale * 1.2
+  marsDistance = 2700 * scale * 1.2
+  jupiterDistance = 4400 * scale * 1.2
+  saturnDistance = 5300 * scale * 1.2
+  uranusDistance = 6200 * scale * 1.2
+  neptuneDistance = 7100 * scale * 1.2
 
   // Create a sphere for the Sun and add it to the scene as a light source
   sunLight = new THREE.PointLight(0xffffff, 1, 100000 * (scale/3));
@@ -323,7 +323,7 @@ function createAsteroidBelts() {
   for (let i = 0; i < 3500 * numAsteroids; i++) {
     var angle = Math.random() * Math.PI * 2;
     var deviation = 200 * scale; // adjust this value to control the amount of deviation
-    var distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 120), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 120));
+    var distance = THREE.MathUtils.randFloat(marsDistance + mars.geometry.parameters.radius + (scale * 350), jupiterDistance - jupiter.geometry.parameters.radius - (scale * 350));
     var deviationX = THREE.MathUtils.randFloatSpread(deviation);
     var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
     var x = Math.cos(angle) * distance + deviationX;
@@ -345,7 +345,7 @@ function createAsteroidBelts() {
   for (let i = 0; i < 3500  * numAsteroids; i++) {
     var angle = Math.random() * Math.PI * 2;
     var deviation = 750 * scale; // adjust this value to control the amount of deviation
-    var distance = THREE.MathUtils.randFloat(neptuneDistance + neptune.geometry.parameters.radius + (50 * scale), neptuneDistance + (scale * 1000));
+    var distance = THREE.MathUtils.randFloat(neptuneDistance + neptune.geometry.parameters.radius + (50 * scale), neptuneDistance + (scale * 1500));
     var deviationX = THREE.MathUtils.randFloatSpread(deviation);
     var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
     var x = Math.cos(angle) * distance + deviationX;
