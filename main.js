@@ -235,7 +235,9 @@ function createPlanets(){
 
   // earth
   const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-  const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_earth.jpg'), bumpMap: new THREE.TextureLoader().load('public/earth_elevation.jpg'), bumpScale: 0.2 * scale, specularMap: new THREE.TextureLoader().load('public/2k_earth_specular_map.tif'), specular: new THREE.Color('grey'), emissive: 0xffffff, emissiveIntensity: 0.2, emissiveMap: new THREE.TextureLoader().load('public/2k_earth_nightmap.jpg') });
+  const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/8k_earth_daymap.jpg'), bumpMap: new THREE.TextureLoader().load('public/earth_elevation.jpg'), bumpScale: 0.2 * scale, 
+  specularMap: new THREE.TextureLoader().load('public/2k_earth_specular_map.tif'), specular: new THREE.Color('grey'), 
+  emissiveMap: new THREE.TextureLoader().load('public/2k_earth_nightmap.jpg'), emissive: 0xffffff, emissiveIntensity: 0.2 });
   earth = new THREE.Mesh(earthGeometry, earthMaterial);
   earth.castShadow = true;
   earth.receiveShadow = true;
