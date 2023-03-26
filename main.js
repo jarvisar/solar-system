@@ -500,6 +500,7 @@ const regenerate = () => {
   if (enableOrbits) {
     createOrbits();
   }
+  focusedPlanet = sunMesh;
 }
 
 const defaultSettings = () => {
