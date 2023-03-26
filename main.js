@@ -655,6 +655,7 @@ function render() {
     } else { // Flight disabled
       controls.enabled = true; // enable orbit controls
       flyControls.enabled = false;
+      flyControls.movementSpeedMultiplier = 5; // reset speed
       reticule.display = 'none'; // hide reticule
       document.body.style.cursor = 'default';
       // decrease fov when not flying
@@ -768,6 +769,7 @@ document.addEventListener('keydown', function(event) {
     focusedPlanet = sunMesh;
     flyControls.enabled = false;
     controls.enabled = true;
+    flyControls.movementSpeedMultiplier = 5;
     // hide reticule
     reticule.style.display = "none";
     // change dropdown back to sun
