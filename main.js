@@ -685,49 +685,49 @@ renderer.domElement.addEventListener('click', function(event) {
       if (intersects[0].object == earth || intersects[0].object == cloudMesh) {
         console.log('earth')
         focusedPlanet = earth;
-        document.getElementById("title").innerHTML = "Earth";
+        document.getElementById("title").value = "earth";
       } else if (intersects[0].object == venus) {
         console.log('venus')
         focusedPlanet = venus;
-        document.getElementById("title").innerHTML = "Venus";
+        document.getElementById("title").value = "venus";
       } else if (intersects[0].object == mercury) {
         console.log('mercury')
         focusedPlanet = mercury;
-        document.getElementById("title").innerHTML = "Mercury";
+        document.getElementById("title").value = "mercury";
       } else if (intersects[0].object == sunMesh) {
         console.log('sun')
         focusedPlanet = sunMesh;
-        document.getElementById("title").innerHTML = "Sun";
+        document.getElementById("title").value = "sun";
       } else if (intersects[0].object == mars) {
         console.log('mars')
         focusedPlanet = mars;
-        document.getElementById("title").innerHTML = "Mars";
+        document.getElementById("title").value = "mars";
       } else if (intersects[0].object == moon) {
         console.log('moon')
         focusedPlanet = earth;
-        document.getElementById("title").innerHTML = "Moon";
+        document.getElementById("title").value = "moon";
       } else if (intersects[0].object == jupiter) {
         console.log('jupiter')
         focusedPlanet = jupiter;
-        document.getElementById("title").innerHTML = "Jupiter";
+        document.getElementById("title").value = "jupiter";
       } else if (intersects[0].object == saturn) {
         console.log('saturn')
         focusedPlanet = saturn;
-        document.getElementById("title").innerHTML = "Saturn";
+        document.getElementById("title").value = "saturn";
       } else if (intersects[0].object == uranus) {
         console.log(intersects[0].object)
         console.log('uranus')
         focusedPlanet = uranus;
-        document.getElementById("title").innerHTML = "Uranus";
+        document.getElementById("title").value = "uranus";
       } else if (intersects[0].object == neptune) {
         console.log('neptune')
         focusedPlanet = neptune;
-        document.getElementById("title").innerHTML = "Neptune";
+        document.getElementById("title").value = "neptune";
       } else if (intersects[0].object.name.includes("mesh_0")) { // UFO
         console.log('spaceship')
         camera.position.copy(spaceship.position);
         focusedPlanet = spaceship;
-        document.getElementById("title").innerHTML = "In Flight";
+        document.getElementById("title").value = "spaceship";
       }
     }
 });
@@ -738,10 +738,36 @@ document.addEventListener('keydown', function(event) {
     focusedPlanet = sunMesh;
     flyControls.enabled = false;
     controls.enabled = true;
-    document.getElementById("title").innerHTML = "Solar System";
+    document.getElementById("title").value = "sun";
   }
 });
 
+// add event listener for "title" select element on change
+document.getElementById("title").addEventListener("change", function() {
+  if (this.value == "earth") {
+    focusedPlanet = earth;
+  } else if (this.value == "venus") {
+    focusedPlanet = venus;
+  } else if (this.value == "mercury") {
+    focusedPlanet = mercury;
+  } else if (this.value == "sun") {
+    focusedPlanet = sunMesh;
+  } else if (this.value == "mars") {
+    focusedPlanet = mars;
+  } else if (this.value == "moon") {
+    focusedPlanet = earth;
+  } else if (this.value == "jupiter") {
+    focusedPlanet = jupiter;
+  } else if (this.value == "saturn") {
+    focusedPlanet = saturn;
+  } else if (this.value == "uranus") {
+    focusedPlanet = uranus;
+  } else if (this.value == "neptune") {
+    focusedPlanet = neptune;
+  } else if (this.value == "spaceship") {
+    focusedPlanet = spaceship;
+  }
+});
 
 render();
 

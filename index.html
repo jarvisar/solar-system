@@ -25,7 +25,21 @@
 	<button id="toggle-flight-button" title="Toggle Flight Mode">
 		<img src="public/ufo.svg"></button>
 	<div>
-		<p id="title">Solar System</p>
+		<select id="title" style="text-align: center;">
+			<option value="sun">Sun</option>
+			<option value="mercury">Mercury</option>
+			<option value="venus">Venus</option>
+			<option value="earth">Earth</option>
+			<option value="moon">Moon</option>
+			<option value="mars">Mars</option>
+			<option value="jupiter">Jupiter</option>
+			<option value="saturn">Saturn</option>
+			<option value="uranus">Uranus</option>
+			<option value="neptune">Neptune</option>
+			<!-- Spaceship ption should not appear in drop down -->
+			<option value="spaceship" hidden>Flight Mode</option>
+			<!-- <option value="pluto">Pluto</option> -->
+		</select>
 	</div>
 	<div>
 		<p id="speed"></p>
