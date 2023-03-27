@@ -1076,34 +1076,48 @@ document.addEventListener("keydown", function(event) {
 
 document.addEventListener("keydown", function(event) {
   if (focusedPlanet == spaceship) return;
-  if (event.code === "KeyW") {
+  if (event.code === "KeyR") {
     moveForward = true;
-  } else if (event.code === "KeyS") {
+  } else if (event.code === "KeyF") {
     moveBackward = true;
   } else if (event.code === "KeyA") {
     moveLeft = true;
   } else if (event.code === "KeyD") {
     moveRight = true;
-  } else if (event.code === "Space") {
+  } else if (event.code === "KeyW") {
     moveUp = true;
-  } else if (event.code === "ShiftLeft") {
+  } else if (event.code === "KeyS") {
     moveDown = true;
   }
 });
 
 document.addEventListener("keyup", function(event) {
   if (focusedPlanet == spaceship) return;
-  if (event.code === "KeyW") {
+  if (event.code === "KeyR") {
     moveForward = false;
-  } else if (event.code === "KeyS") {
+  } else if (event.code === "KeyF") {
     moveBackward = false;
   } else if (event.code === "KeyA") {
     moveLeft = false;
   } else if (event.code === "KeyD") {
     moveRight = false;
-  } else if (event.code === "Space") {
+  } else if (event.code === "KeyW") {
     moveUp = false;
-  } else if (event.code === "ShiftLeft") {
+  } else if (event.code === "KeyS") {
     moveDown = false;
+  }
+});
+
+// Space sets rotationSpeed to 0 if flight is disabled
+var previousRotationSpeed;
+document.addEventListener("keydown", function(event) {
+  if (event.code === "Space") {
+    if (focusedPlanet == spaceship) return;
+    if (rotationSpeed == 0) { // if rotationSpeed is already 0, set it to previousRotationSpeed
+      rotationSpeed = previousRotationSpeed;
+    } else {
+      previousRotationSpeed = rotationSpeed;
+      rotationSpeed = 0;
+    }
   }
 });
