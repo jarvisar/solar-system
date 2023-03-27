@@ -816,21 +816,9 @@ function render() {
 
     // Update the controls target to the position of the focused planet
     if (focusedPlanet == spaceship) { // Flight enabled
-      controls.enabled = false;
-      flyControls.enabled = true;
-      reticule.style.display = 'block';
-      document.body.style.cursor = 'crosshair';
-      // increase fov when flying
-      camera.fov = flightFov;
-      camera.updateProjectionMatrix();
-    } else if (focusedPlanet == moon){
-      controls.enabled = true; // enable orbit controls
-      flyControls.enabled = false;
-      reticule.display = 'none'; // hide reticule
-      document.body.style.cursor = 'default';
-      // decrease fov when not flying
-      camera.fov = 45
-      camera.updateProjectionMatrix();
+      enableFlight();
+    } else if (focusedPlanet == moon){ // need to check if focusedPlanet is a child
+      disableFlight();
       //lerp controls to moon (member of earth)
       var moonPosition = new THREE.Vector3();
       moonPosition.setFromMatrixPosition(moon.matrixWorld); // get moon position
@@ -842,14 +830,56 @@ function render() {
       spaceship.position.x = lerp(spaceship.position.x, moonPosition.x, lerpSpeed + 0.01);
       spaceship.position.y = lerp(spaceship.position.y, 240, lerpSpeed + 0.01);
       spaceship.position.z = lerp(spaceship.position.z, moonPosition.z, lerpSpeed + 0.01);
+    } else if (focusedPlanet == io){
+      disableFlight();
+      var ioPosition = new THREE.Vector3();
+      ioPosition.setFromMatrixPosition(io.matrixWorld); // get moon position
+      // lerp spaceship and controls
+      controls.target.x = lerp(controls.target.x, ioPosition.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, ioPosition.z, lerpSpeed);
+      // move spaceship above planet with lerp
+      spaceship.position.x = lerp(spaceship.position.x, ioPosition.x, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.z = lerp(spaceship.position.z, ioPosition.z, lerpSpeed + 0.01);
+    } else if (focusedPlanet == europa){
+      disableFlight();
+      var europaPosition = new THREE.Vector3();
+      europaPosition.setFromMatrixPosition(europa.matrixWorld); // get moon position
+      // lerp spaceship and controls
+      controls.target.x = lerp(controls.target.x, europaPosition.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, europaPosition.z, lerpSpeed);
+      // move spaceship above planet with lerp
+      spaceship.position.x = lerp(spaceship.position.x, europaPosition.x, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.z = lerp(spaceship.position.z, europaPosition.z, lerpSpeed + 0.01);
+    } else if (focusedPlanet == ganymede){
+      disableFlight();
+      var ganymedePosition = new THREE.Vector3();
+      ganymedePosition.setFromMatrixPosition(ganymede.matrixWorld); // get moon position
+      // lerp spaceship and controls
+      controls.target.x = lerp(controls.target.x, ganymedePosition.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, ganymedePosition.z, lerpSpeed);
+      // move spaceship above planet with lerp
+      spaceship.position.x = lerp(spaceship.position.x, ganymedePosition.x, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.z = lerp(spaceship.position.z, ganymedePosition.z, lerpSpeed + 0.01);
+    } else if (focusedPlanet == callisto){
+      disableFlight();
+      var callistoPosition = new THREE.Vector3();
+      callistoPosition.setFromMatrixPosition(callisto.matrixWorld); // get moon position
+      // lerp spaceship and controls
+      controls.target.x = lerp(controls.target.x, callistoPosition.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, callistoPosition.z, lerpSpeed);
+      // move spaceship above planet with lerp
+      spaceship.position.x = lerp(spaceship.position.x, callistoPosition.x, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.z = lerp(spaceship.position.z, callistoPosition.z, lerpSpeed + 0.01);
     } else { // Flight disabled
-      controls.enabled = true; // enable orbit controls
-      flyControls.enabled = false;
-      reticule.display = 'none'; // hide reticule
-      document.body.style.cursor = 'default';
-      // decrease fov when not flying
-      camera.fov = 45
-      camera.updateProjectionMatrix();
+      disableFlight();
       //lerp controls
       controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
       controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
@@ -876,6 +906,26 @@ function render() {
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
+
+function enableFlight(){
+  controls.enabled = false;
+  flyControls.enabled = true;
+  reticule.style.display = 'block';
+  document.body.style.cursor = 'crosshair';
+  // increase fov when flying
+  camera.fov = flightFov;
+  camera.updateProjectionMatrix();
+}
+
+function disableFlight(){
+  controls.enabled = true; // enable orbit controls
+  flyControls.enabled = false;
+  reticule.display = 'none'; // hide reticule
+  document.body.style.cursor = 'default';
+  // decrease fov when not flying
+  camera.fov = 45
+  camera.updateProjectionMatrix();
+}
 
 // Lerp function for smooth transitions
 function lerp(start, end, alpha) {
@@ -911,6 +961,22 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = jupiter;
     dropdown.value = "jupiter";
     window.history.pushState(null, null, '?planet=jupiter');
+  } else if (planet == "io" || planet == io) {
+    focusedPlanet = io;
+    dropdown.value = "io";
+    window.history.pushState(null, null, '?planet=io');
+  } else if (planet == "europa" || planet == europa) {
+    focusedPlanet = europa;
+    dropdown.value = "europa";
+    window.history.pushState(null, null, '?planet=europa');
+  } else if (planet == "ganymede" || planet == ganymede) {
+    focusedPlanet = ganymede;
+    dropdown.value = "ganymede";
+    window.history.pushState(null, null, '?planet=ganymede');
+  } else if (planet == "callisto" || planet == callisto) {
+    focusedPlanet = callisto;
+    dropdown.value = "callisto";
+    window.history.pushState(null, null, '?planet=callisto');
   } else if (planet == "saturn" || planet == saturn || planet == saturnRing) {
     focusedPlanet = saturn;
     dropdown.value = "saturn";
