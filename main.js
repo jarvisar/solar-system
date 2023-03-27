@@ -345,7 +345,7 @@ function createPlanets(){
   
   // pluto
   const plutoGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
-  const plutoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_pluto.webp'), bumpMap: new THREE.TextureLoader().load('public/pluto_elevation.png'), bumpScale: 0.05 * scale, specularMap: new THREE.TextureLoader().load('public/2k_pluto_spec.tif'), specular: new THREE.Color('grey') });
+  const plutoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_pluto.webp'), bumpMap: new THREE.TextureLoader().load('public/pluto_elevation.png'), bumpScale: 0.05 * scale, specularMap: new THREE.TextureLoader().load('public/pluto_spec.png'), specular: new THREE.Color('grey'), shininess: 2 });
   pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
   pluto.castShadow = true;
   pluto.receiveShadow = true;
