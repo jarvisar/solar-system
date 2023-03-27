@@ -709,108 +709,51 @@ renderer.domElement.addEventListener('click', function(event) {
     if (intersects.length > 0) {
       // Hide reticule by default
       reticule.style.display = 'none';
-      if (intersects[0].object == earth || intersects[0].object == cloudMesh) {
-        console.log('earth')
-        focusedPlanet = earth;
-        dropdown.value = "earth";
-      } else if (intersects[0].object == venus || intersects[0].object == venusAtmo) {
-        console.log('venus')
-        focusedPlanet = venus;
-        dropdown.value = "venus";
-      } else if (intersects[0].object == mercury) {
-        console.log('mercury')
-        focusedPlanet = mercury;
-        dropdown.value = "mercury";
-      } else if (intersects[0].object == sunMesh) {
-        console.log('sun')
-        focusedPlanet = sunMesh;
-        dropdown.value = "sun";
-      } else if (intersects[0].object == mars) {
-        console.log('mars')
-        focusedPlanet = mars;
-        dropdown.value = "mars";
-      } else if (intersects[0].object == moon) {
-        console.log('moon')
-        focusedPlanet = earth;
-        dropdown.value = "moon";
-      } else if (intersects[0].object == jupiter) {
-        console.log('jupiter')
-        focusedPlanet = jupiter;
-        dropdown.value = "jupiter";
-      } else if (intersects[0].object == saturn) {
-        console.log('saturn')
-        focusedPlanet = saturn;
-        dropdown.value = "saturn";
-      } else if (intersects[0].object == uranus) {
-        console.log(intersects[0].object)
-        console.log('uranus')
-        focusedPlanet = uranus;
-        dropdown.value = "uranus";
-      } else if (intersects[0].object == neptune) {
-        console.log('neptune')
-        focusedPlanet = neptune;
-        dropdown.value = "neptune";
-      } else if (intersects[0].object.name.includes("mesh_0")) { // UFO
-        console.log('spaceship')
-        camera.position.copy(spaceship.position);
-        // enable flight reticule
-        reticule.style.display = "block";
-        focusedPlanet = spaceship;
-        dropdown.value = "spaceship";
+      changeFocusedPlanet(intersects[0].object);
+      if (intersects[0].object.name.includes("mesh_0")) { // UFO
+        changeFocusedPlanet("spaceship");
       }
     }
 });
 
-var getUrlParameter = function getUrlParameter(sParam) {
-  var sPageURL = window.location.search.substring(1),
-      sURLVariables = sPageURL.split('&'),
-      sParameterName,
-      i;
-
-  for (i = 0; i < sURLVariables.length; i++) {
-      sParameterName = sURLVariables[i].split('=');
-
-      if (sParameterName[0] === sParam) {
-          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-      }
-  }
-  return false;
-};
-
 const urlParams = new URLSearchParams(window.location.search);
 // set focusedPlanet based on URL query parameters
 if (urlParams.has('planet')) {
-  if (urlParams.get('planet') == "earth") {
+  changeFocusedPlanet(urlParams.get('planet'));
+}
+
+function changeFocusedPlanet(planet) {
+  if (planet == "earth" || planet == earth) {
     focusedPlanet = earth;
     dropdown.value = "earth";
-  } else if (urlParams.get('planet') == "venus") {
+  } else if (planet == "venus" || planet == venus) {
     focusedPlanet = venus;
     dropdown.value = "venus";
-  } else if (urlParams.get('planet') == "mercury") {
+  } else if (planet == "mercury" || planet == mercury) {
     focusedPlanet = mercury;
     dropdown.value = "mercury";
-  } else if (urlParams.get('planet') == "sun") {
+  } else if (planet == "sun" || planet == sunMesh) {
     focusedPlanet = sunMesh;
     dropdown.value = "sun";
-  } else if (urlParams.get('planet') == "mars") {
+  } else if (planet == "mars" || planet == mars) {
     focusedPlanet = mars;
     dropdown.value = "mars";
-  } else if (urlParams.get('planet') == "moon") {
+  } else if (planet == "moon" || planet == moon) {
     focusedPlanet = earth;
     dropdown.value = "moon";
-  } else if (urlParams.get('planet') == "jupiter") {
+  } else if (planet == "jupiter" || planet == jupiter) {
     focusedPlanet = jupiter;
     dropdown.value = "jupiter";
-  } else if (urlParams.get('planet') == "saturn") {
+  } else if (planet == "saturn" || planet == saturn) {
     focusedPlanet = saturn;
     dropdown.value = "saturn";
-  } else if (urlParams.get('planet') == "uranus") {
+  } else if (planet == "uranus" || planet == uranus) {
     focusedPlanet = uranus;
     dropdown.value = "uranus";
-  } else if (urlParams.get('planet') == "neptune") {
+  } else if (planet == "neptune" || planet == neptune) {
     focusedPlanet = neptune;
     dropdown.value = "neptune";
-  } else if (urlParams.get('planet') == "spaceship") {
+  } else if (planet == "spaceship" || planet == spaceship) {
     camera.position.copy(spaceship.position);
     // enable flight reticule
     reticule.style.display = "block";
@@ -836,29 +779,7 @@ document.addEventListener('keydown', function(event) {
 
 // add event listener for "title" select element on change
 dropdown.addEventListener("change", function() {
-  if (this.value == "earth") {
-    focusedPlanet = earth;
-  } else if (this.value == "venus") {
-    focusedPlanet = venus;
-  } else if (this.value == "mercury") {
-    focusedPlanet = mercury;
-  } else if (this.value == "sun") {
-    focusedPlanet = sunMesh;
-  } else if (this.value == "mars") {
-    focusedPlanet = mars;
-  } else if (this.value == "moon") {
-    focusedPlanet = earth;
-  } else if (this.value == "jupiter") {
-    focusedPlanet = jupiter;
-  } else if (this.value == "saturn") {
-    focusedPlanet = saturn;
-  } else if (this.value == "uranus") {
-    focusedPlanet = uranus;
-  } else if (this.value == "neptune") {
-    focusedPlanet = neptune;
-  } else if (this.value == "spaceship") {
-    focusedPlanet = spaceship;
-  }
+  changeFocusedPlanet(dropdown.value);
 });
 
 render();
