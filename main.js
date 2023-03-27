@@ -88,6 +88,7 @@ systemSettings.add(guicontrols, "enableOrbits").onChange((value) => {
     scene.remove(saturnOrbit);
     scene.remove(uranusOrbit);
     scene.remove(neptuneOrbit);
+    scene.remove(plutoOrbit);
   }
 }).name("Enable Orbits").listen();
 
@@ -330,7 +331,7 @@ function createPlanets(){
   
   // pluto
   const plutoGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
-  const plutoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_pluto.webp') });
+  const plutoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_pluto.webp'), bumpMap: new THREE.TextureLoader().load('public/pluto_elevation.png'), bumpScale: 0.05 * scale, specularMap: new THREE.TextureLoader().load('public/2k_pluto_spec.tif'), specular: new THREE.Color('grey') });
   pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
   pluto.castShadow = true;
   pluto.receiveShadow = true;
@@ -375,10 +376,10 @@ function createAsteroidBelts() {
   const kuiperRingMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 * scale, sizeAttenuation: false, opacity: 0.45, transparent: true });
 
   const kuipervertices = [];
-  for (let i = 0; i < 3500  * numAsteroids; i++) {
+  for (let i = 0; i < 4000  * numAsteroids; i++) {
     var angle = Math.random() * Math.PI * 2;
     var deviation = 750 * scale; // adjust this value to control the amount of deviation
-    var distance = THREE.MathUtils.randFloat(neptuneDistance + neptune.geometry.parameters.radius + (50 * scale), neptuneDistance + (scale * 1500));
+    var distance = THREE.MathUtils.randFloat(neptuneDistance + neptune.geometry.parameters.radius + (50 * scale), neptuneDistance + (scale * 1700));
     var deviationX = THREE.MathUtils.randFloatSpread(deviation);
     var deviationZ = THREE.MathUtils.randFloatSpread(deviation);
     var x = Math.cos(angle) * distance + deviationX;
