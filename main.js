@@ -210,7 +210,7 @@ function createPlanets(){
   scene.add(sunMesh);
 
   // mercury
-  const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 128, 128);
+  const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 64, 64);
   const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.2 * scale });
   mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
   mercury.castShadow = true;
@@ -261,7 +261,7 @@ function createPlanets(){
   earth.add(moon);
 
   // mars
-  const marsGeometry = new THREE.SphereGeometry(14 * scale, 128, 128);
+  const marsGeometry = new THREE.SphereGeometry(14 * scale, 64, 64);
   const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.2 * scale });
   mars = new THREE.Mesh(marsGeometry, marsMaterial);
   mars.castShadow = true;
@@ -760,6 +760,64 @@ renderer.domElement.addEventListener('click', function(event) {
       }
     }
 });
+
+var getUrlParameter = function getUrlParameter(sParam) {
+  var sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+
+      if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+  }
+  return false;
+};
+
+const urlParams = new URLSearchParams(window.location.search);
+// set focusedPlanet based on URL query parameters
+if (urlParams.has('planet')) {
+  if (urlParams.get('planet') == "earth") {
+    focusedPlanet = earth;
+    dropdown.value = "earth";
+  } else if (urlParams.get('planet') == "venus") {
+    focusedPlanet = venus;
+    dropdown.value = "venus";
+  } else if (urlParams.get('planet') == "mercury") {
+    focusedPlanet = mercury;
+    dropdown.value = "mercury";
+  } else if (urlParams.get('planet') == "sun") {
+    focusedPlanet = sunMesh;
+    dropdown.value = "sun";
+  } else if (urlParams.get('planet') == "mars") {
+    focusedPlanet = mars;
+    dropdown.value = "mars";
+  } else if (urlParams.get('planet') == "moon") {
+    focusedPlanet = earth;
+    dropdown.value = "moon";
+  } else if (urlParams.get('planet') == "jupiter") {
+    focusedPlanet = jupiter;
+    dropdown.value = "jupiter";
+  } else if (urlParams.get('planet') == "saturn") {
+    focusedPlanet = saturn;
+    dropdown.value = "saturn";
+  } else if (urlParams.get('planet') == "uranus") {
+    focusedPlanet = uranus;
+    dropdown.value = "uranus";
+  } else if (urlParams.get('planet') == "neptune") {
+    focusedPlanet = neptune;
+    dropdown.value = "neptune";
+  } else if (urlParams.get('planet') == "spaceship") {
+    camera.position.copy(spaceship.position);
+    // enable flight reticule
+    reticule.style.display = "block";
+    focusedPlanet = spaceship;
+    dropdown.value = "spaceship";
+  }
+}
 
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
