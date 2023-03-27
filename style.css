@@ -62,6 +62,7 @@ button:active {
 	font-family: Roboto;
 	border-radius: 7.5px;
 	border: 1px solid white;
+	background-color: #000220;
 	padding: 0 5px;
 	position: fixed;
 	bottom: 10px;
