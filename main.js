@@ -537,6 +537,8 @@ let uranusAngle = 3 * (Math.PI / 4);
 // neptune is 7/8
 let neptuneAngle = 7 * (Math.PI / 4);
 
+let plutoRotation = 0;
+
 let focusedPlanet = null;
 let cameraTarget = new THREE.Vector3();
 let lerpSpeed = 0.08; // Adjust this value to control the speed of the animation
@@ -646,23 +648,24 @@ function render() {
   // rotate all planets in place
   mercury.rotation.y -= 0.002 * rotationSpeed;
   venus.rotation.y -= 0.002 * rotationSpeed;
-  venusAtmo.rotation.y += 0.0001 * rotationSpeed;
+  venusAtmo.rotation.y += 0.0005 * rotationSpeed;
 
   earth.rotation.y -= 0.002 * rotationSpeed;
-  cloudMesh.rotation.y += 0.0001 * rotationSpeed;
+  cloudMesh.rotation.y += 0.0003 * rotationSpeed;
   moon.rotation.y -= 0.002 * rotationSpeed;
 
   mars.rotation.y -= 0.002 * rotationSpeed;
   jupiter.rotation.y -= 0.001 * rotationSpeed;
   saturn.rotation.y -= 0.001 * rotationSpeed;
-  uranus.rotation.z -= 0.001 * rotationSpeed; // uranus rotates on its side
+  uranus.rotation.z -= 0.001 * rotationSpeed;
   neptune.rotation.y -= 0.001 * rotationSpeed;
-  pluto.rotation.y -= 0.001 * rotationSpeed;
 
   asteroidRing.rotation.y -= 0.00004 * rotationSpeed;
   kuiperRing.rotation.y -= 0.00001 * rotationSpeed;
 
   spaceship.rotation.y += 0.001 * rotationSpeed;
+
+  const center = new THREE.Vector3(0, 0, 0);
 
   // create array of planets
   const planets = [
@@ -682,7 +685,7 @@ function render() {
       const x = planet.distance * Math.cos(planet.angle);
       const z = planet.distance * Math.sin(planet.angle);
       planet.object.position.set(x, 0, z);
-    } 
+    }
   });
 
   const x = plutoDistance * Math.cos(plutoAngle);
@@ -690,9 +693,10 @@ function render() {
   const z = plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt);
   pluto.position.set(x, y, z);
 
-  const center = new THREE.Vector3(0, 0, 0);
-pluto.lookAt(center);
-pluto.rotateZ(Math.PI / 2 - plutoAngle);
+  pluto.lookAt(center);
+  pluto.rotateZ(Math.PI / 2 - plutoAngle);
+  // rotate pluto in place
+  pluto.rotateX(plutoRotation);
   
   // Increase the angle for the next frame
   mercuryAngle += 0.00025 * rotationSpeed;
@@ -705,6 +709,7 @@ pluto.rotateZ(Math.PI / 2 - plutoAngle);
   uranusAngle += 0.000015625 * rotationSpeed;
   neptuneAngle += 0.000015625 * rotationSpeed;
   plutoAngle += 0.000015625 * rotationSpeed;
+  plutoRotation += 0.002 * rotationSpeed;
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
