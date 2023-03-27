@@ -312,6 +312,7 @@ function createPlanets(){
   moon.castShadow = true;
   moon.receiveShadow = true;
   moon.position.set(0, 0, moonDistance);
+  moon.rotation.y = Math.PI;
   earth.add(moon);
 
   // mars
@@ -804,7 +805,6 @@ function render() {
   venusAngle += 0.00025 * rotationSpeed;
   earthAngle += 0.0001 * rotationSpeed;
   marsAngle += 0.000125 * rotationSpeed;
-  
   jupiterAngle += 0.0000625 * rotationSpeed;
   saturnAngle += 0.00003125 * rotationSpeed;
   uranusAngle += 0.000015625 * rotationSpeed;
@@ -813,16 +813,6 @@ function render() {
   plutoRotation += 0.002 * rotationSpeed;
 
   if (focusedPlanet) {
-    // Update the camera target to the position of the focused planet
-    if (focusedPlanet === moon) {    // if moon, add moon position to earth position
-      cameraTarget.x = earth.position.x + 100;
-      cameraTarget.y = earth.position.y + 100;
-      cameraTarget.z = earth.position.z + 100;
-    } else {
-      cameraTarget.x = focusedPlanet.position.x + 100;
-      cameraTarget.y = focusedPlanet.position.y + 100;
-      cameraTarget.z = focusedPlanet.position.z + 100;
-    }
 
     // Update the controls target to the position of the focused planet
     if (focusedPlanet == spaceship) { // Flight enabled
@@ -833,6 +823,25 @@ function render() {
       // increase fov when flying
       camera.fov = flightFov;
       camera.updateProjectionMatrix();
+    } else if (focusedPlanet == moon){
+      controls.enabled = true; // enable orbit controls
+      flyControls.enabled = false;
+      reticule.display = 'none'; // hide reticule
+      document.body.style.cursor = 'default';
+      // decrease fov when not flying
+      camera.fov = 45
+      camera.updateProjectionMatrix();
+      //lerp controls to moon (member of earth)
+      var moonPosition = new THREE.Vector3();
+      moonPosition.setFromMatrixPosition(moon.matrixWorld); // get moon position
+      // lerp spaceship and controls
+      controls.target.x = lerp(controls.target.x, moonPosition.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, moonPosition.z, lerpSpeed);
+      // move spaceship above planet with lerp
+      spaceship.position.x = lerp(spaceship.position.x, moonPosition.x, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, 240, lerpSpeed + 0.01);
+      spaceship.position.z = lerp(spaceship.position.z, moonPosition.z, lerpSpeed + 0.01);
     } else { // Flight disabled
       controls.enabled = true; // enable orbit controls
       flyControls.enabled = false;
