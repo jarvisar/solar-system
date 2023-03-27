@@ -726,39 +726,50 @@ function changeFocusedPlanet(planet) {
   if (planet == "earth" || planet == earth) {
     focusedPlanet = earth;
     dropdown.value = "earth";
+    window.history.pushState(null, null, '?planet=earth');
   } else if (planet == "venus" || planet == venus) {
     focusedPlanet = venus;
     dropdown.value = "venus";
+    window.history.pushState(null, null, '?planet=venus');
   } else if (planet == "mercury" || planet == mercury) {
     focusedPlanet = mercury;
     dropdown.value = "mercury";
+    window.history.pushState(null, null, '?planet=mercury');
   } else if (planet == "sun" || planet == sunMesh) {
     focusedPlanet = sunMesh;
     dropdown.value = "sun";
+    window.history.pushState(null, null, '?planet=sun');
   } else if (planet == "mars" || planet == mars) {
     focusedPlanet = mars;
     dropdown.value = "mars";
+    window.history.pushState(null, null, '?planet=mars');
   } else if (planet == "moon" || planet == moon) {
     focusedPlanet = earth;
     dropdown.value = "moon";
+    window.history.pushState(null, null, '?planet=moon');
   } else if (planet == "jupiter" || planet == jupiter) {
     focusedPlanet = jupiter;
     dropdown.value = "jupiter";
+    window.history.pushState(null, null, '?planet=jupiter');
   } else if (planet == "saturn" || planet == saturn) {
     focusedPlanet = saturn;
     dropdown.value = "saturn";
+    window.history.pushState(null, null, '?planet=saturn');
   } else if (planet == "uranus" || planet == uranus) {
     focusedPlanet = uranus;
     dropdown.value = "uranus";
+    window.history.pushState(null, null, '?planet=uranus');
   } else if (planet == "neptune" || planet == neptune) {
     focusedPlanet = neptune;
     dropdown.value = "neptune";
+    window.history.pushState(null, null, '?planet=neptune');
   } else if (planet == "spaceship" || planet == spaceship) {
     camera.position.copy(spaceship.position);
     // enable flight reticule
     reticule.style.display = "block";
     focusedPlanet = spaceship;
     dropdown.value = "spaceship";
+    window.history.pushState(null, null, '?planet=spaceship');
   }
 }
 
