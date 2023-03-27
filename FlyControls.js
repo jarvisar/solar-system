@@ -219,7 +219,7 @@ class FlyControls extends EventDispatcher {
 
 			//console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
 			// update html p element id=speed with current speed
-			document.getElementById("speed").innerHTML = "Speed: " + this.movementSpeedMultiplier.toFixed(2);
+			document.getElementById("speed").innerHTML = this.movementSpeedMultiplier.toFixed(1);
 		};
 
 		this.updateRotationVector = function () {

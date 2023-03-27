@@ -48,7 +48,6 @@ button:active {
 	font-family: Roboto;
 	border-radius: 7.5px;
 	border: 1px solid white;
-	padding: 4px 8px;
 	background-color: #000220;
 	font-size: 24px;
 	position: fixed;
@@ -58,16 +57,22 @@ button:active {
 	z-index: 10;
 }
 
-#speed {
+.speed-container {
 	color: white;
 	font-family: Roboto;
 	border-radius: 7.5px;
 	border: 1px solid white;
-	padding: 5px;
+	padding: 0 5px;
 	position: fixed;
 	bottom: 10px;
 	left: 10px;
 	z-index: 10;
+}
+
+#speed{
+	font-size: 36px;
+	margin-top: 0;
+	margin-bottom: 20px;
 }
 
 #speedButtons {
