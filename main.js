@@ -693,35 +693,6 @@ function lerp(start, end, alpha) {
   return (1 - alpha) * start + alpha * end;
 }
 
-renderer.domElement.addEventListener('click', function(event) {
-  // Calculate mouse position in normalized device coordinates
-  const mouse = new THREE.Vector2();
-  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-  // Raycast from camera to mouse position
-  const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera( mouse, camera );
-  const intersects = raycaster.intersectObjects( scene.children, true );
-  const spaceshipIntersects = raycaster.intersectObjects( spaceship.children, true );
-  intersects.push(...spaceshipIntersects);
-  this.update
-    if (intersects.length > 0) {
-      // Hide reticule by default
-      reticule.style.display = 'none';
-      changeFocusedPlanet(intersects[0].object);
-      if (intersects[0].object.name.includes("mesh_0")) { // UFO
-        changeFocusedPlanet("spaceship");
-      }
-    }
-});
-
-const urlParams = new URLSearchParams(window.location.search);
-// set focusedPlanet based on URL query parameters
-if (urlParams.has('planet')) {
-  changeFocusedPlanet(urlParams.get('planet'));
-}
-
 function changeFocusedPlanet(planet) {
   if (planet == "earth" || planet == earth || planet == moon || planet == cloudMesh) {
     focusedPlanet = earth;
@@ -773,6 +744,36 @@ function changeFocusedPlanet(planet) {
   }
 }
 
+// Click listener for planets
+renderer.domElement.addEventListener('click', function(event) {
+  // Calculate mouse position in normalized device coordinates
+  const mouse = new THREE.Vector2();
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  // Raycast from camera to mouse position
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera( mouse, camera );
+  const intersects = raycaster.intersectObjects( scene.children, true );
+  const spaceshipIntersects = raycaster.intersectObjects( spaceship.children, true );
+  intersects.push(...spaceshipIntersects);
+  this.update
+    if (intersects.length > 0) {
+      // Hide reticule by default
+      reticule.style.display = 'none';
+      changeFocusedPlanet(intersects[0].object);
+      if (intersects[0].object.name.includes("mesh_0")) { // UFO
+        changeFocusedPlanet("spaceship");
+      }
+    }
+});
+
+// set focusedPlanet based on URL query parameters
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('planet')) {
+  changeFocusedPlanet(urlParams.get('planet'));
+}
+
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Escape') {
@@ -787,19 +788,6 @@ dropdown.addEventListener("change", function() {
 
 render();
 
-const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"];
-  let konamiIndex = 0;
-  document.addEventListener("keydown", function(event) {
-    if (event.code === konamiCode[konamiIndex]) {
-      konamiIndex++;
-      if (konamiIndex === konamiCode.length) {
-        window.location.href = "tetris.html";
-      }
-    } else {
-      konamiIndex = 0;
-    }
-  });
-
 // event listener for toggle-flight-button
 document.getElementById('toggle-flight-button').addEventListener('click', function() {
   if (focusedPlanet != spaceship){
@@ -807,5 +795,19 @@ document.getElementById('toggle-flight-button').addEventListener('click', functi
     dropdown.value = "spaceship";
   } else {
     focusedPlanet = sunMesh;
+  }
+});
+
+// open tetris if user enters konami code
+const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"];
+let konamiIndex = 0;
+document.addEventListener("keydown", function(event) {
+  if (event.code === konamiCode[konamiIndex]) {
+    konamiIndex++;
+    if (konamiIndex === konamiCode.length) {
+      window.location.href = "tetris.html";
+    }
+  } else {
+    konamiIndex = 0;
   }
 });
