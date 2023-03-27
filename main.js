@@ -162,6 +162,7 @@ var moon;
 var mars;
 var jupiter;
 var saturn;
+var saturnRing;
 var uranus;
 var neptune;
 
@@ -290,7 +291,7 @@ function createPlanets(){
   // saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
   const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 180 * scale, 256);
   const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/saturn_rings.png'), side: THREE.DoubleSide, transparent: true });
-  const saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
+  saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
   saturnRing.rotation.x = Math.PI / 2;
   saturnRing.receiveShadow = true;
   saturnRing.castShadow = true;
