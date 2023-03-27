@@ -723,11 +723,11 @@ if (urlParams.has('planet')) {
 }
 
 function changeFocusedPlanet(planet) {
-  if (planet == "earth" || planet == earth) {
+  if (planet == "earth" || planet == earth || planet == moon || planet == cloudMesh) {
     focusedPlanet = earth;
     dropdown.value = "earth";
     window.history.pushState(null, null, '?planet=earth');
-  } else if (planet == "venus" || planet == venus) {
+  } else if (planet == "venus" || planet == venus || planet == venusAtmo) {
     focusedPlanet = venus;
     dropdown.value = "venus";
     window.history.pushState(null, null, '?planet=venus');
@@ -751,7 +751,7 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = jupiter;
     dropdown.value = "jupiter";
     window.history.pushState(null, null, '?planet=jupiter');
-  } else if (planet == "saturn" || planet == saturn) {
+  } else if (planet == "saturn" || planet == saturn || planet == saturnRing) {
     focusedPlanet = saturn;
     dropdown.value = "saturn";
     window.history.pushState(null, null, '?planet=saturn');
@@ -776,15 +776,7 @@ function changeFocusedPlanet(planet) {
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Escape') {
-    // reset back to sun
-    focusedPlanet = sunMesh;
-    flyControls.enabled = false;
-    controls.enabled = true;
-    flyControls.movementSpeedMultiplier = 5;
-    // hide reticule
-    reticule.style.display = "none";
-    // change dropdown back to sun
-    dropdown.value = "sun";
+    changeFocusedPlanet("sun");
   }
 });
 
