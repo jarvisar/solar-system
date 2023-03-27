@@ -567,16 +567,6 @@ gui.close() // close gui by default
 
 // flight crosshair
 var reticule = document.getElementById("reticule");
-var reticuleX = window.innerWidth / 2;
-var reticuleY = window.innerHeight / 2;
-reticule.style.display = 'none'; // hide crosshair by default
-var xMouse;
-var yMouse;
-document.addEventListener("mousemove", function(event) {
-  xMouse = event.clientX;
-  yMouse = event.clientY;
-  // move crosshair in render()
-});
 
 // animate function (very important)
 function render() {
@@ -672,11 +662,6 @@ function render() {
       flyControls.enabled = true;
       reticule.style.display = 'block';
       document.body.style.cursor = 'crosshair';
-      //move reticule to mouse position 
-      reticuleX += (xMouse - reticuleX) * 0.06;
-      reticuleY += (yMouse - reticuleY) * 0.06;
-      reticule.style.left = reticuleX + "px";
-      reticule.style.top = reticuleY + "px";
       // increase fov when flying
       camera.fov = flightFov;
       camera.updateProjectionMatrix();
