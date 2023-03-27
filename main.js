@@ -135,6 +135,9 @@ var jupiterDistance
 var saturnDistance 
 var uranusDistance 
 var neptuneDistance 
+var plutoDistance
+var plutoTilt
+var plutoAngle
 
 // add star background to scene
 const starGeometry = new THREE.SphereGeometry(300000 * scale, 32, 32);
@@ -172,6 +175,7 @@ var saturn;
 var saturnRing;
 var uranus;
 var neptune;
+var pluto;
 
 var asteroidRing;
 var kuiperRing;
@@ -186,6 +190,7 @@ var jupiterOrbit;
 var saturnOrbit;
 var uranusOrbit;
 var neptuneOrbit;
+var plutoOrbit;
 
 var sunLight;
 
@@ -200,6 +205,7 @@ function createPlanets(){
   saturnDistance = 5300 * scale * 1.2
   uranusDistance = 6200 * scale * 1.2
   neptuneDistance = 7100 * scale * 1.2
+  plutoDistance = 8000 * scale * 1.2
 
   // Create a sphere for the Sun and add it to the scene as a light source
   sunLight = new THREE.PointLight(0xffffff, 1, 100000 * (scale/3));
@@ -322,6 +328,23 @@ function createPlanets(){
   neptune.position.set(0, 0, neptuneDistance);
   scene.add(neptune);
   
+  // pluto
+  const plutoGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
+  const plutoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_pluto.webp') });
+  pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
+  pluto.castShadow = true;
+  pluto.receiveShadow = true;
+
+  // position and tilt pluto
+  plutoTilt = 8.58 * (Math.PI / 180);
+  plutoAngle = Math.PI / 4;
+  pluto.position.set(
+    plutoDistance * Math.cos(plutoAngle),
+    plutoDistance * Math.sin(plutoAngle) * Math.sin(plutoTilt),
+    plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt)
+  );
+
+  scene.add(pluto);
 }
 
 function createAsteroidBelts() {
@@ -434,6 +457,15 @@ function createOrbits(){
   neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
   neptuneOrbit.rotation.x = Math.PI / 2;
   scene.add(neptuneOrbit);
+
+  // pluto orbit
+  const plutoOrbitGeometry = new THREE.RingGeometry(plutoDistance - (0.2 * (scale / 2)), plutoDistance + (0.2 * (scale / 2)), 256);
+  const plutoOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  plutoOrbit = new THREE.Mesh(plutoOrbitGeometry, plutoOrbitMaterial);
+
+  // tilt pluto orbit
+  plutoOrbit.rotation.x = Math.PI / 2 - plutoTilt;
+  scene.add(plutoOrbit);
 }
 
 createPlanets();
@@ -508,6 +540,7 @@ const regenerate = () => {
   scene.remove(saturn);
   scene.remove(uranus);
   scene.remove(neptune);
+  scene.remove(pluto);
   scene.remove(sunMesh);
   scene.remove(asteroidRing);
   scene.remove(kuiperRing);
@@ -522,6 +555,7 @@ const regenerate = () => {
   scene.remove(saturnOrbit);
   scene.remove(uranusOrbit);
   scene.remove(neptuneOrbit);
+  scene.remove(plutoOrbit);
 
   camera.position.set(400 * scale, 250 * scale, -1600 * scale);
 
@@ -606,8 +640,9 @@ function render() {
   mars.rotation.y -= 0.002 * rotationSpeed;
   jupiter.rotation.y -= 0.001 * rotationSpeed;
   saturn.rotation.y -= 0.001 * rotationSpeed;
-  uranus.rotation.y -= 0.001 * rotationSpeed;
+  uranus.rotation.z -= 0.001 * rotationSpeed; // uranus rotates on its side
   neptune.rotation.y -= 0.001 * rotationSpeed;
+  pluto.rotation.y -= 0.001 * rotationSpeed;
 
   asteroidRing.rotation.y -= 0.00004 * rotationSpeed;
   kuiperRing.rotation.y -= 0.00001 * rotationSpeed;
@@ -628,10 +663,21 @@ function render() {
   ];
   
   planets.forEach(planet => {
-    const x = planet.distance * Math.cos(planet.angle);
-    const z = planet.distance * Math.sin(planet.angle);
-    planet.object.position.set(x, 0, z);
+    if (planet != pluto){
+      const x = planet.distance * Math.cos(planet.angle);
+      const z = planet.distance * Math.sin(planet.angle);
+      planet.object.position.set(x, 0, z);
+    } 
   });
+
+  const x = plutoDistance * Math.cos(plutoAngle);
+  const y = plutoDistance * Math.sin(plutoAngle) * Math.sin(plutoTilt);
+  const z = plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt);
+  pluto.position.set(x, y, z);
+
+  const center = new THREE.Vector3(0, 0, 0);
+pluto.lookAt(center);
+pluto.rotateZ(Math.PI / 2 - plutoAngle);
   
   // Increase the angle for the next frame
   mercuryAngle += 0.00025 * rotationSpeed;
@@ -643,6 +689,7 @@ function render() {
   saturnAngle += 0.00003125 * rotationSpeed;
   uranusAngle += 0.000015625 * rotationSpeed;
   neptuneAngle += 0.000015625 * rotationSpeed;
+  plutoAngle += 0.000015625 * rotationSpeed;
 
   if (focusedPlanet) {
     // Update the camera target to the position of the focused planet
@@ -747,6 +794,10 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = neptune;
     dropdown.value = "neptune";
     window.history.pushState(null, null, '?planet=neptune');
+  } else if (planet == "pluto" || planet == pluto) {
+    focusedPlanet = pluto;
+    dropdown.value = "pluto";
+    window.history.pushState(null, null, '?planet=pluto');
   } else if (planet == "spaceship" || planet == spaceship) {
     camera.position.copy(spaceship.position);
     // enable flight reticule
