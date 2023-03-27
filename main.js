@@ -11,6 +11,13 @@ import { FlyControls } from "./FlyControls.js";
 // Create a Three.js scene
 const scene = new THREE.Scene();
 
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+let moveUp = false;
+let moveDown = false;
+
 // define control variables
 var scale = 3;
 var enableOrbits = true;
@@ -574,6 +581,26 @@ document.addEventListener("mousemove", function(event) {
 // animate function (very important)
 function render() {
   requestAnimationFrame(render);
+
+  // check for orbit control movement from keys
+  if (moveForward) {
+    controls.object.translateZ(-10);
+  }
+  if (moveBackward) {
+    controls.object.translateZ(10);
+  }
+  if (moveLeft) {
+    controls.object.translateX(-10);
+  }
+  if (moveRight) {
+    controls.object.translateX(10);
+  }
+  if (moveUp) {
+    controls.object.translateY(10);
+  }
+  if (moveDown) {
+    controls.object.translateY(-10);
+  }
   
   // rotate sun in place
   sunMesh.rotation.y -= 0.0005 * rotationSpeed;
@@ -810,5 +837,42 @@ document.addEventListener("keydown", function(event) {
     }
   } else {
     konamiIndex = 0;
+  }
+});
+
+
+// Use WASD, space, and shift for orbit controls
+
+document.addEventListener("keydown", function(event) {
+  if (focusedPlanet == spaceship) return;
+  if (event.code === "KeyW") {
+    moveForward = true;
+  } else if (event.code === "KeyS") {
+    moveBackward = true;
+  } else if (event.code === "KeyA") {
+    moveLeft = true;
+  } else if (event.code === "KeyD") {
+    moveRight = true;
+  } else if (event.code === "Space") {
+    moveUp = true;
+  } else if (event.code === "ShiftLeft") {
+    moveDown = true;
+  }
+});
+
+document.addEventListener("keyup", function(event) {
+  if (focusedPlanet == spaceship) return;
+  if (event.code === "KeyW") {
+    moveForward = false;
+  } else if (event.code === "KeyS") {
+    moveBackward = false;
+  } else if (event.code === "KeyA") {
+    moveLeft = false;
+  } else if (event.code === "KeyD") {
+    moveRight = false;
+  } else if (event.code === "Space") {
+    moveUp = false;
+  } else if (event.code === "ShiftLeft") {
+    moveDown = false;
   }
 });
