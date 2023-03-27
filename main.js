@@ -790,11 +790,11 @@ function render() {
     }
   });
 
+  // pluto is tilted
   const x = plutoDistance * Math.cos(plutoAngle);
   const y = plutoDistance * Math.sin(plutoAngle) * Math.sin(plutoTilt);
   const z = plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt);
   pluto.position.set(x, y, z);
-
   pluto.lookAt(center);
   pluto.rotateZ(Math.PI / 2 - plutoAngle);
   // rotate pluto in place
