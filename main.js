@@ -134,6 +134,8 @@ function removeOrbits(){
   scene.remove(earthOrbit);
   earth.remove(moonOrbit);
   scene.remove(marsOrbit);
+  mars.remove(deimosOrbit);
+  mars.remove(phobosOrbit);
   scene.remove(jupiterOrbit);
   jupiter.remove(ioOrbit);
   jupiter.remove(europaOrbit);
@@ -154,7 +156,9 @@ var venusDistance
 var earthDistance
 var moonDistance 
 
-var marsDistance 
+var marsDistance
+var deimosDistance
+var phobosDistance 
 
 var jupiterDistance 
 var ioDistance
@@ -204,6 +208,8 @@ var earth;
 var cloudMesh;
 var moon;
 var mars;
+var deimos;
+var phobos;
 var jupiter;
 var io;
 var europa;
@@ -227,6 +233,8 @@ var venusOrbit;
 var earthOrbit;
 var moonOrbit;
 var marsOrbit;
+var deimosOrbit;
+var phobosOrbit;
 var jupiterOrbit;
 var ioOrbit;
 var europaOrbit;
@@ -249,6 +257,8 @@ function createPlanets(){
   earthDistance = 2100 * scale * 1.2
   moonDistance = 200 * scale
   marsDistance = 2700 * scale * 1.2
+  deimosDistance = 150 * scale
+  phobosDistance = 250 * scale
   jupiterDistance = 4400 * scale * 1.2
   ioDistance = 200 * scale
   europaDistance = 300 * scale
@@ -338,6 +348,28 @@ function createPlanets(){
   mars.receiveShadow = true;
   mars.position.set(0, 0, marsDistance);
   scene.add(mars);
+
+  // deimos from deimos.glb
+  const deimosLoader = new GLTFLoader();
+  deimos = new THREE.Object3D();
+  deimosLoader.load('public/deimos.glb', function (gltf) {
+    let model = gltf.scene;
+    deimos.scale.set(0.25 * scale, 0.25 * scale, 0.25 * scale);
+    deimos.position.set(0, 0, deimosDistance);
+    deimos.add(model);
+  });
+  mars.add(deimos);
+
+  // phobos from phobos.glb
+  const phobosLoader = new GLTFLoader();
+  phobos = new THREE.Object3D();
+  phobosLoader.load('public/phobos.glb', function (gltf) {
+    let model = gltf.scene;
+    phobos.scale.set(0.25 * scale, 0.25 * scale, 0.25 * scale);
+    phobos.position.set(0, 0, phobosDistance);
+    phobos.add(model);
+  });
+  mars.add(phobos);
 
   // jupiter
   const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
@@ -550,6 +582,20 @@ function createOrbits(){
   marsOrbit.rotation.x = Math.PI / 2;
   scene.add(marsOrbit);
 
+  // phobos orbit
+  const phobosOrbitGeometry = new THREE.RingGeometry(phobosDistance - (.1 * (scale/2) * orbitWidth), phobosDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const phobosOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  phobosOrbit = new THREE.Mesh(phobosOrbitGeometry, phobosOrbitMaterial);
+  phobosOrbit.rotation.x = Math.PI / 2;
+  mars.add(phobosOrbit); // add phobos orbit to the mars so that it orbits around the sun along with the mars
+
+  // deimos orbit
+  const deimosOrbitGeometry = new THREE.RingGeometry(deimosDistance - (.1 * (scale/2) * orbitWidth), deimosDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const deimosOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  deimosOrbit = new THREE.Mesh(deimosOrbitGeometry, deimosOrbitMaterial);
+  deimosOrbit.rotation.x = Math.PI / 2;
+  mars.add(deimosOrbit); // add deimos orbit to the mars so that it orbits around the sun along with the mars
+
   // jupiter orbit
   const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - (.2 * (scale/2) * orbitWidth), jupiterDistance + (.2 * (scale/2) * orbitWidth), 1024);
   const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
@@ -682,6 +728,8 @@ let earthAngle = Math.PI * 0.5;
 let moonAngle = 0;
 // mars is 3/4
 let marsAngle = Math.PI * 1.5;
+let phobosAngle = 0;
+let deimosAngle = Math.PI * 0.5;
 // jupiter is 1/8
 let jupiterAngle = Math.PI * 0.25;
 let ioAngle = 0;
@@ -796,10 +844,10 @@ function render() {
     controls.object.translateY(-10);
   }
   
-  // rotate sun in place
+  // rotate in place
   sunMesh.rotation.y -= 0.0005 * rotationSpeed * 0.15;
-  // rotate all planets in place
   mercury.rotation.y -= 0.002 * rotationSpeed * 0.15;
+
   venus.rotation.y -= 0.002 * rotationSpeed * 0.15;
   venusAtmo.rotation.y += 0.0005 * rotationSpeed * 0.15;
 
@@ -808,6 +856,9 @@ function render() {
   moon.rotation.y -= 0.002 * rotationSpeed * 0.15;
 
   mars.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  phobos.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  deimos.rotation.y -= 0.002 * rotationSpeed * 0.15;
+
   jupiter.rotation.y -= 0.001 * rotationSpeed * 0.15;
   io.rotation.y -= 0.001 * rotationSpeed * 0.15;
   europa.rotation.y -= 0.001 * rotationSpeed * 0.15;
@@ -835,6 +886,8 @@ function render() {
     { distance: earthDistance, angle: earthAngle, object: earth },
     { distance: moonDistance, angle: moonAngle, object: moon },
     { distance: marsDistance, angle: marsAngle, object: mars },
+    { distance: phobosDistance, angle: phobosAngle, object: phobos },
+    { distance: deimosDistance, angle: deimosAngle, object: deimos },
     { distance: jupiterDistance, angle: jupiterAngle, object: jupiter },
     { distance: ioDistance, angle: ioAngle, object: io },
     { distance: europaDistance, angle: europaAngle, object: europa },
@@ -885,6 +938,10 @@ function render() {
       enableFlight();
     } else if (focusedPlanet == moon){ // need to check if focusedPlanet is a child
       setMoonPosition(moon, 0);
+    } else if (focusedPlanet == phobos){
+      setMoonPosition(phobos, 0);
+    } else if (focusedPlanet == deimos){
+      setMoonPosition(deimos, 0);
     } else if (focusedPlanet == io){
       setMoonPosition(io, 0);
     } else if (focusedPlanet == europa){
@@ -938,7 +995,12 @@ function setMoonPosition(moon, offsetY) {
   controls.target.z = lerp(controls.target.z, moonPosition.z, lerpSpeed);
   // move spaceship above planet with lerp
   spaceship.position.x = lerp(spaceship.position.x, moonPosition.x, lerpSpeed + 0.01);
+  // if not deimos or phobos, move up
+  if (moon != deimos && moon != phobos){
   spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240 + offsetY, lerpSpeed + 0.01);
+  } else {
+    spaceship.position.y = lerp(spaceship.position.y, 240, lerpSpeed + 0.01);
+  }
   spaceship.position.z = lerp(spaceship.position.z, moonPosition.z, lerpSpeed + 0.01);
 }
 
@@ -988,6 +1050,14 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = mars;
     dropdown.value = "mars";
     window.history.pushState(null, null, '?planet=mars');
+  } else if (planet == "phobos" || planet == phobos) {
+    focusedPlanet = phobos;
+    dropdown.value = "phobos";
+    window.history.pushState(null, null, '?planet=phobos');
+  } else if (planet == "deimos" || planet == deimos) {
+    focusedPlanet = deimos;
+    dropdown.value = "deimos";
+    window.history.pushState(null, null, '?planet=deimos');
   } else if (planet == "moon" || planet == moon) {
     focusedPlanet = moon;
     dropdown.value = "moon";
@@ -1068,8 +1138,15 @@ renderer.domElement.addEventListener('click', function(event) {
       // Hide reticule by default
       reticule.style.display = 'none';
       changeFocusedPlanet(intersects[0].object);
+      console.log(intersects[0].object.name)
       if (intersects[0].object.name.includes("mesh_0")) { // UFO
         changeFocusedPlanet("spaceship");
+      }
+      if (intersects[0].object.name.includes("deimos")){
+        changeFocusedPlanet("deimos");
+      }
+      if (intersects[0].object.name.includes("phobos")){
+        changeFocusedPlanet("phobos");
       }
     }
 });
