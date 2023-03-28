@@ -1281,9 +1281,24 @@ if (urlParams.has('planet')) {
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Escape') {
-    changeFocusedPlanet("sun");
+    // if flight enabled
+    if(focusedPlanet == spaceship){// calculate closest planet to camera
+    let closestPlanet = sunMesh;
+    let closestDistance = camera.position.distanceTo(sunMesh.position);
+    for (let planet of planets) {
+      let distance = camera.position.distanceTo(planet.position);
+      if (distance < closestDistance) {
+        closestPlanet = planet;
+        closestDistance = distance;
+      }
+    }
+    changeFocusedPlanet(closestPlanet);
+    } else {
+      changeFocusedPlanet(sunMesh);
+    }
   }
 });
+const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto];
 
 // add event listener for "title" select element on change
 dropdown.addEventListener("change", function() {
