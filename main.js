@@ -954,6 +954,7 @@ const regenerate = () => {
   if (enableOrbits) {
     createOrbits();
   }
+  createSky();
   focusedPlanet = sunMesh;
   dropdown.value = "sun";
 }
