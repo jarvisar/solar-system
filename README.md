@@ -4,7 +4,7 @@ My first real [Three.js](https://threejs.org/) project.
 
 Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to access the latest deployment.
 
-The web app might be slow while loading all the textures.
+###### Note: performance might be slow while loading all the textures.
 
 ### Explore Mode
 
