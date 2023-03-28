@@ -335,7 +335,7 @@ function createPlanets(){
 
   // io
   const ioGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-  const ioMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/io_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/io_elevation.png'), bumpScale: 0.05 * scale });
+  const ioMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/io_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/io_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
   io = new THREE.Mesh(ioGeometry, ioMaterial);
   io.castShadow = true;
   io.receiveShadow = true;
@@ -344,7 +344,7 @@ function createPlanets(){
 
   // europa
   const europaGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-  const europaMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/europa_texture.png'), bumpMap: new THREE.TextureLoader().load('public/europa_elevation.png'), bumpScale: 0.05 * scale });
+  const europaMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/europa_texture.png'), bumpMap: new THREE.TextureLoader().load('public/europa_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
   europa = new THREE.Mesh(europaGeometry, europaMaterial);
   europa.castShadow = true;
   europa.receiveShadow = true;
@@ -353,7 +353,7 @@ function createPlanets(){
 
   // ganymede
   const ganymedeGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-  const ganymedeMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/ganymede_texture.png') });
+  const ganymedeMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/ganymede_texture.png'), bumpMap: new THREE.TextureLoader().load('public/ganymede_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
   ganymede = new THREE.Mesh(ganymedeGeometry, ganymedeMaterial);
   ganymede.castShadow = true;
   ganymede.receiveShadow = true;
