@@ -1081,7 +1081,7 @@ function render() {
       controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
       // move spaceship above planet with lerp
       spaceship.position.x = lerp(spaceship.position.x, focusedPlanet.position.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.position.y + focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
       spaceship.position.z = lerp(spaceship.position.z, focusedPlanet.position.z, lerpSpeed + 0.01);
     }
     camera.position.copy(controls.object.position);
