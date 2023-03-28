@@ -297,7 +297,7 @@ function createPlanets(){
 
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 64, 64);
-  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.1 * scale, shininess: 4 });
+  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.07 * scale, shininess: 4 });
   mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
   mercury.castShadow = true;
   mercury.receiveShadow = true;
