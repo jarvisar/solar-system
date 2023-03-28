@@ -401,7 +401,7 @@ function createPlanets(){
   scene.add(venus);
 
   const venusAtmoGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
-  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: , transparent: true, opacity: 0.75, shininess: 4  });
+  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: venusAtmo, transparent: true, opacity: 0.75, shininess: 4  });
   venusAtmo = new THREE.Mesh(venusAtmoGeometry, venusAtmoMaterial);
   venusAtmo.position.set(0, 0, 0);
   venus.add(venusAtmo);
