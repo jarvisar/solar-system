@@ -60,7 +60,7 @@ systemSettings.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
 }).name("System Scale").listen();
 
 // add control for rotationSpeed
-systemSettings.add(guicontrols, "rotationSpeed", 0, 15, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "rotationSpeed", 0, 30, 0.1).onChange((value) => {
   rotationSpeed = value;
 }).name("Orbit Rotation Speed").listen();
 
