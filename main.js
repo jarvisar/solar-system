@@ -955,6 +955,7 @@ const regenerate = () => {
     createOrbits();
   }
   createSky();
+  camera.far = 400000 * scale;
   focusedPlanet = sunMesh;
   dropdown.value = "sun";
 }
@@ -1334,12 +1335,14 @@ if (urlParams.has('planet')) {
 
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
+  const planets = [sunMesh, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto];
   if (event.code === 'Escape') {
     // if flight enabled
     if(focusedPlanet == spaceship){// calculate closest planet to camera
     let closestPlanet = sunMesh;
     let closestDistance = camera.position.distanceTo(sunMesh.position);
-    for (let planet of planets) {
+    for (let planet of planets) { 
+      console.log(planet.position)
       let distance = camera.position.distanceTo(planet.position);
       if (distance < closestDistance) {
         closestPlanet = planet;
@@ -1352,7 +1355,6 @@ document.addEventListener('keydown', function(event) {
     }
   }
 });
-const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto];
 
 // add event listener for "title" select element on change
 dropdown.addEventListener("change", function() {
