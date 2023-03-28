@@ -192,51 +192,107 @@ var plutoTexture
 var plutoBumpTexture
 var plutoSpecular
 
-function loadAllTextures(){
-  // load textures
-  const loader = new THREE.TextureLoader();
-  starTexture = loader.load('public/8k_stars_milky_way.jpg');
-  sunTexture = loader.load('public/2k_sun.jpg');
-  mercuryTexture = loader.load('public/2k_mercury.jpg');
-  mercuryBumpTexture = loader.load('public/mercury_elevation.jpg');
-  venusTexture = loader.load('public/2k_venus_surface.jpg');
-  venusBumpTexture = loader.load('public/venus_elevation.jpg');
-  venusAtmo = loader.load('public/2k_venus_atmosphere.jpg')
-  earthTexture = loader.load('public/8k_earth_daymap.jpg');
-  earthBumpTexture = loader.load('public/earth_elevation.jpg');
-  earthSpecular = loader.load('public/2k_earth_specular_map.tif');
-  earthEmissive = loader.load('public/2k_earth_nightmap.jpg');
-  earthCloud = loader.load('public/earth_clouds.png');
-  moonTexture = loader.load('public/2k_moon.jpg');
-  moonBumpTexture = loader.load('public/moon_elevation.jpg');
-  marsTexture = loader.load('public/2k_mars.jpg');
-  marsBumpTexture = loader.load('public/mars_elevation.jpg');
-  jupiterTexture = loader.load('public/2k_jupiter.jpg');
-  ioTexture = loader.load('public/io_texture.jpg');
-  ioBumpTexture = loader.load('public/io_elevation.png');
-  europaTexture = loader.load('public/europa_texture.png');
-  europaBumpTexture = loader.load('public/europa_elevation.png');
-  ganymedeTexture = loader.load('public/ganymede_texture.png');
-  ganymedeBumpTexture = loader.load('public/ganymede_elevation.jpg');
-  callistoTexture = loader.load('public/callisto_texture.jpg');
-  callistoBumpTexture = loader.load('public/callisto_elevation.jpg');
-  saturnTexture = loader.load('public/2k_saturn.jpg');
-  saturnRingTexture = loader.load('public/saturn_rings.png');
-  titanTexture = loader.load('public/titan_texture.png');
-  titanBumpTexture = loader.load('public/titan_elevation.png');
-  enceladusTexture = loader.load('public/enceladus_texture.jpg');
-  enceladusBumpTexture = loader.load('public/enceladus_elevation.png');
-  iapetusTexture = loader.load('public/iapetus_texture.png');
-  iapetusBumpTexture = loader.load('public/iapetus_elevation.png');
-  uranusTexture = loader.load('public/2k_uranus.jpg');
-  neptuneTexture = loader.load('public/2k_neptune.jpg');
-  tritonTexture = loader.load('public/triton_texture.png');
-  tritonBumpTexture = loader.load('public/triton_elevation.jpg');
-  plutoTexture = loader.load('public/2k_pluto.webp');
-  plutoBumpTexture = loader.load('public/pluto_elevation.png');
-  plutoSpecular = loader.load('public/pluto_spec.png');
+function loadAllTextures() {
+  return new Promise((resolve, reject) => {
+    const loader = new THREE.TextureLoader();
+    const texturesToLoad = [      
+      loader.load('public/8k_stars_milky_way.jpg'),
+      loader.load('public/2k_sun.jpg'),
+      loader.load('public/2k_mercury.jpg'),
+      loader.load('public/mercury_elevation.jpg'),
+      loader.load('public/2k_venus_surface.jpg'),
+      loader.load('public/venus_elevation.jpg'),
+      loader.load('public/2k_venus_atmosphere.jpg'),
+      loader.load('public/8k_earth_daymap.jpg'),
+      loader.load('public/earth_elevation.jpg'),
+      loader.load('public/2k_earth_specular_map.tif'),
+      loader.load('public/2k_earth_nightmap.jpg'),
+      loader.load('public/earth_clouds.png'),
+      loader.load('public/2k_moon.jpg'),
+      loader.load('public/moon_elevation.jpg'),
+      loader.load('public/2k_mars.jpg'),
+      loader.load('public/mars_elevation.jpg'),
+      loader.load('public/2k_jupiter.jpg'),
+      loader.load('public/io_texture.jpg'),
+      loader.load('public/io_elevation.png'),
+      loader.load('public/europa_texture.png'),
+      loader.load('public/europa_elevation.png'),
+      loader.load('public/ganymede_texture.png'),
+      loader.load('public/ganymede_elevation.jpg'),
+      loader.load('public/callisto_texture.jpg'),
+      loader.load('public/callisto_elevation.jpg'),
+      loader.load('public/2k_saturn.jpg'),
+      loader.load('public/saturn_rings.png'),
+      loader.load('public/titan_texture.png'),
+      loader.load('public/titan_elevation.png'),
+      loader.load('public/enceladus_texture.jpg'),
+      loader.load('public/enceladus_elevation.png'),
+      loader.load('public/iapetus_texture.png'),
+      loader.load('public/iapetus_elevation.png'),
+      loader.load('public/2k_uranus.jpg'),
+      loader.load('public/2k_neptune.jpg'),
+      loader.load('public/triton_texture.png'),
+      loader.load('public/triton_elevation.jpg'),
+      loader.load('public/2k_pluto.webp'),
+      loader.load('public/pluto_elevation.png'),
+      loader.load('public/pluto_spec.png'),    
+    ];
+
+    Promise.all(texturesToLoad)
+      .then((textures) => {
+        // Assign loaded textures to variables
+        starTexture = textures[0];
+        sunTexture = textures[1];
+        mercuryTexture = textures[2];
+        mercuryBumpTexture = textures[3];
+        venusTexture = textures[4];
+        venusBumpTexture = textures[5];
+        venusAtmo = textures[6];
+        earthTexture = textures[7];
+        earthBumpTexture = textures[8];
+        earthSpecular = textures[9];
+        earthEmissive = textures[10];
+        earthCloud = textures[11];
+        moonTexture = textures[12];
+        moonBumpTexture = textures[13];
+        marsTexture = textures[14];
+        marsBumpTexture = textures[15];
+        jupiterTexture = textures[16];
+        ioTexture = textures[17];
+        ioBumpTexture = textures[18];
+        europaTexture = textures[19];
+        europaBumpTexture = textures[20];
+        ganymedeTexture = textures[21];
+        ganymedeBumpTexture = textures[22];
+        callistoTexture = textures[23];
+        callistoBumpTexture = textures[24];
+        saturnTexture = textures[25];
+        saturnRingTexture = textures[26];
+        titanTexture = textures[27];
+        titanBumpTexture = textures[28];
+        enceladusTexture = textures[29];
+        enceladusBumpTexture = textures[30];
+        iapetusTexture = textures[31];
+        iapetusBumpTexture = textures[32];
+        uranusTexture = textures[33];
+        neptuneTexture = textures[34];
+        tritonTexture = textures[35];
+        tritonBumpTexture = textures[36];
+        plutoTexture = textures[37];
+        plutoBumpTexture = textures[38];
+        plutoSpecular = textures[39];
+
+        // Call create functions after all textures are loaded
+        createPlanets();
+        createOrbits();
+        createAsteroidBelts();
+        render();
+        createSky(); // Assuming this is a valid function
+        resolve();
+      })
+      .catch((error) => reject(error));
+  });
 }
-loadAllTextures();
 
 var mercuryDistance
 var venusDistance 
@@ -267,14 +323,6 @@ var tritonDistance
 var plutoDistance
 var plutoTilt
 var plutoAngle
-
-// add star background to scene
-const starGeometry = new THREE.SphereGeometry(300000 * scale, 32, 32);
-const starMaterial = new THREE.MeshBasicMaterial({ map: starTexture, side: THREE.BackSide, depthWrite: false });
-const starMesh = new THREE.Mesh(starGeometry, starMaterial);
-// darken a bit
-starMesh.material.color.setRGB(0.5, 0.5, 0.5);
-scene.add(starMesh);
 
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -342,6 +390,16 @@ var tritonOrbit;
 var plutoOrbit;
 
 var sunLight;
+
+function createSky() {
+  // add star background to scene
+  const starGeometry = new THREE.SphereGeometry(300000 * scale, 32, 32);
+  const starMaterial = new THREE.MeshBasicMaterial({ map: starTexture, side: THREE.BackSide, depthWrite: false });
+  const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+  // darken a bit
+  starMesh.material.color.setRGB(0.5, 0.5, 0.5);
+  scene.add(starMesh);
+}
 
 function createPlanets(){
 
@@ -793,10 +851,6 @@ function createOrbits(){
   plutoOrbit.rotation.x = Math.PI / 2 - plutoTilt;
   scene.add(plutoOrbit);
 }
-
-createPlanets();
-createOrbits();
-createAsteroidBelts();
 
 // load spaceship from UFO_Empty.glb but declare it outside callback so I can uypdate position from animate function
 // spaceship from UFO_Empty.glb
@@ -1304,8 +1358,6 @@ dropdown.addEventListener("change", function() {
   changeFocusedPlanet(dropdown.value);
 });
 
-render();
-
 // event listener for toggle-flight-button
 document.getElementById('toggle-flight-button').addEventListener('click', function() {
   if (focusedPlanet != spaceship){
@@ -1380,3 +1432,6 @@ document.addEventListener("keydown", function(event) {
     }
   }
 });
+
+// Start scene
+loadAllTextures();
