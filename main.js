@@ -22,7 +22,7 @@ let moveDown = false;
 var scale = 3;
 var enableOrbits = true;
 var flightSensitivity = 10;
-var rotationSpeed = 0.2;
+var rotationSpeed = 1.0;
 var flightFov = 50;
 var numAsteroids = 1;
 var flightRotationSpeed = 1;
@@ -47,7 +47,7 @@ const guicontrols = {
   scale: 3,
   flightSensitivity: 10,
   enableOrbits: true,
-  rotationSpeed: 0.2,
+  rotationSpeed: 1.0,
   flightFov: 50,
   numAsteroids: 1,
   flightRotationSpeed: 1,
@@ -738,28 +738,28 @@ function render() {
   }
   
   // rotate sun in place
-  sunMesh.rotation.y -= 0.0005 * rotationSpeed;
+  sunMesh.rotation.y -= 0.0005 * rotationSpeed * 0.15;
   // rotate all planets in place
-  mercury.rotation.y -= 0.002 * rotationSpeed;
-  venus.rotation.y -= 0.002 * rotationSpeed;
-  venusAtmo.rotation.y += 0.0005 * rotationSpeed;
+  mercury.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  venus.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  venusAtmo.rotation.y += 0.0005 * rotationSpeed * 0.15;
 
-  earth.rotation.y -= 0.002 * rotationSpeed;
-  cloudMesh.rotation.y += 0.0003 * rotationSpeed;
-  moon.rotation.y -= 0.002 * rotationSpeed;
+  earth.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  cloudMesh.rotation.y += 0.0003 * rotationSpeed * 0.15;
+  moon.rotation.y -= 0.002 * rotationSpeed * 0.15;
 
-  mars.rotation.y -= 0.002 * rotationSpeed;
-  jupiter.rotation.y -= 0.001 * rotationSpeed;
-  io.rotation.y -= 0.001 * rotationSpeed;
-  europa.rotation.y -= 0.001 * rotationSpeed;
-  ganymede.rotation.y -= 0.001 * rotationSpeed;
-  callisto.rotation.y -= 0.001 * rotationSpeed;
-  saturn.rotation.y -= 0.001 * rotationSpeed;
-  uranus.rotation.z -= 0.001 * rotationSpeed;
-  neptune.rotation.y -= 0.001 * rotationSpeed;
+  mars.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  jupiter.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  io.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  europa.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  ganymede.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  callisto.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  saturn.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  uranus.rotation.z -= 0.001 * rotationSpeed * 0.15;
+  neptune.rotation.y -= 0.001 * rotationSpeed * 0.15;
 
-  asteroidRing.rotation.y -= 0.00004 * rotationSpeed;
-  kuiperRing.rotation.y -= 0.00001 * rotationSpeed;
+  asteroidRing.rotation.y -= 0.00004 * rotationSpeed * 0.2;
+  kuiperRing.rotation.y -= 0.00001 * rotationSpeed * 0.2;
 
   spaceship.rotation.y += 0.001 * rotationSpeed;
 
@@ -801,16 +801,16 @@ function render() {
   pluto.rotateX(plutoRotation);
   
   // Increase the angle for the next frame
-  mercuryAngle += 0.00025 * rotationSpeed;
-  venusAngle += 0.00025 * rotationSpeed;
-  earthAngle += 0.0001 * rotationSpeed;
-  marsAngle += 0.000125 * rotationSpeed;
-  jupiterAngle += 0.0000625 * rotationSpeed;
-  saturnAngle += 0.00003125 * rotationSpeed;
-  uranusAngle += 0.000015625 * rotationSpeed;
-  neptuneAngle += 0.000015625 * rotationSpeed;
-  plutoAngle += 0.000015625 * rotationSpeed;
-  plutoRotation += 0.002 * rotationSpeed;
+  mercuryAngle += 0.00025 * rotationSpeed * 0.15;
+  venusAngle += 0.00025 * rotationSpeed * 0.15;
+  earthAngle += 0.0001 * rotationSpeed * 0.15;
+  marsAngle += 0.000125 * rotationSpeed * 0.15;
+  jupiterAngle += 0.0000625 * rotationSpeed * 0.15;
+  saturnAngle += 0.00003125 * rotationSpeed * 0.15;
+  uranusAngle += 0.000015625 * rotationSpeed * 0.15;
+  neptuneAngle += 0.000015625 * rotationSpeed * 0.15;
+  plutoAngle += 0.000015625 * rotationSpeed * 0.15;
+  plutoRotation += 0.002 * rotationSpeed * 0.15;
 
   if (focusedPlanet) {
 
