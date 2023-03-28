@@ -30,7 +30,6 @@ var orbitWidth = 1;
 
 var dropdown = document.getElementById("title");
 
-
 const customTheme = {
   color: '#ffffff', // white text
   backgroundColor: '#000220', // dark blue background
@@ -61,12 +60,12 @@ systemSettings.add(guicontrols, "scale", 0.1, 10, 0.1).onChange((value) => {
 }).name("System Scale").listen();
 
 // add control for rotationSpeed
-systemSettings.add(guicontrols, "rotationSpeed", 0, 10, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "rotationSpeed", 0, 15, 0.1).onChange((value) => {
   rotationSpeed = value;
 }).name("Orbit Rotation Speed").listen();
 
 // add control for numAsteroids
-systemSettings.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "numAsteroids", 0, 3, 0.1).onChange((value) => {
   scene.remove(asteroidRing);
   scene.remove(kuiperRing);
   numAsteroids = value;
@@ -74,7 +73,7 @@ systemSettings.add(guicontrols, "numAsteroids", 0, 2, 0.1).onChange((value) => {
 }).name("Asteroid Belt Density").listen();
 
 // add control for orbitWidth
-systemSettings.add(guicontrols, "orbitWidth", 0, 15, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "orbitWidth", 0, 25, 0.1).onChange((value) => {
   orbitWidth = value;
   removeOrbits();
   createOrbits();
