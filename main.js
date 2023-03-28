@@ -141,6 +141,8 @@ function removeOrbits(){
   jupiter.remove(callistoOrbit);
   scene.remove(saturnOrbit);
   saturn.remove(titanOrbit);
+  saturn.remove(enceladusOrbit);
+  saturn.remove(iapetusOrbit);
   scene.remove(uranusOrbit);
   scene.remove(neptuneOrbit);
   scene.remove(plutoOrbit);
@@ -162,6 +164,8 @@ var callistoDistance
 
 var saturnDistance
 var titanDistance 
+var enceladusDistance
+var iapetusDistance
 
 var uranusDistance 
 var neptuneDistance 
@@ -208,6 +212,8 @@ var callisto;
 var saturn;
 var saturnRing;
 var titan;
+var enceladus;
+var iapetus;
 var uranus;
 var neptune;
 var pluto;
@@ -228,6 +234,8 @@ var ganymedeOrbit;
 var callistoOrbit;
 var saturnOrbit;
 var titanOrbit;
+var enceladusOrbit;
+var iapetusOrbit;
 var uranusOrbit;
 var neptuneOrbit;
 var plutoOrbit;
@@ -247,7 +255,9 @@ function createPlanets(){
   ganymedeDistance = 400 * scale
   callistoDistance = 500 * scale
   saturnDistance = 5300 * scale * 1.2
-  titanDistance = 200 * scale
+  titanDistance = 300 * scale
+  enceladusDistance = 200 * scale
+  iapetusDistance = 400 * scale
   uranusDistance = 6200 * scale * 1.2
   neptuneDistance = 7100 * scale * 1.2
   plutoDistance = 8000 * scale * 1.2
@@ -400,6 +410,25 @@ function createPlanets(){
   titan.receiveShadow = true;
   titan.position.set(0, 0, titanDistance);
   saturn.add(titan);
+
+  // enceladus
+  const enceladusGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
+  const enceladusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/enceladus_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/enceladus_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  enceladus = new THREE.Mesh(enceladusGeometry, enceladusMaterial);
+  enceladus.castShadow = true;
+  enceladus.receiveShadow = true;
+  enceladus.position.set(0, 0, enceladusDistance);
+  enceladus.rotation.y = Math.PI / 2;
+  saturn.add(enceladus);
+
+  // iapetus
+  const iapetusGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
+  const iapetusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/iapetus_texture.png'), bumpMap: new THREE.TextureLoader().load('public/iapetus_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  iapetus = new THREE.Mesh(iapetusGeometry, iapetusMaterial);
+  iapetus.castShadow = true;
+  iapetus.receiveShadow = true;
+  iapetus.position.set(0, 0, iapetusDistance);
+  saturn.add(iapetus);
 
   // uranus
   const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
@@ -570,6 +599,20 @@ function createOrbits(){
   titanOrbit.rotation.x = Math.PI / 2;
   saturn.add(titanOrbit); // add titan orbit to the saturn so that it orbits around the sun along with the saturn
 
+  // enceladus orbit
+  const enceladusOrbitGeometry = new THREE.RingGeometry(enceladusDistance - (.1 * (scale/2) * orbitWidth), enceladusDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const enceladusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  enceladusOrbit = new THREE.Mesh(enceladusOrbitGeometry, enceladusOrbitMaterial);
+  enceladusOrbit.rotation.x = Math.PI / 2;
+  saturn.add(enceladusOrbit); // add enceladus orbit to the saturn so that it orbits around the sun along with the saturn
+
+  // iapetus orbit
+  const iapetusOrbitGeometry = new THREE.RingGeometry(iapetusDistance - (.1 * (scale/2) * orbitWidth), iapetusDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const iapetusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  iapetusOrbit = new THREE.Mesh(iapetusOrbitGeometry, iapetusOrbitMaterial);
+  iapetusOrbit.rotation.x = Math.PI / 2;
+  saturn.add(iapetusOrbit); // add iapetus orbit to the saturn so that it orbits around the sun along with the saturn
+
   // uranus orbit
   const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - (.2 * (scale/2) * orbitWidth), uranusDistance + (.2 * (scale/2) * orbitWidth), 1024);
   const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
@@ -648,6 +691,8 @@ let callistoAngle = Math.PI * 0.25;
 // saturn is 5/8
 let saturnAngle = 5 * (Math.PI / 4);
 let titanAngle = 0;
+let enceladusAngle = Math.PI * 0.5;
+let iapetusAngle = Math.PI * 1.5;
 // uranus is 3/8
 let uranusAngle = 3 * (Math.PI / 4);
 // neptune is 7/8
@@ -707,6 +752,7 @@ const defaultSettings = () => {
   rotationSpeed = 0.5;
   flightFov = 50;
   numAsteroids = 1;
+  orbitWidth = 1;
   // reset controls
   guicontrols.scale = scale;
   guicontrols.flightSensitivity = flightSensitivity;
@@ -714,6 +760,7 @@ const defaultSettings = () => {
   guicontrols.rotationSpeed = rotationSpeed;
   guicontrols.flightFov = flightFov;
   guicontrols.numAsteroids = numAsteroids;
+  guicontrols.orbitWidth = orbitWidth;
   regenerate()
 }
 
@@ -766,8 +813,11 @@ function render() {
   europa.rotation.y -= 0.001 * rotationSpeed * 0.15;
   ganymede.rotation.y -= 0.001 * rotationSpeed * 0.15;
   callisto.rotation.y -= 0.001 * rotationSpeed * 0.15;
+
   saturn.rotation.y -= 0.001 * rotationSpeed * 0.15;
   titan.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  enceladus.rotation.y -= 0.001 * rotationSpeed * 0.15;
+
   uranus.rotation.z -= 0.001 * rotationSpeed * 0.15;
   neptune.rotation.y -= 0.001 * rotationSpeed * 0.15;
 
@@ -792,6 +842,8 @@ function render() {
     { distance: callistoDistance, angle: callistoAngle, object: callisto },
     { distance: saturnDistance, angle: saturnAngle, object: saturn },
     { distance: titanDistance, angle: titanAngle, object: titan },
+    { distance: enceladusDistance, angle: enceladusAngle, object: enceladus },
+    { distance: iapetusDistance, angle: iapetusAngle, object: iapetus },
     { distance: uranusDistance, angle: uranusAngle, object: uranus },
     { distance: neptuneDistance, angle: neptuneAngle, object: neptune }
   ];
@@ -843,6 +895,10 @@ function render() {
       setMoonPosition(callisto, 0);
     } else if (focusedPlanet == titan){
       setMoonPosition(titan, 0);
+    } else if (focusedPlanet == enceladus){
+      setMoonPosition(enceladus, 0);
+    } else if (focusedPlanet == iapetus){
+      setMoonPosition(iapetus, 0);
     } else { // Flight disabled
       disableFlight();
       //lerp controls
@@ -964,6 +1020,14 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = titan;
     dropdown.value = "titan";
     window.history.pushState(null, null, '?planet=titan');
+  } else if (planet == "enceladus" || planet == enceladus) {
+    focusedPlanet = enceladus;
+    dropdown.value = "enceladus";
+    window.history.pushState(null, null, '?planet=enceladus');
+  } else if (planet == "iapetus" || planet == iapetus) { 
+    focusedPlanet = iapetus;
+    dropdown.value = "iapetus";
+    window.history.pushState(null, null, '?planet=iapetus');
   } else if (planet == "uranus" || planet == uranus) {
     focusedPlanet = uranus;
     dropdown.value = "uranus";
