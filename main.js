@@ -147,6 +147,7 @@ function removeOrbits(){
   saturn.remove(iapetusOrbit);
   scene.remove(uranusOrbit);
   scene.remove(neptuneOrbit);
+  neptune.remove(tritonOrbit)
   scene.remove(plutoOrbit);
 }
 
@@ -172,7 +173,10 @@ var enceladusDistance
 var iapetusDistance
 
 var uranusDistance 
+
 var neptuneDistance 
+var tritonDistance
+
 var plutoDistance
 var plutoTilt
 var plutoAngle
@@ -222,6 +226,7 @@ var enceladus;
 var iapetus;
 var uranus;
 var neptune;
+var triton;
 var pluto;
 
 var asteroidRing;
@@ -246,6 +251,7 @@ var enceladusOrbit;
 var iapetusOrbit;
 var uranusOrbit;
 var neptuneOrbit;
+var tritonOrbit;
 var plutoOrbit;
 
 var sunLight;
@@ -270,6 +276,7 @@ function createPlanets(){
   iapetusDistance = 400 * scale
   uranusDistance = 6200 * scale * 1.2
   neptuneDistance = 7100 * scale * 1.2
+  tritonDistance = 250 * scale
   plutoDistance = 8000 * scale * 1.2
 
   // Create a sphere for the Sun and add it to the scene as a light source
@@ -290,7 +297,7 @@ function createPlanets(){
 
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 64, 64);
-  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.2 * scale });
+  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.1 * scale, shininess: 4 });
   mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
   mercury.castShadow = true;
   mercury.receiveShadow = true;
@@ -299,7 +306,7 @@ function createPlanets(){
 
   //venus
   const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-  const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_surface.jpg'), bumpMap: new THREE.TextureLoader().load('public/venus_elevation.jpg'), bumpScale: 0.2 * scale });
+  const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_surface.jpg'), bumpMap: new THREE.TextureLoader().load('public/venus_elevation.jpg'), bumpScale: 0.2 * scale, shininess: 4 });
   venus = new THREE.Mesh(venusGeometry, venusMaterial);
   venus.castShadow = true;
   venus.receiveShadow = true;
@@ -307,7 +314,7 @@ function createPlanets(){
   scene.add(venus);
 
   const venusAtmoGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
-  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg'), transparent: true, opacity: 0.75 });
+  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg'), transparent: true, opacity: 0.75, shininess: 4  });
   venusAtmo = new THREE.Mesh(venusAtmoGeometry, venusAtmoMaterial);
   venusAtmo.position.set(0, 0, 0);
   venus.add(venusAtmo);
@@ -331,8 +338,8 @@ function createPlanets(){
   earth.add(cloudMesh);
 
   //moon
-  const moonGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-  const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg'), bumpMap: new THREE.TextureLoader().load('public/moon_elevation.jpg'), bumpScale: 0.1 * scale });
+  const moonGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
+  const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg'), bumpMap: new THREE.TextureLoader().load('public/moon_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
   moon = new THREE.Mesh(moonGeometry, moonMaterial);
   moon.castShadow = true;
   moon.receiveShadow = true;
@@ -342,7 +349,7 @@ function createPlanets(){
 
   // mars
   const marsGeometry = new THREE.SphereGeometry(14 * scale, 64, 64);
-  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.2 * scale });
+  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.2 * scale, shininess: 4 });
   mars = new THREE.Mesh(marsGeometry, marsMaterial);
   mars.castShadow = true;
   mars.receiveShadow = true;
@@ -479,6 +486,16 @@ function createPlanets(){
   neptune.receiveShadow = true;
   neptune.position.set(0, 0, neptuneDistance);
   scene.add(neptune);
+
+  // triton
+  const tritonGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
+  const tritonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/triton_texture.png'), bumpMap: new THREE.TextureLoader().load('public/triton_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
+  triton = new THREE.Mesh(tritonGeometry, tritonMaterial);
+  triton.castShadow = true;
+  triton.receiveShadow = true;
+  triton.position.set(0, 0, tritonDistance);
+  triton.rotation.y = Math.PI / 2;
+  neptune.add(triton);
   
   // pluto
   const plutoGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
@@ -673,6 +690,13 @@ function createOrbits(){
   neptuneOrbit.rotation.x = Math.PI / 2;
   scene.add(neptuneOrbit);
 
+  // triton orbit
+  const tritonOrbitGeometry = new THREE.RingGeometry(tritonDistance - (.1 * (scale/2) * orbitWidth), tritonDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const tritonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  tritonOrbit = new THREE.Mesh(tritonOrbitGeometry, tritonOrbitMaterial);
+  tritonOrbit.rotation.x = Math.PI / 2;
+  neptune.add(tritonOrbit); // add triton orbit to the neptune so that it orbits around the sun along with the neptune
+
   // pluto orbit
   const plutoOrbitGeometry = new THREE.RingGeometry(plutoDistance - (0.2 * (scale / 2) * orbitWidth), plutoDistance + (0.2 * (scale / 2) * orbitWidth), 1024);
   const plutoOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
@@ -745,6 +769,7 @@ let iapetusAngle = Math.PI * 1.5;
 let uranusAngle = 3 * (Math.PI / 4);
 // neptune is 7/8
 let neptuneAngle = 7 * (Math.PI / 4);
+let tritonAngle = 0;
 // pluto is 0
 let plutoRotation = 0;
 
@@ -871,6 +896,7 @@ function render() {
 
   uranus.rotation.z -= 0.001 * rotationSpeed * 0.15;
   neptune.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  triton.rotation.y -= 0.001 * rotationSpeed * 0.15;
 
   asteroidRing.rotation.y -= 0.00004 * rotationSpeed * 0.2;
   kuiperRing.rotation.y -= 0.00001 * rotationSpeed * 0.2;
@@ -898,7 +924,8 @@ function render() {
     { distance: enceladusDistance, angle: enceladusAngle, object: enceladus },
     { distance: iapetusDistance, angle: iapetusAngle, object: iapetus },
     { distance: uranusDistance, angle: uranusAngle, object: uranus },
-    { distance: neptuneDistance, angle: neptuneAngle, object: neptune }
+    { distance: neptuneDistance, angle: neptuneAngle, object: neptune },
+    { distance: tritonDistance, angle: tritonAngle, object: triton }
   ];
   
   planets.forEach(planet => {
@@ -956,6 +983,8 @@ function render() {
       setMoonPosition(enceladus, 0);
     } else if (focusedPlanet == iapetus){
       setMoonPosition(iapetus, 0);
+    } else if (focusedPlanet == triton){
+      setMoonPosition(triton, 0);
     } else { // Flight disabled
       disableFlight();
       //lerp controls
@@ -1106,6 +1135,10 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = neptune;
     dropdown.value = "neptune";
     window.history.pushState(null, null, '?planet=neptune');
+  } else if (planet == "triton" || planet == triton) {
+    focusedPlanet = triton;
+    dropdown.value = "triton";
+    window.history.pushState(null, null, '?planet=triton');
   } else if (planet == "pluto" || planet == pluto) {
     focusedPlanet = pluto;
     dropdown.value = "pluto";
@@ -1139,13 +1172,13 @@ renderer.domElement.addEventListener('click', function(event) {
       reticule.style.display = 'none';
       changeFocusedPlanet(intersects[0].object);
       console.log(intersects[0].object.name)
-      if (intersects[0].object.name.includes("mesh_0")) { // UFO
+      if (intersects[0].object.name.includes("mesh_0")) { // UFO model
         changeFocusedPlanet("spaceship");
       }
-      if (intersects[0].object.name.includes("deimos")){
+      if (intersects[0].object.name.includes("deimos")){ // Deimos model
         changeFocusedPlanet("deimos");
       }
-      if (intersects[0].object.name.includes("phobos")){
+      if (intersects[0].object.name.includes("phobos")){ // Phobos model
         changeFocusedPlanet("phobos");
       }
     }
