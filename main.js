@@ -192,6 +192,7 @@ var tritonBumpTexture
 var plutoTexture
 var plutoBumpTexture
 var plutoSpecular
+
 function loadAllTextures(){
   // load textures
   const loader = new THREE.TextureLoader();
@@ -221,7 +222,7 @@ function loadAllTextures(){
   callistoTexture = loader.load('public/callisto_texture.jpg');
   callistoBumpTexture = loader.load('public/callisto_elevation.jpg');
   saturnTexture = loader.load('public/2k_saturn.jpg');
-  saturnRingTexture = loader.load('public/saturn_ring.png');
+  saturnRingTexture = loader.load('public/saturn_rings.png');
   titanTexture = loader.load('public/titan_texture.png');
   titanBumpTexture = loader.load('public/titan_elevation.png');
   enceladusTexture = loader.load('public/enceladus_texture.jpg');
@@ -231,7 +232,7 @@ function loadAllTextures(){
   uranusTexture = loader.load('public/2k_uranus.jpg');
   neptuneTexture = loader.load('public/2k_neptune.jpg');
   tritonTexture = loader.load('public/triton_texture.png');
-  tritonBumpTexture = loader.load('public/triton_elevation.png');
+  tritonBumpTexture = loader.load('public/triton_elevation.jpg');
   plutoTexture = loader.load('public/2k_pluto.webp');
   plutoBumpTexture = loader.load('public/pluto_elevation.png');
   plutoSpecular = loader.load('public/pluto_spec.png');
