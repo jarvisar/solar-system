@@ -362,7 +362,7 @@ function createPlanets(){
 
   // callisto
   const callistoGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
-  const callistoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/callisto_texture.png'), color: 0xaaaaaa });
+  const callistoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/callisto_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/callisto_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
   callisto = new THREE.Mesh(callistoGeometry, callistoMaterial);
   callisto.castShadow = true;
   callisto.receiveShadow = true;
