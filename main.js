@@ -140,6 +140,7 @@ function removeOrbits(){
   jupiter.remove(ganymedeOrbit);
   jupiter.remove(callistoOrbit);
   scene.remove(saturnOrbit);
+  saturn.remove(titanOrbit);
   scene.remove(uranusOrbit);
   scene.remove(neptuneOrbit);
   scene.remove(plutoOrbit);
@@ -159,7 +160,8 @@ var europaDistance
 var ganymedeDistance
 var callistoDistance
 
-var saturnDistance 
+var saturnDistance
+var titanDistance 
 
 var uranusDistance 
 var neptuneDistance 
@@ -205,6 +207,7 @@ var ganymede;
 var callisto;
 var saturn;
 var saturnRing;
+var titan;
 var uranus;
 var neptune;
 var pluto;
@@ -224,6 +227,7 @@ var europaOrbit;
 var ganymedeOrbit;
 var callistoOrbit;
 var saturnOrbit;
+var titanOrbit;
 var uranusOrbit;
 var neptuneOrbit;
 var plutoOrbit;
@@ -243,6 +247,7 @@ function createPlanets(){
   ganymedeDistance = 400 * scale
   callistoDistance = 500 * scale
   saturnDistance = 5300 * scale * 1.2
+  titanDistance = 200 * scale
   uranusDistance = 6200 * scale * 1.2
   neptuneDistance = 7100 * scale * 1.2
   plutoDistance = 8000 * scale * 1.2
@@ -386,6 +391,15 @@ function createPlanets(){
   saturnRing.receiveShadow = true;
   saturnRing.castShadow = true;
   saturn.add(saturnRing);
+
+  // titan
+  const titanGeometry = new THREE.SphereGeometry(4 * scale, 32, 32);
+  const titanMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/titan_texture.png'), bumpMap: new THREE.TextureLoader().load('public/titan_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  titan = new THREE.Mesh(titanGeometry, titanMaterial);
+  titan.castShadow = true;
+  titan.receiveShadow = true;
+  titan.position.set(0, 0, titanDistance);
+  saturn.add(titan);
 
   // uranus
   const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
@@ -549,6 +563,13 @@ function createOrbits(){
   saturnOrbit.rotation.x = Math.PI / 2;
   scene.add(saturnOrbit);
 
+  // titan orbit
+  const titanOrbitGeometry = new THREE.RingGeometry(titanDistance - (.1 * (scale/2) * orbitWidth), titanDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const titanOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  titanOrbit = new THREE.Mesh(titanOrbitGeometry, titanOrbitMaterial);
+  titanOrbit.rotation.x = Math.PI / 2;
+  saturn.add(titanOrbit); // add titan orbit to the saturn so that it orbits around the sun along with the saturn
+
   // uranus orbit
   const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - (.2 * (scale/2) * orbitWidth), uranusDistance + (.2 * (scale/2) * orbitWidth), 1024);
   const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
@@ -626,15 +647,15 @@ let ganymedeAngle = Math.PI * 1.5;;
 let callistoAngle = Math.PI * 0.25;
 // saturn is 5/8
 let saturnAngle = 5 * (Math.PI / 4);
+let titanAngle = 0;
 // uranus is 3/8
 let uranusAngle = 3 * (Math.PI / 4);
 // neptune is 7/8
 let neptuneAngle = 7 * (Math.PI / 4);
-
+// pluto is 0
 let plutoRotation = 0;
 
 let focusedPlanet = null;
-let cameraTarget = new THREE.Vector3();
 let lerpSpeed = 0.08; // Adjust this value to control the speed of the animation
 
 // add regenerate button to gui to reset the scene
@@ -656,17 +677,8 @@ const regenerate = () => {
   scene.remove(asteroidRing);
   scene.remove(kuiperRing);
 
-  //remove orbit lines
-  scene.remove(mercuryOrbit);
-  scene.remove(venusOrbit);
-  scene.remove(earthOrbit);
-  scene.remove(moonOrbit);
-  scene.remove(marsOrbit);
-  scene.remove(jupiterOrbit);
-  scene.remove(saturnOrbit);
-  scene.remove(uranusOrbit);
-  scene.remove(neptuneOrbit);
-  scene.remove(plutoOrbit);
+  // remove all orbits from scene
+  removeOrbits();
 
   camera.position.set(400 * scale, 250 * scale, -1600 * scale);
 
@@ -755,6 +767,7 @@ function render() {
   ganymede.rotation.y -= 0.001 * rotationSpeed * 0.15;
   callisto.rotation.y -= 0.001 * rotationSpeed * 0.15;
   saturn.rotation.y -= 0.001 * rotationSpeed * 0.15;
+  titan.rotation.y -= 0.001 * rotationSpeed * 0.15;
   uranus.rotation.z -= 0.001 * rotationSpeed * 0.15;
   neptune.rotation.y -= 0.001 * rotationSpeed * 0.15;
 
@@ -778,6 +791,7 @@ function render() {
     { distance: ganymedeDistance, angle: ganymedeAngle, object: ganymede },
     { distance: callistoDistance, angle: callistoAngle, object: callisto },
     { distance: saturnDistance, angle: saturnAngle, object: saturn },
+    { distance: titanDistance, angle: titanAngle, object: titan },
     { distance: uranusDistance, angle: uranusAngle, object: uranus },
     { distance: neptuneDistance, angle: neptuneAngle, object: neptune }
   ];
@@ -818,66 +832,17 @@ function render() {
     if (focusedPlanet == spaceship) { // Flight enabled
       enableFlight();
     } else if (focusedPlanet == moon){ // need to check if focusedPlanet is a child
-      disableFlight();
-      //lerp controls to moon (member of earth)
-      var moonPosition = new THREE.Vector3();
-      moonPosition.setFromMatrixPosition(moon.matrixWorld); // get moon position
-      // lerp spaceship and controls
-      controls.target.x = lerp(controls.target.x, moonPosition.x, lerpSpeed);
-      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
-      controls.target.z = lerp(controls.target.z, moonPosition.z, lerpSpeed);
-      // move spaceship above planet with lerp
-      spaceship.position.x = lerp(spaceship.position.x, moonPosition.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, 240, lerpSpeed + 0.01);
-      spaceship.position.z = lerp(spaceship.position.z, moonPosition.z, lerpSpeed + 0.01);
+      setMoonPosition(moon, 0);
     } else if (focusedPlanet == io){
-      disableFlight();
-      var ioPosition = new THREE.Vector3();
-      ioPosition.setFromMatrixPosition(io.matrixWorld); // get moon position
-      // lerp spaceship and controls
-      controls.target.x = lerp(controls.target.x, ioPosition.x, lerpSpeed);
-      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
-      controls.target.z = lerp(controls.target.z, ioPosition.z, lerpSpeed);
-      // move spaceship above planet with lerp
-      spaceship.position.x = lerp(spaceship.position.x, ioPosition.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
-      spaceship.position.z = lerp(spaceship.position.z, ioPosition.z, lerpSpeed + 0.01);
+      setMoonPosition(io, 0);
     } else if (focusedPlanet == europa){
-      disableFlight();
-      var europaPosition = new THREE.Vector3();
-      europaPosition.setFromMatrixPosition(europa.matrixWorld); // get moon position
-      // lerp spaceship and controls
-      controls.target.x = lerp(controls.target.x, europaPosition.x, lerpSpeed);
-      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
-      controls.target.z = lerp(controls.target.z, europaPosition.z, lerpSpeed);
-      // move spaceship above planet with lerp
-      spaceship.position.x = lerp(spaceship.position.x, europaPosition.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
-      spaceship.position.z = lerp(spaceship.position.z, europaPosition.z, lerpSpeed + 0.01);
+      setMoonPosition(europa, 0);
     } else if (focusedPlanet == ganymede){
-      disableFlight();
-      var ganymedePosition = new THREE.Vector3();
-      ganymedePosition.setFromMatrixPosition(ganymede.matrixWorld); // get moon position
-      // lerp spaceship and controls
-      controls.target.x = lerp(controls.target.x, ganymedePosition.x, lerpSpeed);
-      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
-      controls.target.z = lerp(controls.target.z, ganymedePosition.z, lerpSpeed);
-      // move spaceship above planet with lerp
-      spaceship.position.x = lerp(spaceship.position.x, ganymedePosition.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
-      spaceship.position.z = lerp(spaceship.position.z, ganymedePosition.z, lerpSpeed + 0.01);
+      setMoonPosition(ganymede, 0);
     } else if (focusedPlanet == callisto){
-      disableFlight();
-      var callistoPosition = new THREE.Vector3();
-      callistoPosition.setFromMatrixPosition(callisto.matrixWorld); // get moon position
-      // lerp spaceship and controls
-      controls.target.x = lerp(controls.target.x, callistoPosition.x, lerpSpeed);
-      controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
-      controls.target.z = lerp(controls.target.z, callistoPosition.z, lerpSpeed);
-      // move spaceship above planet with lerp
-      spaceship.position.x = lerp(spaceship.position.x, callistoPosition.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
-      spaceship.position.z = lerp(spaceship.position.z, callistoPosition.z, lerpSpeed + 0.01);
+      setMoonPosition(callisto, 0);
+    } else if (focusedPlanet == titan){
+      setMoonPosition(titan, 0);
     } else { // Flight disabled
       disableFlight();
       //lerp controls
@@ -886,7 +851,7 @@ function render() {
       controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
       // move spaceship above planet with lerp
       spaceship.position.x = lerp(spaceship.position.x, focusedPlanet.position.x, lerpSpeed + 0.01);
-      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.position.y + focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
       spaceship.position.z = lerp(spaceship.position.z, focusedPlanet.position.z, lerpSpeed + 0.01);
     }
     camera.position.copy(controls.object.position);
@@ -906,6 +871,20 @@ function render() {
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
+
+function setMoonPosition(moon, offsetY) {
+  disableFlight();
+  var moonPosition = new THREE.Vector3();
+  moonPosition.setFromMatrixPosition(moon.matrixWorld); // get moon position
+  // lerp spaceship and controls
+  controls.target.x = lerp(controls.target.x, moonPosition.x, lerpSpeed);
+  controls.target.y = lerp(controls.target.y, 0, lerpSpeed);
+  controls.target.z = lerp(controls.target.z, moonPosition.z, lerpSpeed);
+  // move spaceship above planet with lerp
+  spaceship.position.x = lerp(spaceship.position.x, moonPosition.x, lerpSpeed + 0.01);
+  spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240 + offsetY, lerpSpeed + 0.01);
+  spaceship.position.z = lerp(spaceship.position.z, moonPosition.z, lerpSpeed + 0.01);
+}
 
 function enableFlight(){
   controls.enabled = false;
@@ -981,6 +960,10 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = saturn;
     dropdown.value = "saturn";
     window.history.pushState(null, null, '?planet=saturn');
+  } else if (planet == "titan" || planet == titan) {
+    focusedPlanet = titan;
+    dropdown.value = "titan";
+    window.history.pushState(null, null, '?planet=titan');
   } else if (planet == "uranus" || planet == uranus) {
     focusedPlanet = uranus;
     dropdown.value = "uranus";
