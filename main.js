@@ -30,6 +30,7 @@ var orbitWidth = 1;
 
 var dropdown = document.getElementById("title");
 
+
 const customTheme = {
   color: '#ffffff', // white text
   backgroundColor: '#000220', // dark blue background
@@ -151,6 +152,92 @@ function removeOrbits(){
   scene.remove(plutoOrbit);
 }
 
+var starTexture
+var sunTexture
+var mercuryTexture
+var mercuryBumpTexture
+var venusTexture
+var venusBumpTexture
+var venusAtmo
+var earthTexture
+var earthBumpTexture
+var earthSpecular
+var earthEmissive
+var earthCloud
+var moonTexture
+var moonBumpTexture
+var marsTexture
+var marsBumpTexture
+var jupiterTexture
+var ioTexture
+var ioBumpTexture
+var europaTexture
+var europaBumpTexture
+var ganymedeTexture
+var ganymedeBumpTexture
+var callistoTexture
+var callistoBumpTexture
+var saturnTexture
+var saturnRingTexture
+var titanTexture
+var titanBumpTexture
+var enceladusTexture
+var enceladusBumpTexture
+var iapetusTexture
+var iapetusBumpTexture
+var uranusTexture
+var neptuneTexture
+var tritonTexture
+var tritonBumpTexture
+var plutoTexture
+var plutoBumpTexture
+var plutoSpecular
+function loadAllTextures(){
+  // load textures
+  const loader = new THREE.TextureLoader();
+  starTexture = loader.load('public/8k_stars_milky_way.jpg');
+  sunTexture = loader.load('public/2k_sun.jpg');
+  mercuryTexture = loader.load('public/2k_mercury.jpg');
+  mercuryBumpTexture = loader.load('public/mercury_elevation.jpg');
+  venusTexture = loader.load('public/2k_venus_surface.jpg');
+  venusBumpTexture = loader.load('public/venus_elevation.jpg');
+  venusAtmo = loader.load('public/2k_venus_atmosphere.jpg')
+  earthTexture = loader.load('public/8k_earth_daymap.jpg');
+  earthBumpTexture = loader.load('public/earth_elevation.jpg');
+  earthSpecular = loader.load('public/2k_earth_specular_map.tif');
+  earthEmissive = loader.load('public/2k_earth_nightmap.jpg');
+  earthCloud = loader.load('public/earth_clouds.png');
+  moonTexture = loader.load('public/2k_moon.jpg');
+  moonBumpTexture = loader.load('public/moon_elevation.jpg');
+  marsTexture = loader.load('public/2k_mars.jpg');
+  marsBumpTexture = loader.load('public/mars_elevation.jpg');
+  jupiterTexture = loader.load('public/2k_jupiter.jpg');
+  ioTexture = loader.load('public/io_texture.jpg');
+  ioBumpTexture = loader.load('public/io_elevation.png');
+  europaTexture = loader.load('public/europa_texture.png');
+  europaBumpTexture = loader.load('public/europa_elevation.png');
+  ganymedeTexture = loader.load('public/ganymede_texture.png');
+  ganymedeBumpTexture = loader.load('public/ganymede_elevation.jpg');
+  callistoTexture = loader.load('public/callisto_texture.jpg');
+  callistoBumpTexture = loader.load('public/callisto_elevation.jpg');
+  saturnTexture = loader.load('public/2k_saturn.jpg');
+  saturnRingTexture = loader.load('public/saturn_ring.png');
+  titanTexture = loader.load('public/titan_texture.png');
+  titanBumpTexture = loader.load('public/titan_elevation.png');
+  enceladusTexture = loader.load('public/enceladus_texture.jpg');
+  enceladusBumpTexture = loader.load('public/enceladus_elevation.png');
+  iapetusTexture = loader.load('public/iapetus_texture.png');
+  iapetusBumpTexture = loader.load('public/iapetus_elevation.png');
+  uranusTexture = loader.load('public/2k_uranus.jpg');
+  neptuneTexture = loader.load('public/2k_neptune.jpg');
+  tritonTexture = loader.load('public/triton_texture.png');
+  tritonBumpTexture = loader.load('public/triton_elevation.png');
+  plutoTexture = loader.load('public/2k_pluto.webp');
+  plutoBumpTexture = loader.load('public/pluto_elevation.png');
+  plutoSpecular = loader.load('public/pluto_spec.png');
+}
+loadAllTextures();
+
 var mercuryDistance
 var venusDistance 
 
@@ -183,7 +270,7 @@ var plutoAngle
 
 // add star background to scene
 const starGeometry = new THREE.SphereGeometry(300000 * scale, 32, 32);
-const starMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/8k_stars_milky_way.jpg'), side: THREE.BackSide, depthWrite: false });
+const starMaterial = new THREE.MeshBasicMaterial({ map: starTexture, side: THREE.BackSide, depthWrite: false });
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 // darken a bit
 starMesh.material.color.setRGB(0.5, 0.5, 0.5);
@@ -290,14 +377,14 @@ function createPlanets(){
   scene.add(sunLight);
 
   const sunGeometry = new THREE.SphereGeometry(200 * scale, 128, 128);
-  const sunMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_sun.jpg'), emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: new THREE.TextureLoader().load('public/2k_sun.jpg') });
+  const sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture, emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: sunTexture });
   sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
   sunMesh.position.set(0, 0, 0);
   scene.add(sunMesh);
 
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 64, 64);
-  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mercury.jpg'), bumpMap: new THREE.TextureLoader().load('public/mercury_elevation.jpg'), bumpScale: 0.07 * scale, shininess: 4 });
+  const mercuryMaterial = new THREE.MeshPhongMaterial({ map: mercuryTexture, bumpMap: mercuryBumpTexture, bumpScale: 0.07 * scale, shininess: 4 });
   mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
   mercury.castShadow = true;
   mercury.receiveShadow = true;
@@ -306,7 +393,7 @@ function createPlanets(){
 
   //venus
   const venusGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-  const venusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_surface.jpg'), bumpMap: new THREE.TextureLoader().load('public/venus_elevation.jpg'), bumpScale: 0.2 * scale, shininess: 4 });
+  const venusMaterial = new THREE.MeshPhongMaterial({ map: venusTexture, bumpMap: venusBumpTexture, bumpScale: 0.2 * scale, shininess: 4 });
   venus = new THREE.Mesh(venusGeometry, venusMaterial);
   venus.castShadow = true;
   venus.receiveShadow = true;
@@ -314,16 +401,16 @@ function createPlanets(){
   scene.add(venus);
 
   const venusAtmoGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
-  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_venus_atmosphere.jpg'), transparent: true, opacity: 0.75, shininess: 4  });
+  const venusAtmoMaterial = new THREE.MeshPhongMaterial({ map: , transparent: true, opacity: 0.75, shininess: 4  });
   venusAtmo = new THREE.Mesh(venusAtmoGeometry, venusAtmoMaterial);
   venusAtmo.position.set(0, 0, 0);
   venus.add(venusAtmo);
 
   // earth
   const earthGeometry = new THREE.SphereGeometry(20 * scale, 128, 128);
-  const earthMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/8k_earth_daymap.jpg'), bumpMap: new THREE.TextureLoader().load('public/earth_elevation.jpg'), bumpScale: 0.2 * scale, 
-  specularMap: new THREE.TextureLoader().load('public/2k_earth_specular_map.tif'), specular: new THREE.Color('grey'), 
-  emissiveMap: new THREE.TextureLoader().load('public/2k_earth_nightmap.jpg'), emissive: 0xffffff, emissiveIntensity: 0.2 });
+  const earthMaterial = new THREE.MeshPhongMaterial({ map: earthTexture, bumpMap: earthBumpTexture, bumpScale: 0.2 * scale, 
+  specularMap: earthSpecular, specular: new THREE.Color('grey'), 
+  emissiveMap: earthEmissive, emissive: 0xffffff, emissiveIntensity: 0.2 });
   earth = new THREE.Mesh(earthGeometry, earthMaterial);
   earth.castShadow = true;
   earth.receiveShadow = true;
@@ -332,14 +419,14 @@ function createPlanets(){
 
   // add sphere for cloud layer just barely bigger than earth
   const cloudGeometry = new THREE.SphereGeometry(20.1 * scale, 128, 128);
-  const cloudMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/earth_clouds.png'), transparent: true, opacity: 0.6 });
+  const cloudMaterial = new THREE.MeshPhongMaterial({ map: earthCloud, transparent: true, opacity: 0.6 });
   cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
   cloudMesh.position.set(0, 0, 0);
   earth.add(cloudMesh);
 
   //moon
   const moonGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const moonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_moon.jpg'), bumpMap: new THREE.TextureLoader().load('public/moon_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
+  const moonMaterial = new THREE.MeshPhongMaterial({ map: moonTexture, bumpMap: moonBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   moon = new THREE.Mesh(moonGeometry, moonMaterial);
   moon.castShadow = true;
   moon.receiveShadow = true;
@@ -349,7 +436,7 @@ function createPlanets(){
 
   // mars
   const marsGeometry = new THREE.SphereGeometry(14 * scale, 64, 64);
-  const marsMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_mars.jpg'), bumpMap: new THREE.TextureLoader().load('public/mars_elevation.jpg'), bumpScale: 0.2 * scale, shininess: 4 });
+  const marsMaterial = new THREE.MeshPhongMaterial({ map: marsTexture, bumpMap: marsBumpTexture, bumpScale: 0.2 * scale, shininess: 4 });
   mars = new THREE.Mesh(marsGeometry, marsMaterial);
   mars.castShadow = true;
   mars.receiveShadow = true;
@@ -380,7 +467,7 @@ function createPlanets(){
 
   // jupiter
   const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
-  const jupiterMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_jupiter.jpg') });
+  const jupiterMaterial = new THREE.MeshPhongMaterial({ map: jupiterTexture });
   jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
   jupiter.castShadow = true;
   jupiter.receiveShadow = true;
@@ -389,7 +476,7 @@ function createPlanets(){
 
   // io
   const ioGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const ioMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/io_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/io_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  const ioMaterial = new THREE.MeshPhongMaterial({ map: ioTexture, bumpMap: ioBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   io = new THREE.Mesh(ioGeometry, ioMaterial);
   io.castShadow = true;
   io.receiveShadow = true;
@@ -398,7 +485,7 @@ function createPlanets(){
 
   // europa
   const europaGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const europaMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/europa_texture.png'), bumpMap: new THREE.TextureLoader().load('public/europa_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  const europaMaterial = new THREE.MeshPhongMaterial({ map: europaTexture, bumpMap: europaBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   europa = new THREE.Mesh(europaGeometry, europaMaterial);
   europa.castShadow = true;
   europa.receiveShadow = true;
@@ -407,7 +494,7 @@ function createPlanets(){
 
   // ganymede
   const ganymedeGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const ganymedeMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/ganymede_texture.png'), bumpMap: new THREE.TextureLoader().load('public/ganymede_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
+  const ganymedeMaterial = new THREE.MeshPhongMaterial({ map: ganymedeTexture, bumpMap: ganymedeBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   ganymede = new THREE.Mesh(ganymedeGeometry, ganymedeMaterial);
   ganymede.castShadow = true;
   ganymede.receiveShadow = true;
@@ -416,7 +503,7 @@ function createPlanets(){
 
   // callisto
   const callistoGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const callistoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/callisto_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/callisto_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
+  const callistoMaterial = new THREE.MeshPhongMaterial({ map: callistoTexture, bumpMap: callistoBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   callisto = new THREE.Mesh(callistoGeometry, callistoMaterial);
   callisto.castShadow = true;
   callisto.receiveShadow = true;
@@ -425,7 +512,7 @@ function createPlanets(){
 
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
-  const saturnMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_saturn.jpg') });
+  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture });
   saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
   saturn.castShadow = true;
   saturn.receiveShadow = true;
@@ -434,7 +521,7 @@ function createPlanets(){
 
   // saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
   const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 180 * scale, 256);
-  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('public/saturn_rings.png'), side: THREE.DoubleSide, transparent: true });
+  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true });
   saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
   saturnRing.rotation.x = Math.PI / 2;
   saturnRing.receiveShadow = true;
@@ -443,7 +530,7 @@ function createPlanets(){
 
   // titan
   const titanGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const titanMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/titan_texture.png'), bumpMap: new THREE.TextureLoader().load('public/titan_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  const titanMaterial = new THREE.MeshPhongMaterial({ map: titanTexture, bumpMap: titanBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   titan = new THREE.Mesh(titanGeometry, titanMaterial);
   titan.castShadow = true;
   titan.receiveShadow = true;
@@ -452,7 +539,7 @@ function createPlanets(){
 
   // enceladus
   const enceladusGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const enceladusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/enceladus_texture.jpg'), bumpMap: new THREE.TextureLoader().load('public/enceladus_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  const enceladusMaterial = new THREE.MeshPhongMaterial({ map: enceladusTexture, bumpMap: enceladusBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   enceladus = new THREE.Mesh(enceladusGeometry, enceladusMaterial);
   enceladus.castShadow = true;
   enceladus.receiveShadow = true;
@@ -462,7 +549,7 @@ function createPlanets(){
 
   // iapetus
   const iapetusGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const iapetusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/iapetus_texture.png'), bumpMap: new THREE.TextureLoader().load('public/iapetus_elevation.png'), bumpScale: 0.05 * scale, shininess: 4 });
+  const iapetusMaterial = new THREE.MeshPhongMaterial({ map: iapetusTexture, bumpMap: iapetusBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   iapetus = new THREE.Mesh(iapetusGeometry, iapetusMaterial);
   iapetus.castShadow = true;
   iapetus.receiveShadow = true;
@@ -471,7 +558,7 @@ function createPlanets(){
 
   // uranus
   const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
-  const uranusMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_uranus.jpg') });
+  const uranusMaterial = new THREE.MeshPhongMaterial({ map: uranusTexture });
   uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
   uranus.castShadow = true;
   uranus.receiveShadow = true;
@@ -480,7 +567,7 @@ function createPlanets(){
 
   // neptune
   const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
-  const neptuneMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_neptune.jpg') });
+  const neptuneMaterial = new THREE.MeshPhongMaterial({ map: neptuneTexture });
   neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
   neptune.castShadow = true;
   neptune.receiveShadow = true;
@@ -489,7 +576,7 @@ function createPlanets(){
 
   // triton
   const tritonGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const tritonMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/triton_texture.png'), bumpMap: new THREE.TextureLoader().load('public/triton_elevation.jpg'), bumpScale: 0.05 * scale, shininess: 4 });
+  const tritonMaterial = new THREE.MeshPhongMaterial({ map: tritonTexture, bumpMap: tritonBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
   triton = new THREE.Mesh(tritonGeometry, tritonMaterial);
   triton.castShadow = true;
   triton.receiveShadow = true;
@@ -499,7 +586,7 @@ function createPlanets(){
   
   // pluto
   const plutoGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
-  const plutoMaterial = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('public/2k_pluto.webp'), bumpMap: new THREE.TextureLoader().load('public/pluto_elevation.png'), bumpScale: 0.05 * scale, specularMap: new THREE.TextureLoader().load('public/pluto_spec.png'), specular: new THREE.Color('grey'), shininess: 2 });
+  const plutoMaterial = new THREE.MeshPhongMaterial({ map: plutoTexture, bumpMap: plutoBumpTexture, bumpScale: 0.05 * scale, specularMap: plutoSpecular, specular: new THREE.Color('grey'), shininess: 2 });
   pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
   pluto.castShadow = true;
   pluto.receiveShadow = true;
