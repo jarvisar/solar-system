@@ -12,7 +12,7 @@ Click on individual planets or moons to move the camera and focus on that object
 
 Use either the mouse or WASD to move the camera. Use the scroll wheel or R/F to zoom in and out.
 
-Press the escape key at any time to enter free view. Hold right click to pan.
+Press the escape key at any time to enter free view. Hold right click and drag the mouse to pan.
 
 Press the space key to start and stop rotation.
 
