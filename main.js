@@ -89,7 +89,9 @@ systemSettings.add(guicontrols, "orbitWidth", 0, 25, 0.1).onChange((value) => {
 systemSettings.add(guicontrols, "enableMoons").onChange((value) => {
   if (value) {
     enableMoons = true;
-    createMoonOrbits();
+    if (enableOrbits) {
+      createMoonOrbits();
+    }
     createMoons();
   } else { 
     enableMoons = false;
@@ -102,8 +104,10 @@ systemSettings.add(guicontrols, "enableMoons").onChange((value) => {
 systemSettings.add(guicontrols, "enableDwarfs").onChange((value) => {
   if (value) {
     enableDwarfs = true;
-    createDwarfOrbits();
     createDwarfs();
+    if (enableOrbits) {
+      createDwarfOrbits();
+    }
     document.querySelector('#title option[value="pluto"]').disabled = false;
   } else {
     enableDwarfs = false;
