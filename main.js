@@ -1479,8 +1479,8 @@ function changeFocusedPlanet(planet) {
   } else if (planet == "null" || planet == null) {
     focusedPlanet = null;
     dropdown.value = "free";
-    // clear url params
-    window.history.pushState(null, null, '?planet=');
+    // remove all url params
+    window.history.pushState(null, null, '?');
   }
 }
 
