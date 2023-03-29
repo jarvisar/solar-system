@@ -1286,6 +1286,15 @@ function render() {
       setMoonPosition(iapetus, 0);
     } else if (focusedPlanet == triton){
       setMoonPosition(triton, 0);
+    } else if (focusedPlanet == null){
+      disableFlight();
+      controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
+      controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
+      controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
+      // move to sun
+      spaceship.position.x = lerp(spaceship.position.x, sun.position.x, lerpSpeed + 0.01);
+      spaceship.position.y = lerp(spaceship.position.y, sun.position.y + sun.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+      spaceship.position.z = lerp(spaceship.position.z, sun.position.z, lerpSpeed + 0.01);
     } else { // Flight disabled
       disableFlight();
       //lerp controls
@@ -1467,6 +1476,11 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = spaceship;
     dropdown.value = "spaceship";
     window.history.pushState(null, null, '?planet=spaceship');
+  } else if (planet == "null" || planet == null) {
+    focusedPlanet = null;
+    dropdown.value = "free";
+    // clear url params
+    window.history.pushState(null, null, '?planet=');
   }
 }
 
@@ -1525,7 +1539,7 @@ document.addEventListener('keydown', function(event) {
     }
     changeFocusedPlanet(closestPlanet);
     } else {
-      changeFocusedPlanet(sun);
+      changeFocusedPlanet(null);
     }
   }
 });
