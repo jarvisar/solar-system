@@ -27,6 +27,8 @@ var flightFov = 50;
 var numAsteroids = 1;
 var flightRotationSpeed = 1;
 var orbitWidth = 1;
+var enableMoons = true;
+var enableDwarfs = true;
 
 var dropdown = document.getElementById("title");
 
@@ -52,6 +54,8 @@ const guicontrols = {
   numAsteroids: 1,
   flightRotationSpeed: 1,
   orbitWidth: 1,
+  enableMoons: true,
+  enableDwarfs: true,
 };
 
 // add control for scale
@@ -76,9 +80,39 @@ systemSettings.add(guicontrols, "numAsteroids", 0, 3, 0.1).onChange((value) => {
 systemSettings.add(guicontrols, "orbitWidth", 0, 25, 0.1).onChange((value) => {
   orbitWidth = value;
   removeOrbits();
+  removeMoonOrbits();
+  removeDrawfOrbits();
   createOrbits();
 }).name("Orbit Width").listen();
 
+// add control for enableMoons
+systemSettings.add(guicontrols, "enableMoons").onChange((value) => {
+  if (value) {
+    enableMoons = true;
+    createMoonOrbits();
+    createMoons();
+  } else { 
+    enableMoons = false;
+    removeMoonOrbits();
+    removeMoons();
+  }
+}).name("Enable Moons").listen();
+
+// add control for enableDwarfs
+systemSettings.add(guicontrols, "enableDwarfs").onChange((value) => {
+  if (value) {
+    enableDwarfs = true;
+    createDwarfOrbits();
+    createDwarfs();
+    document.querySelector('#title option[value="pluto"]').disabled = false;
+  } else {
+    enableDwarfs = false;
+    removeDrawfOrbits();
+    removeDwarfs();
+    // disable pluto option value in id="title" select in html
+    document.querySelector('#title option[value="pluto"]').disabled = true;
+  }
+}).name("Enable Dwarf Planets").listen();
 
 // add control for enableOrbits
 systemSettings.add(guicontrols, "enableOrbits").onChange((value) => {
@@ -86,9 +120,17 @@ systemSettings.add(guicontrols, "enableOrbits").onChange((value) => {
     enableOrbits = true;
     // add all orbits
     createOrbits();
+    if (enableMoons) {
+      createMoonOrbits();
+    }
+    if (enableDwarfs) {
+      createDwarfOrbits();
+    }
   } else {
     enableOrbits = false;
     removeOrbits();
+    removeMoonOrbits();
+    removeDrawfOrbits();
   }
 }).name("Enable Orbits").listen();
 
@@ -134,20 +176,27 @@ function removeOrbits(){
   scene.remove(earthOrbit);
   earth.remove(moonOrbit);
   scene.remove(marsOrbit);
+  scene.remove(jupiterOrbit);
+  scene.remove(saturnOrbit);
+  scene.remove(uranusOrbit);
+  scene.remove(neptuneOrbit);
+}
+
+function removeMoonOrbits(){
   mars.remove(deimosOrbit);
   mars.remove(phobosOrbit);
-  scene.remove(jupiterOrbit);
   jupiter.remove(ioOrbit);
   jupiter.remove(europaOrbit);
   jupiter.remove(ganymedeOrbit);
   jupiter.remove(callistoOrbit);
-  scene.remove(saturnOrbit);
   saturn.remove(titanOrbit);
   saturn.remove(enceladusOrbit);
   saturn.remove(iapetusOrbit);
-  scene.remove(uranusOrbit);
-  scene.remove(neptuneOrbit);
   neptune.remove(tritonOrbit)
+}
+
+function removeDrawfOrbits(){
+  scene.remove(ceresOrbit);
   scene.remove(plutoOrbit);
 }
 
@@ -167,6 +216,8 @@ var moonTexture
 var moonBumpTexture
 var marsTexture
 var marsBumpTexture
+var ceresTexture
+var ceresBumpTexture
 var jupiterTexture
 var ioTexture
 var ioBumpTexture
@@ -192,107 +243,53 @@ var plutoTexture
 var plutoBumpTexture
 var plutoSpecular
 
-function loadAllTextures() {
-  return new Promise((resolve, reject) => {
-    const loader = new THREE.TextureLoader();
-    const texturesToLoad = [      
-      loader.load('public/8k_stars_milky_way.jpg'),
-      loader.load('public/2k_sun.jpg'),
-      loader.load('public/2k_mercury.jpg'),
-      loader.load('public/mercury_elevation.jpg'),
-      loader.load('public/2k_venus_surface.jpg'),
-      loader.load('public/venus_elevation.jpg'),
-      loader.load('public/2k_venus_atmosphere.jpg'),
-      loader.load('public/8k_earth_daymap.jpg'),
-      loader.load('public/earth_elevation.jpg'),
-      loader.load('public/2k_earth_specular_map.tif'),
-      loader.load('public/2k_earth_nightmap.jpg'),
-      loader.load('public/earth_clouds.png'),
-      loader.load('public/2k_moon.jpg'),
-      loader.load('public/moon_elevation.jpg'),
-      loader.load('public/2k_mars.jpg'),
-      loader.load('public/mars_elevation.jpg'),
-      loader.load('public/2k_jupiter.jpg'),
-      loader.load('public/io_texture.jpg'),
-      loader.load('public/io_elevation.png'),
-      loader.load('public/europa_texture.png'),
-      loader.load('public/europa_elevation.png'),
-      loader.load('public/ganymede_texture.png'),
-      loader.load('public/ganymede_elevation.jpg'),
-      loader.load('public/callisto_texture.jpg'),
-      loader.load('public/callisto_elevation.jpg'),
-      loader.load('public/2k_saturn.jpg'),
-      loader.load('public/saturn_rings.png'),
-      loader.load('public/titan_texture.png'),
-      loader.load('public/titan_elevation.png'),
-      loader.load('public/enceladus_texture.jpg'),
-      loader.load('public/enceladus_elevation.png'),
-      loader.load('public/iapetus_texture.png'),
-      loader.load('public/iapetus_elevation.png'),
-      loader.load('public/2k_uranus.jpg'),
-      loader.load('public/2k_neptune.jpg'),
-      loader.load('public/triton_texture.png'),
-      loader.load('public/triton_elevation.jpg'),
-      loader.load('public/2k_pluto.webp'),
-      loader.load('public/pluto_elevation.png'),
-      loader.load('public/pluto_spec.png'),    
-    ];
-
-    Promise.all(texturesToLoad)
-      .then((textures) => {
-        // Assign loaded textures to variables
-        starTexture = textures[0];
-        sunTexture = textures[1];
-        mercuryTexture = textures[2];
-        mercuryBumpTexture = textures[3];
-        venusTexture = textures[4];
-        venusBumpTexture = textures[5];
-        venusAtmo = textures[6];
-        earthTexture = textures[7];
-        earthBumpTexture = textures[8];
-        earthSpecular = textures[9];
-        earthEmissive = textures[10];
-        earthCloud = textures[11];
-        moonTexture = textures[12];
-        moonBumpTexture = textures[13];
-        marsTexture = textures[14];
-        marsBumpTexture = textures[15];
-        jupiterTexture = textures[16];
-        ioTexture = textures[17];
-        ioBumpTexture = textures[18];
-        europaTexture = textures[19];
-        europaBumpTexture = textures[20];
-        ganymedeTexture = textures[21];
-        ganymedeBumpTexture = textures[22];
-        callistoTexture = textures[23];
-        callistoBumpTexture = textures[24];
-        saturnTexture = textures[25];
-        saturnRingTexture = textures[26];
-        titanTexture = textures[27];
-        titanBumpTexture = textures[28];
-        enceladusTexture = textures[29];
-        enceladusBumpTexture = textures[30];
-        iapetusTexture = textures[31];
-        iapetusBumpTexture = textures[32];
-        uranusTexture = textures[33];
-        neptuneTexture = textures[34];
-        tritonTexture = textures[35];
-        tritonBumpTexture = textures[36];
-        plutoTexture = textures[37];
-        plutoBumpTexture = textures[38];
-        plutoSpecular = textures[39];
-
-        // Call create functions after all textures are loaded
-        createPlanets();
-        createOrbits();
-        createAsteroidBelts();
-        render();
-        createSky(); // Assuming this is a valid function
-        resolve();
-      })
-      .catch((error) => reject(error));
-  });
+function loadAllTextures(){
+  // load textures
+  const loader = new THREE.TextureLoader();
+  starTexture = loader.load('public/8k_stars_milky_way.jpg');
+  sunTexture = loader.load('public/2k_sun.jpg');
+  mercuryTexture = loader.load('public/2k_mercury.jpg');
+  mercuryBumpTexture = loader.load('public/mercury_elevation.jpg');
+  venusTexture = loader.load('public/2k_venus_surface.jpg');
+  venusBumpTexture = loader.load('public/venus_elevation.jpg');
+  venusAtmo = loader.load('public/2k_venus_atmosphere.jpg')
+  earthTexture = loader.load('public/8k_earth_daymap.jpg');
+  earthBumpTexture = loader.load('public/earth_elevation.jpg');
+  earthSpecular = loader.load('public/2k_earth_specular_map.tif');
+  earthEmissive = loader.load('public/2k_earth_nightmap.jpg');
+  earthCloud = loader.load('public/earth_clouds.png');
+  moonTexture = loader.load('public/2k_moon.jpg');
+  moonBumpTexture = loader.load('public/moon_elevation.jpg');
+  marsTexture = loader.load('public/2k_mars.jpg');
+  marsBumpTexture = loader.load('public/mars_elevation.jpg');
+  ceresTexture = loader.load('public/2k_ceres.jpg');
+  ceresBumpTexture = loader.load('public/ceres_elevation.png');
+  jupiterTexture = loader.load('public/2k_jupiter.jpg');
+  ioTexture = loader.load('public/io_texture.jpg');
+  ioBumpTexture = loader.load('public/io_elevation.png');
+  europaTexture = loader.load('public/europa_texture.png');
+  europaBumpTexture = loader.load('public/europa_elevation.png');
+  ganymedeTexture = loader.load('public/ganymede_texture.png');
+  ganymedeBumpTexture = loader.load('public/ganymede_elevation.jpg');
+  callistoTexture = loader.load('public/callisto_texture.jpg');
+  callistoBumpTexture = loader.load('public/callisto_elevation.jpg');
+  saturnTexture = loader.load('public/2k_saturn.jpg');
+  saturnRingTexture = loader.load('public/saturn_rings.png');
+  titanTexture = loader.load('public/titan_texture.png');
+  titanBumpTexture = loader.load('public/titan_elevation.png');
+  enceladusTexture = loader.load('public/enceladus_texture.jpg');
+  enceladusBumpTexture = loader.load('public/enceladus_elevation.png');
+  iapetusTexture = loader.load('public/iapetus_texture.png');
+  iapetusBumpTexture = loader.load('public/iapetus_elevation.png');
+  uranusTexture = loader.load('public/2k_uranus.jpg');
+  neptuneTexture = loader.load('public/2k_neptune.jpg');
+  tritonTexture = loader.load('public/triton_texture.png');
+  tritonBumpTexture = loader.load('public/triton_elevation.jpg');
+  plutoTexture = loader.load('public/2k_pluto.webp');
+  plutoBumpTexture = loader.load('public/pluto_elevation.png');
+  plutoSpecular = loader.load('public/pluto_spec.png');
 }
+loadAllTextures();
 
 var mercuryDistance
 var venusDistance 
@@ -303,6 +300,8 @@ var moonDistance
 var marsDistance
 var deimosDistance
 var phobosDistance 
+
+var ceresDistance
 
 var jupiterDistance 
 var ioDistance
@@ -349,6 +348,7 @@ var moon;
 var mars;
 var deimos;
 var phobos;
+var ceres;
 var jupiter;
 var io;
 var europa;
@@ -375,6 +375,7 @@ var moonOrbit;
 var marsOrbit;
 var deimosOrbit;
 var phobosOrbit;
+var ceresOrbit;
 var jupiterOrbit;
 var ioOrbit;
 var europaOrbit;
@@ -410,6 +411,7 @@ function createPlanets(){
   marsDistance = 2700 * scale * 1.2
   deimosDistance = 150 * scale
   phobosDistance = 250 * scale
+  ceresDistance = 3500 * scale * 1.2
   jupiterDistance = 4400 * scale * 1.2
   ioDistance = 200 * scale
   europaDistance = 300 * scale
@@ -501,6 +503,54 @@ function createPlanets(){
   mars.position.set(0, 0, marsDistance);
   scene.add(mars);
 
+  // jupiter
+  const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
+  const jupiterMaterial = new THREE.MeshPhongMaterial({ map: jupiterTexture });
+  jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
+  jupiter.castShadow = true;
+  jupiter.receiveShadow = true;
+  jupiter.position.set(0, 0, jupiterDistance);
+  scene.add(jupiter);
+
+  // saturn
+  const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
+  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture });
+  saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
+  saturn.castShadow = true;
+  saturn.receiveShadow = true;
+  saturn.position.set(0, 0, saturnDistance);
+  scene.add(saturn);
+
+  // saturn ring
+  const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 180 * scale, 256);
+  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true });
+  saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
+  saturnRing.rotation.x = Math.PI / 2;
+  saturnRing.receiveShadow = true;
+  saturnRing.castShadow = true;
+  saturn.add(saturnRing);
+
+  // uranus
+  const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
+  const uranusMaterial = new THREE.MeshPhongMaterial({ map: uranusTexture });
+  uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
+  uranus.castShadow = true;
+  uranus.receiveShadow = true;
+  uranus.position.set(0, 0, uranusDistance);
+  scene.add(uranus);
+
+  // neptune
+  const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
+  const neptuneMaterial = new THREE.MeshPhongMaterial({ map: neptuneTexture });
+  neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+  neptune.castShadow = true;
+  neptune.receiveShadow = true;
+  neptune.position.set(0, 0, neptuneDistance);
+  scene.add(neptune);
+}
+
+function createMoons(){
+  //mars
   // deimos from deimos.glb
   const deimosLoader = new GLTFLoader();
   deimos = new THREE.Object3D();
@@ -523,15 +573,7 @@ function createPlanets(){
   });
   mars.add(phobos);
 
-  // jupiter
-  const jupiterGeometry = new THREE.SphereGeometry(100 * scale, 128, 128);
-  const jupiterMaterial = new THREE.MeshPhongMaterial({ map: jupiterTexture });
-  jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
-  jupiter.castShadow = true;
-  jupiter.receiveShadow = true;
-  jupiter.position.set(0, 0, jupiterDistance);
-  scene.add(jupiter);
-
+  //jupiter
   // io
   const ioGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
   const ioMaterial = new THREE.MeshPhongMaterial({ map: ioTexture, bumpMap: ioBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
@@ -568,24 +610,7 @@ function createPlanets(){
   callisto.position.set(0, 0, callistoDistance);
   jupiter.add(callisto);
 
-  // saturn
-  const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
-  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture });
-  saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
-  saturn.castShadow = true;
-  saturn.receiveShadow = true;
-  saturn.position.set(0, 0, saturnDistance);
-  scene.add(saturn);
-
-  // saturn ring load from 2k_saturn_ring_alpha.png and repoeat image around the ring
-  const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 180 * scale, 256);
-  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true });
-  saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
-  saturnRing.rotation.x = Math.PI / 2;
-  saturnRing.receiveShadow = true;
-  saturnRing.castShadow = true;
-  saturn.add(saturnRing);
-
+  //saturn
   // titan
   const titanGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
   const titanMaterial = new THREE.MeshPhongMaterial({ map: titanTexture, bumpMap: titanBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
@@ -614,23 +639,7 @@ function createPlanets(){
   iapetus.position.set(0, 0, iapetusDistance);
   saturn.add(iapetus);
 
-  // uranus
-  const uranusGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
-  const uranusMaterial = new THREE.MeshPhongMaterial({ map: uranusTexture });
-  uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
-  uranus.castShadow = true;
-  uranus.receiveShadow = true;
-  uranus.position.set(0, 0, uranusDistance);
-  scene.add(uranus);
-
   // neptune
-  const neptuneGeometry = new THREE.SphereGeometry(60 * scale, 128, 128);
-  const neptuneMaterial = new THREE.MeshPhongMaterial({ map: neptuneTexture });
-  neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
-  neptune.castShadow = true;
-  neptune.receiveShadow = true;
-  neptune.position.set(0, 0, neptuneDistance);
-  scene.add(neptune);
 
   // triton
   const tritonGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
@@ -641,14 +650,24 @@ function createPlanets(){
   triton.position.set(0, 0, tritonDistance);
   triton.rotation.y = Math.PI / 2;
   neptune.add(triton);
-  
+}
+
+function createDwarfs(){
+  // ceres
+  const ceresGeometry = new THREE.SphereGeometry(3 * scale, 64, 64);
+  const ceresMaterial = new THREE.MeshPhongMaterial({ map: ceresTexture, bumpMap: ceresBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
+  ceres = new THREE.Mesh(ceresGeometry, ceresMaterial);
+  ceres.castShadow = true;
+  ceres.receiveShadow = true;
+  ceres.position.set(0, 0, ceresDistance);
+  scene.add(ceres);
+
   // pluto
   const plutoGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
   const plutoMaterial = new THREE.MeshPhongMaterial({ map: plutoTexture, bumpMap: plutoBumpTexture, bumpScale: 0.05 * scale, specularMap: plutoSpecular, specular: new THREE.Color('grey'), shininess: 2 });
   pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
   pluto.castShadow = true;
   pluto.receiveShadow = true;
-
   // position and tilt pluto
   plutoTilt = 8.58 * (Math.PI / 180);
   plutoAngle = Math.PI / 4;
@@ -657,7 +676,6 @@ function createPlanets(){
     plutoDistance * Math.sin(plutoAngle) * Math.sin(plutoTilt),
     plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt)
   );
-
   scene.add(pluto);
 }
 
@@ -744,6 +762,37 @@ function createOrbits(){
   marsOrbit.rotation.x = Math.PI / 2;
   scene.add(marsOrbit);
 
+  // jupiter orbit
+  const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - (.2 * (scale/2) * orbitWidth), jupiterDistance + (.2 * (scale/2) * orbitWidth), 1024);
+  const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
+  jupiterOrbit.rotation.x = Math.PI / 2;
+  scene.add(jupiterOrbit);
+  
+  // saturn orbit
+  const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - (.2 * (scale/2) * orbitWidth), saturnDistance + (.2 * (scale/2) * orbitWidth), 1024);
+  const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
+  saturnOrbit.rotation.x = Math.PI / 2;
+  scene.add(saturnOrbit);
+
+  // uranus orbit
+  const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - (.2 * (scale/2) * orbitWidth), uranusDistance + (.2 * (scale/2) * orbitWidth), 1024);
+  const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
+  uranusOrbit.rotation.x = Math.PI / 2;
+  scene.add(uranusOrbit);
+  
+  // neptune orbit
+  const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - (.2 * (scale/2) * orbitWidth), neptuneDistance + (.2 * (scale/2) * orbitWidth), 1024);
+  const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
+  neptuneOrbit.rotation.x = Math.PI / 2;
+  scene.add(neptuneOrbit);
+}
+
+function createMoonOrbits(){
+
   // phobos orbit
   const phobosOrbitGeometry = new THREE.RingGeometry(phobosDistance - (.1 * (scale/2) * orbitWidth), phobosDistance + (.1 * (scale/2) * orbitWidth), 256);
   const phobosOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
@@ -757,13 +806,6 @@ function createOrbits(){
   deimosOrbit = new THREE.Mesh(deimosOrbitGeometry, deimosOrbitMaterial);
   deimosOrbit.rotation.x = Math.PI / 2;
   mars.add(deimosOrbit); // add deimos orbit to the mars so that it orbits around the sun along with the mars
-
-  // jupiter orbit
-  const jupiterOrbitGeometry = new THREE.RingGeometry(jupiterDistance - (.2 * (scale/2) * orbitWidth), jupiterDistance + (.2 * (scale/2) * orbitWidth), 1024);
-  const jupiterOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  jupiterOrbit = new THREE.Mesh(jupiterOrbitGeometry, jupiterOrbitMaterial);
-  jupiterOrbit.rotation.x = Math.PI / 2;
-  scene.add(jupiterOrbit);
 
   // io orbit
   const ioOrbitGeometry = new THREE.RingGeometry(ioDistance - (.1 * (scale/2) * orbitWidth), ioDistance + (.1 * (scale/2) * orbitWidth), 256);
@@ -792,13 +834,6 @@ function createOrbits(){
   callistoOrbit = new THREE.Mesh(callistoOrbitGeometry, callistoOrbitMaterial);
   callistoOrbit.rotation.x = Math.PI / 2;
   jupiter.add(callistoOrbit); // add callisto orbit to the jupiter so that it orbits around the sun along with the jupiter
-  
-  // saturn orbit
-  const saturnOrbitGeometry = new THREE.RingGeometry(saturnDistance - (.2 * (scale/2) * orbitWidth), saturnDistance + (.2 * (scale/2) * orbitWidth), 1024);
-  const saturnOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  saturnOrbit = new THREE.Mesh(saturnOrbitGeometry, saturnOrbitMaterial);
-  saturnOrbit.rotation.x = Math.PI / 2;
-  scene.add(saturnOrbit);
 
   // titan orbit
   const titanOrbitGeometry = new THREE.RingGeometry(titanDistance - (.1 * (scale/2) * orbitWidth), titanDistance + (.1 * (scale/2) * orbitWidth), 256);
@@ -820,27 +855,22 @@ function createOrbits(){
   iapetusOrbit = new THREE.Mesh(iapetusOrbitGeometry, iapetusOrbitMaterial);
   iapetusOrbit.rotation.x = Math.PI / 2;
   saturn.add(iapetusOrbit); // add iapetus orbit to the saturn so that it orbits around the sun along with the saturn
-
-  // uranus orbit
-  const uranusOrbitGeometry = new THREE.RingGeometry(uranusDistance - (.2 * (scale/2) * orbitWidth), uranusDistance + (.2 * (scale/2) * orbitWidth), 1024);
-  const uranusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  uranusOrbit = new THREE.Mesh(uranusOrbitGeometry, uranusOrbitMaterial);
-  uranusOrbit.rotation.x = Math.PI / 2;
-  scene.add(uranusOrbit);
-  
-  // neptune orbit
-  const neptuneOrbitGeometry = new THREE.RingGeometry(neptuneDistance - (.2 * (scale/2) * orbitWidth), neptuneDistance + (.2 * (scale/2) * orbitWidth), 1024);
-  const neptuneOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
-  neptuneOrbit = new THREE.Mesh(neptuneOrbitGeometry, neptuneOrbitMaterial);
-  neptuneOrbit.rotation.x = Math.PI / 2;
-  scene.add(neptuneOrbit);
-
   // triton orbit
   const tritonOrbitGeometry = new THREE.RingGeometry(tritonDistance - (.1 * (scale/2) * orbitWidth), tritonDistance + (.1 * (scale/2) * orbitWidth), 256);
   const tritonOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   tritonOrbit = new THREE.Mesh(tritonOrbitGeometry, tritonOrbitMaterial);
   tritonOrbit.rotation.x = Math.PI / 2;
   neptune.add(tritonOrbit); // add triton orbit to the neptune so that it orbits around the sun along with the neptune
+}
+
+function createDwarfOrbits(){
+
+  // ceres orbit
+  const ceresOrbitGeometry = new THREE.RingGeometry(ceresDistance - (.1 * (scale/2) * orbitWidth), ceresDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const ceresOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  ceresOrbit = new THREE.Mesh(ceresOrbitGeometry, ceresOrbitMaterial);
+  ceresOrbit.rotation.x = Math.PI / 2;
+  scene.add(ceresOrbit);
 
   // pluto orbit
   const plutoOrbitGeometry = new THREE.RingGeometry(plutoDistance - (0.2 * (scale / 2) * orbitWidth), plutoDistance + (0.2 * (scale / 2) * orbitWidth), 1024);
@@ -850,9 +880,38 @@ function createOrbits(){
   // tilt pluto orbit
   plutoOrbit.rotation.x = Math.PI / 2 - plutoTilt;
   scene.add(plutoOrbit);
+} 
+
+// create everything
+createPlanets();
+createMoons();
+createDwarfs();
+createAsteroidBelts();
+createSky();
+createOrbits();
+createMoonOrbits();
+createDwarfOrbits();
+
+
+function removeMoons(){
+  // remove moons from planets
+  mars.remove(phobos);
+  mars.remove(deimos);
+  jupiter.remove(io);
+  jupiter.remove(europa);
+  jupiter.remove(ganymede);
+  jupiter.remove(callisto);
+  saturn.remove(titan);
+  saturn.remove(enceladus);
+  saturn.remove(iapetus);
+  neptune.remove(triton);
 }
 
-// load spaceship from UFO_Empty.glb but declare it outside callback so I can uypdate position from animate function
+function removeDwarfs(){
+  scene.remove(ceres)
+  scene.remove(pluto)
+}
+
 // spaceship from UFO_Empty.glb
 const loader = new GLTFLoader();
 const spaceship = new THREE.Object3D(); // create empty Object3D
@@ -863,7 +922,6 @@ loader.load('public/ufo.glb', function (gltf) {
   model.scale.set(18.1, 18.1, 18.1);
   model.position.set(0, -200, 0);
   model.rotation.set(0, 0, 0);
-
   spaceship.add(model);
 });
 
@@ -878,11 +936,11 @@ spaceship.add(pointLight);
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
+// fly controls
 const flyControls = new FlyControls(camera, renderer.domElement);
 flyControls.movementSpeed = 100;
 flyControls.rollSpeed = Math.PI / 12;
 flyControls.autoForward = true;
-
 
 // seperate angle for each planet
 let mercuryAngle = 0;
@@ -895,6 +953,8 @@ let moonAngle = 0;
 let marsAngle = Math.PI * 1.5;
 let phobosAngle = 0;
 let deimosAngle = Math.PI * 0.5;
+// ceres is 7/8
+let ceresAngle = 7 * (Math.PI / 4);
 // jupiter is 1/8
 let jupiterAngle = Math.PI * 0.25;
 let ioAngle = 0;
@@ -927,6 +987,7 @@ const regenerate = () => {
   scene.remove(cloudMesh)
   scene.remove(moon);
   scene.remove(mars);
+  scene.remove(ceres)
   scene.remove(jupiter);
   scene.remove(saturn);
   scene.remove(uranus);
@@ -938,6 +999,8 @@ const regenerate = () => {
 
   // remove all orbits from scene
   removeOrbits();
+  removeMoonOrbits();
+  removeDrawfOrbits();
 
   camera.position.set(400 * scale, 250 * scale, -1600 * scale);
 
@@ -949,6 +1012,14 @@ const regenerate = () => {
 
   // recreate all planets
   createPlanets();
+  if (enableMoons){
+    createMoons();
+    createMoonOrbits();
+  }
+  if (enableDwarfs){
+    createDwarfs();
+    createDwarfOrbits();
+  }
   createAsteroidBelts();
   console.log(enableOrbits)
   if (enableOrbits) {
@@ -1027,6 +1098,8 @@ function render() {
   phobos.rotation.y -= 0.002 * rotationSpeed * 0.15;
   deimos.rotation.y -= 0.002 * rotationSpeed * 0.15;
 
+  ceres.rotation.y -= 0.002 * rotationSpeed * 0.15;
+
   jupiter.rotation.y -= 0.001 * rotationSpeed * 0.15;
   io.rotation.y -= 0.001 * rotationSpeed * 0.15;
   europa.rotation.y -= 0.001 * rotationSpeed * 0.15;
@@ -1055,6 +1128,7 @@ function render() {
     { distance: earthDistance, angle: earthAngle, object: earth },
     { distance: moonDistance, angle: moonAngle, object: moon },
     { distance: marsDistance, angle: marsAngle, object: mars },
+    { distance: ceresDistance, angle: ceresAngle, object: ceres},
     { distance: phobosDistance, angle: phobosAngle, object: phobos },
     { distance: deimosDistance, angle: deimosAngle, object: deimos },
     { distance: jupiterDistance, angle: jupiterAngle, object: jupiter },
@@ -1094,6 +1168,7 @@ function render() {
   venusAngle += 0.00025 * rotationSpeed * 0.15;
   earthAngle += 0.0001 * rotationSpeed * 0.15;
   marsAngle += 0.000125 * rotationSpeed * 0.15;
+  ceresAngle += 0.000125 * rotationSpeed * 0.15;
   jupiterAngle += 0.0000625 * rotationSpeed * 0.15;
   saturnAngle += 0.00003125 * rotationSpeed * 0.15;
   uranusAngle += 0.000015625 * rotationSpeed * 0.15;
@@ -1168,10 +1243,14 @@ function setMoonPosition(moon, offsetY) {
   // move spaceship above planet with lerp
   spaceship.position.x = lerp(spaceship.position.x, moonPosition.x, lerpSpeed + 0.01);
   // if not deimos or phobos, move up
-  if (moon != deimos && moon != phobos){
-  spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240 + offsetY, lerpSpeed + 0.01);
+  if (moon == ceres){
+    spaceship.position.y = lerp(spaceship.position.y, 320, lerpSpeed + 0.01);
+  } else if (moon != deimos && moon != phobos){
+    spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.geometry.parameters.radius + 240 + offsetY, lerpSpeed + 0.01);
   } else {
     spaceship.position.y = lerp(spaceship.position.y, 240, lerpSpeed + 0.01);
+    // get height of model
+
   }
   spaceship.position.z = lerp(spaceship.position.z, moonPosition.z, lerpSpeed + 0.01);
 }
@@ -1234,6 +1313,10 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = moon;
     dropdown.value = "moon";
     window.history.pushState(null, null, '?planet=moon');
+  } else if (planet == "ceres" || planet == ceres) {
+    focusedPlanet = ceres;
+    dropdown.value = "ceres";
+    window.history.pushState(null, null, '?planet=ceres');
   } else if (planet == "jupiter" || planet == jupiter) {
     focusedPlanet = jupiter;
     dropdown.value = "jupiter";
@@ -1436,5 +1519,5 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
-// Start scene
-loadAllTextures();
+// Start animation loop
+render();
