@@ -84,10 +84,12 @@ button:active {
 	display: none;
 }
 
-/* Show speed buttons if on mobile */
 @media only screen and (max-width: 600px) {
-  #speedButtons {
+  #speedButtons { /* Show speed buttons if on mobile */
 	display: block;
+  }
+  .github { /* Hide github button if on mobile */
+	display: none;
   }
 }
 
