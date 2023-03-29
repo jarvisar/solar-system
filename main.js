@@ -81,7 +81,7 @@ systemSettings.add(guicontrols, "orbitWidth", 0, 25, 0.1).onChange((value) => {
   orbitWidth = value;
   removeOrbits();
   removeMoonOrbits();
-  removeDrawfOrbits();
+  removeDwarfOrbits();
   createOrbits();
 }).name("Orbit Width").listen();
 
@@ -111,7 +111,7 @@ systemSettings.add(guicontrols, "enableDwarfs").onChange((value) => {
     document.querySelector('#title option[value="pluto"]').disabled = false;
   } else {
     enableDwarfs = false;
-    removeDrawfOrbits();
+    removeDwarfOrbits();
     removeDwarfs();
     // disable pluto option value in id="title" select in html
     document.querySelector('#title option[value="pluto"]').disabled = true;
@@ -134,7 +134,7 @@ systemSettings.add(guicontrols, "enableOrbits").onChange((value) => {
     enableOrbits = false;
     removeOrbits();
     removeMoonOrbits();
-    removeDrawfOrbits();
+    removeDwarfOrbits();
   }
 }).name("Enable Orbits").listen();
 
@@ -199,9 +199,11 @@ function removeMoonOrbits(){
   neptune.remove(tritonOrbit)
 }
 
-function removeDrawfOrbits(){
+function removeDwarfOrbits(){
   scene.remove(ceresOrbit);
   scene.remove(plutoOrbit);
+  scene.remove(erisOrbit);
+  scene.remove(makemakeOrbit);
 }
 
 var starTexture
@@ -246,6 +248,9 @@ var tritonBumpTexture
 var plutoTexture
 var plutoBumpTexture
 var plutoSpecular
+var makemakeTexture
+var erisTexture
+var erisBumpTexture
 
 function loadAllTextures(){
   // load textures
@@ -272,7 +277,7 @@ function loadAllTextures(){
   ioTexture = loader.load('public/io_texture.jpg');
   ioBumpTexture = loader.load('public/io_elevation.png');
   europaTexture = loader.load('public/europa_texture.png');
-  europaBumpTexture = loader.load('public/europa_elevation.png');
+  europaBumpTexture = loader.load('public/europa_elevation.jpg');
   ganymedeTexture = loader.load('public/ganymede_texture.png');
   ganymedeBumpTexture = loader.load('public/ganymede_elevation.jpg');
   callistoTexture = loader.load('public/callisto_texture.jpg');
@@ -292,6 +297,9 @@ function loadAllTextures(){
   plutoTexture = loader.load('public/2k_pluto.webp');
   plutoBumpTexture = loader.load('public/pluto_elevation.png');
   plutoSpecular = loader.load('public/pluto_spec.png');
+  makemakeTexture = loader.load('public/2k_makemake.jpg');
+  erisTexture = loader.load('public/2k_eris.jpg');
+  erisBumpTexture = loader.load('public/eris_elevation.jpg');
 }
 loadAllTextures();
 
@@ -326,6 +334,9 @@ var tritonDistance
 var plutoDistance
 var plutoTilt
 var plutoAngle
+
+var makemakeDistance
+var erisDistance
 
 //add faint ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -367,6 +378,8 @@ var uranus;
 var neptune;
 var triton;
 var pluto;
+var makemake;
+var eris;
 
 var asteroidRing;
 var kuiperRing;
@@ -393,6 +406,8 @@ var uranusOrbit;
 var neptuneOrbit;
 var tritonOrbit;
 var plutoOrbit;
+var makemakeOrbit;
+var erisOrbit;
 
 var sunLight;
 
@@ -429,6 +444,8 @@ function createPlanets(){
   neptuneDistance = 7100 * scale * 1.2
   tritonDistance = 250 * scale
   plutoDistance = 8000 * scale * 1.2
+  erisDistance = 9000 * scale * 1.2
+  makemakeDistance = 10000 * scale * 1.2
 
   // Create a sphere for the Sun and add it to the scene as a light source
   sunLight = new THREE.PointLight(0xffffff, 1, 100000 * (scale/3));
@@ -589,7 +606,7 @@ function createMoons(){
 
   // europa
   const europaGeometry = new THREE.SphereGeometry(4 * scale, 64, 64);
-  const europaMaterial = new THREE.MeshPhongMaterial({ map: europaTexture, bumpMap: europaBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
+  const europaMaterial = new THREE.MeshPhongMaterial({ map: europaTexture, bumpMap: europaBumpTexture, bumpScale: 0.025 * scale, shininess: 4 });
   europa = new THREE.Mesh(europaGeometry, europaMaterial);
   europa.castShadow = true;
   europa.receiveShadow = true;
@@ -681,6 +698,24 @@ function createDwarfs(){
     plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt)
   );
   scene.add(pluto);
+
+  // eris
+  const erisGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
+  const erisMaterial = new THREE.MeshPhongMaterial({ map: erisTexture, bumpMap: erisBumpTexture, bumpScale: 0.05 * scale, shininess: 4 });
+  eris = new THREE.Mesh(erisGeometry, erisMaterial);
+  eris.castShadow = true;
+  eris.receiveShadow = true;
+  eris.position.set(0, 0, erisDistance);
+  scene.add(eris);
+
+  // makemake
+  const makemakeGeometry = new THREE.SphereGeometry(5 * scale, 64, 64);
+  const makemakeMaterial = new THREE.MeshPhongMaterial({ map: makemakeTexture, shininess: 4 });
+  makemake = new THREE.Mesh(makemakeGeometry, makemakeMaterial);
+  makemake.castShadow = true;
+  makemake.receiveShadow = true;
+  makemake.position.set(0, 0, makemakeDistance);
+  scene.add(makemake);
 }
 
 function createAsteroidBelts() {
@@ -884,6 +919,21 @@ function createDwarfOrbits(){
   // tilt pluto orbit
   plutoOrbit.rotation.x = Math.PI / 2 - plutoTilt;
   scene.add(plutoOrbit);
+
+  // eris orbit
+  const erisOrbitGeometry = new THREE.RingGeometry(erisDistance - (.1 * (scale/2) * orbitWidth), erisDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const erisOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  erisOrbit = new THREE.Mesh(erisOrbitGeometry, erisOrbitMaterial);
+  erisOrbit.rotation.x = Math.PI / 2;
+  scene.add(erisOrbit);
+
+  // makemake orbit
+  const makemakeOrbitGeometry = new THREE.RingGeometry(makemakeDistance - (.1 * (scale/2) * orbitWidth), makemakeDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const makemakeOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
+  makemakeOrbit = new THREE.Mesh(makemakeOrbitGeometry, makemakeOrbitMaterial);
+  makemakeOrbit.rotation.x = Math.PI / 2;
+  scene.add(makemakeOrbit);
+
 } 
 
 // create everything
@@ -914,6 +964,8 @@ function removeMoons(){
 function removeDwarfs(){
   scene.remove(ceres)
   scene.remove(pluto)
+  scene.remove(eris)
+  scene.remove(makemake)
 }
 
 // spaceship from UFO_Empty.glb
@@ -977,6 +1029,10 @@ let neptuneAngle = 7 * (Math.PI / 4);
 let tritonAngle = 0;
 // pluto is 0
 let plutoRotation = 0;
+// eris is 1/4
+let erisAngle = Math.PI * 0.5;
+// makemake is 1/2
+let makemakeAngle = Math.PI;
 
 let focusedPlanet = null;
 let lerpSpeed = 0.08; // Adjust this value to control the speed of the animation
@@ -997,6 +1053,8 @@ const regenerate = () => {
   scene.remove(uranus);
   scene.remove(neptune);
   scene.remove(pluto);
+  scene.remove(eris);
+  scene.remove(makemake);
   scene.remove(sunMesh);
   scene.remove(asteroidRing);
   scene.remove(kuiperRing);
@@ -1004,7 +1062,7 @@ const regenerate = () => {
   // remove all orbits from scene
   removeOrbits();
   removeMoonOrbits();
-  removeDrawfOrbits();
+  removeDwarfOrbits();
 
   camera.position.set(400 * scale, 250 * scale, -1600 * scale);
 
@@ -1102,7 +1160,7 @@ function render() {
   phobos.rotation.y -= 0.002 * rotationSpeed * 0.15;
   deimos.rotation.y -= 0.002 * rotationSpeed * 0.15;
 
-  ceres.rotation.y -= 0.002 * rotationSpeed * 0.15;
+  ceres.rotation.y -= 0.006 * rotationSpeed * 0.15;
 
   jupiter.rotation.y -= 0.001 * rotationSpeed * 0.15;
   io.rotation.y -= 0.001 * rotationSpeed * 0.15;
@@ -1117,6 +1175,9 @@ function render() {
   uranus.rotation.z -= 0.001 * rotationSpeed * 0.15;
   neptune.rotation.y -= 0.001 * rotationSpeed * 0.15;
   triton.rotation.y -= 0.001 * rotationSpeed * 0.15;
+
+  eris.rotation.y -= 0.005 * rotationSpeed * 0.15;
+  makemake.rotation.y -= 0.005 * rotationSpeed * 0.15;
 
   asteroidRing.rotation.y -= 0.00004 * rotationSpeed * 0.2;
   kuiperRing.rotation.y -= 0.00001 * rotationSpeed * 0.2;
@@ -1146,7 +1207,9 @@ function render() {
     { distance: iapetusDistance, angle: iapetusAngle, object: iapetus },
     { distance: uranusDistance, angle: uranusAngle, object: uranus },
     { distance: neptuneDistance, angle: neptuneAngle, object: neptune },
-    { distance: tritonDistance, angle: tritonAngle, object: triton }
+    { distance: tritonDistance, angle: tritonAngle, object: triton },
+    { distance: erisDistance, angle: erisAngle, object: eris },
+    { distance: makemakeDistance, angle: makemakeAngle, object: makemake },
   ];
   
   planets.forEach(planet => {
@@ -1179,6 +1242,8 @@ function render() {
   neptuneAngle += 0.000015625 * rotationSpeed * 0.15;
   plutoAngle += 0.000015625 * rotationSpeed * 0.15;
   plutoRotation += 0.002 * rotationSpeed * 0.15;
+  erisAngle += 0.000015625 * rotationSpeed * 0.15;
+  makemakeAngle += 0.000015625 * rotationSpeed * 0.15;
 
   if (focusedPlanet) {
 
@@ -1373,6 +1438,14 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = pluto;
     dropdown.value = "pluto";
     window.history.pushState(null, null, '?planet=pluto');
+  } else if (planet == "eris" || planet == eris) {
+    focusedPlanet = eris;
+    dropdown.value = "eris";
+    window.history.pushState(null, null, '?planet=eris');
+  } else if (planet == "makemake" || planet == makemake) {
+    focusedPlanet = makemake;
+    dropdown.value = "makemake";
+    window.history.pushState(null, null, '?planet=makemake');
   } else if (planet == "spaceship" || planet == spaceship) {
     camera.position.copy(spaceship.position);
     // enable flight reticule
