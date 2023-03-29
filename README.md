@@ -4,7 +4,7 @@ My first real [Three.js](https://threejs.org/) project.
 
 Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to access the latest deployment.
 
-###### Note: Performance might be slow while loading all the textures. Disabling moons and dwarf planets in the controls will increase performance.
+###### Note: Performance might be slow while loading all the textures. Disabling moons and dwarf planets in the controls can help increase performance.
 
 ### Explore Mode
 
