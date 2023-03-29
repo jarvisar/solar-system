@@ -361,7 +361,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 //define all meshes
-var sunMesh;
+var sun;
 var mercury;
 var venus;
 var venusAtmo;
@@ -467,9 +467,9 @@ function createPlanets(){
 
   const sunGeometry = new THREE.SphereGeometry(200 * scale, 128, 128);
   const sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture, emissive: 0xffff00, emissiveIntensity: 1, emissiveMap: sunTexture });
-  sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
-  sunMesh.position.set(0, 0, 0);
-  scene.add(sunMesh);
+  sun = new THREE.Mesh(sunGeometry, sunMaterial);
+  sun.position.set(0, 0, 0);
+  scene.add(sun);
 
   // mercury
   const mercuryGeometry = new THREE.SphereGeometry(10 * scale, 64, 64);
@@ -1063,7 +1063,7 @@ const regenerate = () => {
   scene.remove(pluto);
   scene.remove(eris);
   scene.remove(makemake);
-  scene.remove(sunMesh);
+  scene.remove(sun);
   scene.remove(asteroidRing);
   scene.remove(kuiperRing);
 
@@ -1097,7 +1097,7 @@ const regenerate = () => {
   }
   createSky();
   camera.far = 400000 * scale;
-  focusedPlanet = sunMesh;
+  focusedPlanet = sun;
   dropdown.value = "sun";
 }
 
@@ -1160,7 +1160,7 @@ function render() {
   }
   
   // rotate in place
-  sunMesh.rotation.y -= 0.0005 * rotationSpeed * 0.15;
+  sun.rotation.y -= 0.0005 * rotationSpeed * 0.15;
   mercury.rotation.y -= 0.002 * rotationSpeed * 0.15;
 
   venus.rotation.y -= 0.002 * rotationSpeed * 0.15;
@@ -1305,9 +1305,9 @@ function render() {
   if (flyControls.enabled) {
     flyControls.update(clock.getDelta()); // update position using fly controls
     // move spaceship inside sun to hide
-    spaceship.position.x = sunMesh.position.x;
-    spaceship.position.y = sunMesh.position.y + 400000 * scale;
-    spaceship.position.z = sunMesh.position.z;
+    spaceship.position.x = sun.position.x;
+    spaceship.position.y = sun.position.y + 400000 * scale;
+    spaceship.position.z = sun.position.z;
   } else {
     controls.update(clock.getDelta()); // update position using orbit controls
   }
@@ -1376,8 +1376,8 @@ function changeFocusedPlanet(planet) {
     focusedPlanet = mercury;
     dropdown.value = "mercury";
     window.history.pushState(null, null, '?planet=mercury');
-  } else if (planet == "sun" || planet == sunMesh) {
-    focusedPlanet = sunMesh;
+  } else if (planet == "sun" || planet == sun) {
+    focusedPlanet = sun;
     dropdown.value = "sun";
     window.history.pushState(null, null, '?planet=sun');
   } else if (planet == "mars" || planet == mars) {
@@ -1509,12 +1509,12 @@ if (urlParams.has('planet')) {
 
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
-  const planets = [sunMesh, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto];
+  const planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto];
   if (event.code === 'Escape') {
     // if flight enabled
     if(focusedPlanet == spaceship){// calculate closest planet to camera
-    let closestPlanet = sunMesh;
-    let closestDistance = camera.position.distanceTo(sunMesh.position);
+    let closestPlanet = sun;
+    let closestDistance = camera.position.distanceTo(sun.position);
     for (let planet of planets) { 
       console.log(planet.position)
       let distance = camera.position.distanceTo(planet.position);
@@ -1525,7 +1525,7 @@ document.addEventListener('keydown', function(event) {
     }
     changeFocusedPlanet(closestPlanet);
     } else {
-      changeFocusedPlanet(sunMesh);
+      changeFocusedPlanet(sun);
     }
   }
 });
@@ -1541,7 +1541,7 @@ document.getElementById('toggle-flight-button').addEventListener('click', functi
     focusedPlanet = spaceship;
     dropdown.value = "spaceship";
   } else {
-    focusedPlanet = sunMesh;
+    focusedPlanet = sun;
   }
 });
 
