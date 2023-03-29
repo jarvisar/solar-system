@@ -874,7 +874,7 @@ function createMoonOrbits(){
   jupiter.add(ganymedeOrbit); // add ganymede orbit to the jupiter so that it orbits around the sun along with the jupiter
 
   // callisto orbit
-  const callistoOrbitGeometry = new THREE.RingGeometry(callistoDistance - (.1 * (scale/2) * orbitWidth), callistoDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const callistoOrbitGeometry = new THREE.RingGeometry(callistoDistance - (.1 * (scale/2) * orbitWidth), callistoDistance + (.1 * (scale/2) * orbitWidth), 512);
   const callistoOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   callistoOrbit = new THREE.Mesh(callistoOrbitGeometry, callistoOrbitMaterial);
   callistoOrbit.rotation.x = Math.PI / 2;
@@ -895,7 +895,7 @@ function createMoonOrbits(){
   saturn.add(enceladusOrbit); // add enceladus orbit to the saturn so that it orbits around the sun along with the saturn
 
   // iapetus orbit
-  const iapetusOrbitGeometry = new THREE.RingGeometry(iapetusDistance - (.1 * (scale/2) * orbitWidth), iapetusDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const iapetusOrbitGeometry = new THREE.RingGeometry(iapetusDistance - (.1 * (scale/2) * orbitWidth), iapetusDistance + (.1 * (scale/2) * orbitWidth), 512);
   const iapetusOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   iapetusOrbit = new THREE.Mesh(iapetusOrbitGeometry, iapetusOrbitMaterial);
   iapetusOrbit.rotation.x = Math.PI / 2;
@@ -911,7 +911,7 @@ function createMoonOrbits(){
 function createDwarfOrbits(){
 
   // ceres orbit
-  const ceresOrbitGeometry = new THREE.RingGeometry(ceresDistance - (.1 * (scale/2) * orbitWidth), ceresDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const ceresOrbitGeometry = new THREE.RingGeometry(ceresDistance - (.1 * (scale/2) * orbitWidth), ceresDistance + (.1 * (scale/2) * orbitWidth), 1024);
   const ceresOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   ceresOrbit = new THREE.Mesh(ceresOrbitGeometry, ceresOrbitMaterial);
   ceresOrbit.rotation.x = Math.PI / 2;
@@ -927,14 +927,14 @@ function createDwarfOrbits(){
   scene.add(plutoOrbit);
 
   // eris orbit
-  const erisOrbitGeometry = new THREE.RingGeometry(erisDistance - (.1 * (scale/2) * orbitWidth), erisDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const erisOrbitGeometry = new THREE.RingGeometry(erisDistance - (.1 * (scale/2) * orbitWidth), erisDistance + (.1 * (scale/2) * orbitWidth), 1024);
   const erisOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   erisOrbit = new THREE.Mesh(erisOrbitGeometry, erisOrbitMaterial);
   erisOrbit.rotation.x = Math.PI / 2;
   scene.add(erisOrbit);
 
   // makemake orbit
-  const makemakeOrbitGeometry = new THREE.RingGeometry(makemakeDistance - (.1 * (scale/2) * orbitWidth), makemakeDistance + (.1 * (scale/2) * orbitWidth), 256);
+  const makemakeOrbitGeometry = new THREE.RingGeometry(makemakeDistance - (.1 * (scale/2) * orbitWidth), makemakeDistance + (.1 * (scale/2) * orbitWidth), 1024);
   const makemakeOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.4, transparent: true, side: THREE.DoubleSide });
   makemakeOrbit = new THREE.Mesh(makemakeOrbitGeometry, makemakeOrbitMaterial);
   makemakeOrbit.rotation.x = Math.PI / 2;
