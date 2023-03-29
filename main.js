@@ -1105,17 +1105,23 @@ const defaultSettings = () => {
   flightSensitivity = 10;
   enableOrbits = true;
   rotationSpeed = 0.5;
+  flightRotationSpeed = 1;
   flightFov = 50;
   numAsteroids = 1;
   orbitWidth = 1;
+  enableMoons = true;
+  enableDwarfs = true;
   // reset controls
   guicontrols.scale = scale;
   guicontrols.flightSensitivity = flightSensitivity;
   guicontrols.enableOrbits = enableOrbits;
   guicontrols.rotationSpeed = rotationSpeed;
+  guicontrols.flightRotationSpeed = flightRotationSpeed;
   guicontrols.flightFov = flightFov;
   guicontrols.numAsteroids = numAsteroids;
   guicontrols.orbitWidth = orbitWidth;
+  guicontrols.enableMoons = enableMoons;
+  guicontrols.enableDwarfs = enableDwarfs;
   regenerate()
 }
 
