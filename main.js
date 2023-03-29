@@ -82,12 +82,14 @@ systemSettings.add(guicontrols, "orbitWidth", 0, 25, 0.1).onChange((value) => {
   removeOrbits();
   removeMoonOrbits();
   removeDwarfOrbits();
-  createOrbits();
-  if (enableMoons) {
-    createMoonOrbits();
-  }
-  if (enableDwarfs) {
-    createDwarfOrbits();
+  if (enableOrbits) {
+    createOrbits();
+    if (enableMoons) {
+      createMoonOrbits();
+    }
+    if (enableDwarfs) {
+      createDwarfOrbits();
+    }
   }
 }).name("Orbit Width").listen();
 
