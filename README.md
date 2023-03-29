@@ -20,7 +20,7 @@ Click on the UFO to switch to flight mode and fly around the solar system.
 
 ### Flight Mode
 
-Use W/S to increase or decrease throttle. Use A/D to roll. Use the mouse to control yaw and pitch. Use space to stop and set the speed to 0.
+Use W/S to increase or decrease throttle. Use A/D to roll. Use the mouse to control yaw and pitch. Use space to stop and set the speed to 0. 
 
 Press the escape key at any time to exit flight mode and switch the focus to the nearest planet.
 
