@@ -1630,14 +1630,14 @@ document.addEventListener("keydown", function(event) {
 });
 
 // vr-button event listener
-document.getElementById('vr-button').addEventListener('click', function() {
-  if (vrMode) {
-    renderer.xr.getSession().end();
-  } else {
-    vrMode = true;
-    startVR();
-  }
-});
+// document.getElementById('vr-button').addEventListener('click', function() {
+//   if (vrMode) {
+//     renderer.xr.getSession().end();
+//   } else {
+//     vrMode = true;
+//     startVR();
+//   }
+// });
 
 // VR mode
 function startVR() {
