@@ -79,7 +79,7 @@ systemSettings.add(guicontrols, "numAsteroids", 0, 3, 0.1).onChange((value) => {
 }).name("Asteroid Belt Density").listen();
 
 // add control for orbitWidth
-systemSettings.add(guicontrols, "orbitWidth", 0, 25, 0.1).onChange((value) => {
+systemSettings.add(guicontrols, "orbitWidth", 0, 35, 0.1).onChange((value) => {
   orbitWidth = value;
   removeOrbits();
   removeMoonOrbits();
