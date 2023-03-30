@@ -11,6 +11,8 @@ import { FlyControls } from "./FlyControls.js";
 // Create a Three.js scene
 const scene = new THREE.Scene();
 
+let vrMode = false;
+
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -1137,7 +1139,9 @@ var reticule = document.getElementById("reticule");
 
 // animate function (very important)
 function render() {
-  requestAnimationFrame(render);
+  if (vrMode) {
+    return;
+  }
 
   // check for orbit control movement from keys
   if (moveForward) {
@@ -1320,6 +1324,7 @@ function render() {
   } else {
     controls.update(clock.getDelta()); // update position using orbit controls
   }
+  requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
@@ -1624,5 +1629,214 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
+// vr-button event listener
+document.getElementById('vr-button').addEventListener('click', function() {
+  if (vrMode) {
+    renderer.xr.getSession().end();
+  } else {
+    vrMode = true;
+    startVR();
+  }
+});
+
+// VR mode
+function startVR() {
+  navigator.xr.requestSession('immersive-vr', {requiredFeatures: ['local-floor']}).then((session) => {
+
+    renderer.xr.setSession(session);
+
+    session.addEventListener('end', function() {
+      renderer.vr.enabled = false;
+      vrMode = false;
+    });
+
+    session.requestAnimationFrame(function animate() {
+      vrMode = true;
+      // check for orbit control movement from keys
+      if (moveForward) {
+        controls.object.translateZ(-10);
+      }
+      if (moveBackward) {
+        controls.object.translateZ(10);
+      }
+      if (moveLeft) {
+        controls.object.translateX(-10);
+      }
+      if (moveRight) {
+        controls.object.translateX(10);
+      }
+      if (moveUp) {
+        controls.object.translateY(10);
+      }
+      if (moveDown) {
+        controls.object.translateY(-10);
+      }
+      
+      // rotate in place
+      sun.rotation.y -= 0.0005 * rotationSpeed * 0.15;
+      mercury.rotation.y -= 0.002 * rotationSpeed * 0.15;
+
+      venus.rotation.y -= 0.002 * rotationSpeed * 0.15;
+      venusAtmo.rotation.y += 0.0005 * rotationSpeed * 0.15;
+
+      earth.rotation.y -= 0.002 * rotationSpeed * 0.15;
+      cloudMesh.rotation.y += 0.0003 * rotationSpeed * 0.15;
+      moon.rotation.y -= 0.002 * rotationSpeed * 0.15;
+
+      mars.rotation.y -= 0.002 * rotationSpeed * 0.15;
+      phobos.rotation.y -= 0.002 * rotationSpeed * 0.15;
+      deimos.rotation.y -= 0.002 * rotationSpeed * 0.15;
+
+      ceres.rotation.y -= 0.006 * rotationSpeed * 0.15;
+
+      jupiter.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      io.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      europa.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      ganymede.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      callisto.rotation.y -= 0.001 * rotationSpeed * 0.15;
+
+      saturn.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      titan.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      enceladus.rotation.y -= 0.001 * rotationSpeed * 0.15;
+
+      uranus.rotation.z -= 0.001 * rotationSpeed * 0.15;
+      neptune.rotation.y -= 0.001 * rotationSpeed * 0.15;
+      triton.rotation.y -= 0.001 * rotationSpeed * 0.15;
+
+      eris.rotation.y -= 0.005 * rotationSpeed * 0.15;
+      makemake.rotation.y -= 0.005 * rotationSpeed * 0.15;
+
+      asteroidRing.rotation.y -= 0.00004 * rotationSpeed * 0.2;
+      kuiperRing.rotation.y -= 0.00001 * rotationSpeed * 0.2;
+
+      spaceship.rotation.y += 0.001 * rotationSpeed;
+
+      const center = new THREE.Vector3(0, 0, 0);
+
+      // create array of planets
+      const planets = [
+        { distance: mercuryDistance, angle: mercuryAngle, object: mercury },
+        { distance: venusDistance, angle: venusAngle, object: venus },
+        { distance: earthDistance, angle: earthAngle, object: earth },
+        { distance: moonDistance, angle: moonAngle, object: moon },
+        { distance: marsDistance, angle: marsAngle, object: mars },
+        { distance: ceresDistance, angle: ceresAngle, object: ceres},
+        { distance: phobosDistance, angle: phobosAngle, object: phobos },
+        { distance: deimosDistance, angle: deimosAngle, object: deimos },
+        { distance: jupiterDistance, angle: jupiterAngle, object: jupiter },
+        { distance: ioDistance, angle: ioAngle, object: io },
+        { distance: europaDistance, angle: europaAngle, object: europa },
+        { distance: ganymedeDistance, angle: ganymedeAngle, object: ganymede },
+        { distance: callistoDistance, angle: callistoAngle, object: callisto },
+        { distance: saturnDistance, angle: saturnAngle, object: saturn },
+        { distance: titanDistance, angle: titanAngle, object: titan },
+        { distance: enceladusDistance, angle: enceladusAngle, object: enceladus },
+        { distance: iapetusDistance, angle: iapetusAngle, object: iapetus },
+        { distance: uranusDistance, angle: uranusAngle, object: uranus },
+        { distance: neptuneDistance, angle: neptuneAngle, object: neptune },
+        { distance: tritonDistance, angle: tritonAngle, object: triton },
+        { distance: erisDistance, angle: erisAngle, object: eris },
+        { distance: makemakeDistance, angle: makemakeAngle, object: makemake },
+      ];
+      
+      planets.forEach(planet => {
+        if (planet != pluto){
+          const x = planet.distance * Math.cos(planet.angle);
+          const z = planet.distance * Math.sin(planet.angle);
+          planet.object.position.set(x, 0, z);
+        }
+      });
+
+      // pluto is tilted
+      const x = plutoDistance * Math.cos(plutoAngle);
+      const y = plutoDistance * Math.sin(plutoAngle) * Math.sin(plutoTilt);
+      const z = plutoDistance * Math.sin(plutoAngle) * Math.cos(plutoTilt);
+      pluto.position.set(x, y, z);
+      pluto.lookAt(center);
+      pluto.rotateZ(Math.PI / 2 - plutoAngle);
+      // rotate pluto in place
+      pluto.rotateX(plutoRotation);
+      
+      // Increase the angle for the next frame
+      mercuryAngle += 0.00025 * rotationSpeed * 0.15;
+      venusAngle += 0.00025 * rotationSpeed * 0.15;
+      earthAngle += 0.0001 * rotationSpeed * 0.15;
+      marsAngle += 0.000125 * rotationSpeed * 0.15;
+      ceresAngle += 0.000125 * rotationSpeed * 0.15;
+      jupiterAngle += 0.0000625 * rotationSpeed * 0.15;
+      saturnAngle += 0.00003125 * rotationSpeed * 0.15;
+      uranusAngle += 0.000015625 * rotationSpeed * 0.15;
+      neptuneAngle += 0.000015625 * rotationSpeed * 0.15;
+      plutoAngle += 0.000015625 * rotationSpeed * 0.15;
+      plutoRotation += 0.002 * rotationSpeed * 0.15;
+      erisAngle += 0.000015625 * rotationSpeed * 0.15;
+      makemakeAngle += 0.000015625 * rotationSpeed * 0.15;
+
+      if (focusedPlanet) {
+
+        // Update the controls target to the position of the focused planet
+        if (focusedPlanet == spaceship) { // Flight enabled
+          enableFlight();
+        } else if (focusedPlanet == moon){ // need to check if focusedPlanet is a child
+          setMoonPosition(moon, 0);
+        } else if (focusedPlanet == phobos){
+          setMoonPosition(phobos, 0);
+        } else if (focusedPlanet == deimos){
+          setMoonPosition(deimos, 0);
+        } else if (focusedPlanet == io){
+          setMoonPosition(io, 0);
+        } else if (focusedPlanet == europa){
+          setMoonPosition(europa, 0);
+        } else if (focusedPlanet == ganymede){
+          setMoonPosition(ganymede, 0);
+        } else if (focusedPlanet == callisto){
+          setMoonPosition(callisto, 0);
+        } else if (focusedPlanet == titan){
+          setMoonPosition(titan, 0);
+        } else if (focusedPlanet == enceladus){
+          setMoonPosition(enceladus, 0);
+        } else if (focusedPlanet == iapetus){
+          setMoonPosition(iapetus, 0);
+        } else if (focusedPlanet == triton){
+          setMoonPosition(triton, 0);
+        } else if (focusedPlanet == null){
+          disableFlight();
+          controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
+          controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
+          controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
+          // move to sun
+          spaceship.position.x = lerp(spaceship.position.x, sun.position.x, lerpSpeed + 0.01);
+          spaceship.position.y = lerp(spaceship.position.y, sun.position.y + sun.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+          spaceship.position.z = lerp(spaceship.position.z, sun.position.z, lerpSpeed + 0.01);
+        } else { // Flight disabled
+          disableFlight();
+          //lerp controls
+          controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
+          controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
+          controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
+          // move spaceship above planet with lerp
+          spaceship.position.x = lerp(spaceship.position.x, focusedPlanet.position.x, lerpSpeed + 0.01);
+          spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.position.y + focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
+          spaceship.position.z = lerp(spaceship.position.z, focusedPlanet.position.z, lerpSpeed + 0.01);
+        }
+        camera.position.copy(controls.object.position);
+      }
+      // Update the camera position
+      
+      // Update the controls and render the scene
+      if (flyControls.enabled) {
+        flyControls.update(clock.getDelta()); // update position using fly controls
+        // move spaceship inside sun to hide
+        spaceship.position.x = sun.position.x;
+        spaceship.position.y = sun.position.y + 400000 * scale;
+        spaceship.position.z = sun.position.z;
+      } else {
+        controls.update(clock.getDelta()); // update position using orbit controls
+      }
+      renderer.render(scene, camera);
+      session.requestAnimationFrame(animate);
+    });
+  });
+}
 // Start animation loop
 render();
