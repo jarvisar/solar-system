@@ -69,8 +69,8 @@ Pluto
 <br>
 
 <kbd>
- <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-6.jpg" alt="Ganymede & Jupiter" title"Ganymede & Jupiter" width="750">
+ <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-6.jpg" alt="Ganymede, Jupiter, & Io" title"Ganymede, Jupiter, & Io" width="750">
 </kbd>
 <br>
-Ganymede & Jupiter
+Ganymede, Jupiter, & Io
 </p>
