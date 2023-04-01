@@ -6,12 +6,6 @@ Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to acces
 
 This model includes 1 sun, 8 planets, 9 moons, 4 dwarf planets, and 2 asteroid belts.
 
-<p align="center">
-  <kbd>
-  <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-3.png" alt="Screenshot" title"All Orbits" width="750">
-   </kbd>
-</p>
-
 ###### Note: Performance can be slow while loading all the textures. Disable moons and dwarf planets in Controls to improve performance.
 
 ### Explore Mode
@@ -34,4 +28,49 @@ Press the escape key at any time to exit flight mode and switch the focus to the
 
 <p align="left">
   <img src="https://github.com/jarvisar/solar-system/blob/main/public/icon/android-chrome-192x192.png" alt="Three.js" title"Three.js">
+</p>
+
+## Screenshots
+
+<p align="center">
+  
+ <kbd>
+  <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-3.png" alt="All Orbits" title"All Orbits" width="750">
+ </kbd>
+<br>
+All Orbits
+<br>
+<br>
+ 
+ <kbd>
+  <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-2.png" alt="Earth & Moon" title"Earth & Moon" width="750">
+ </kbd>
+ 
+<br>
+Earth & Moon
+<br>
+<br>
+
+<kbd>
+  <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-4.jpg" alt="Saturn, Enceladus, & Iapetus" title"Saturn, Enceladus, & Iapetus" width="750">
+</kbd>
+
+<br>
+Saturn, Enceladus, & Iapetus
+<br>
+<br>
+
+<kbd>
+ <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-5.jpg" alt="Pluto" title"Pluto" width="750">
+</kbd>
+<br>
+Pluto
+<br>
+<br>
+
+<kbd>
+ <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-6.jpg" alt="Ganymede & Jupiter" title"Ganymede & Jupiter" width="750">
+</kbd>
+<br>
+Ganymede & Jupiter
 </p>
