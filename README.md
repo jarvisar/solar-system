@@ -5,11 +5,13 @@ My first real [Three.js](https://threejs.org/) project.
 Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to access the latest deployment.
 
 This model includes 1 sun, 8 planets, 9 moons, 4 dwarf planets, and 2 asteroid belts.
-<kbd>
+
 <p align="center">
+  <kbd>
   <img src="https://jarvisar.github.io/assets/img/portfolio/portfolio-11-3.png" alt="Screenshot" title"All Orbits" width="750">
+   </kbd>
 </p>
-</kbd>
+
 ###### Note: Performance can be slow while loading all the textures. Disable moons and dwarf planets in Controls to improve performance.
 
 ### Explore Mode
