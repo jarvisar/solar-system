@@ -1528,7 +1528,7 @@ if (urlParams.has('planet')) {
 
 // if escape key is pressed, change focused planet to sun
 document.addEventListener('keydown', function(event) {
-  const planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto];
+  const planets = [sun, mercury, venus, earth, mars, ceres, jupiter, saturn, uranus, neptune, pluto, eris, makemake];
   if (event.code === 'Escape') {
     // if flight enabled
     if(focusedPlanet == spaceship){// calculate closest planet to camera
