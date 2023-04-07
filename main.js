@@ -262,56 +262,215 @@ var makemakeTexture
 var erisTexture
 var erisBumpTexture
 
+// Start animation loop
+const loadingManager = new THREE.LoadingManager(() => {
+});
+
 function loadAllTextures(){
   // load textures
   const loader = new THREE.TextureLoader();
-  starTexture = loader.load('public/8k_stars_milky_way.jpg');
-  sunTexture = loader.load('public/2k_sun.jpg');
-  mercuryTexture = loader.load('public/2k_mercury.jpg');
-  mercuryBumpTexture = loader.load('public/mercury_elevation.jpg');
-  venusTexture = loader.load('public/2k_venus_surface.jpg');
-  venusBumpTexture = loader.load('public/venus_elevation.jpg');
-  venusAtmo = loader.load('public/2k_venus_atmosphere.jpg')
-  earthTexture = loader.load('public/8k_earth_daymap.jpg');
-  earthBumpTexture = loader.load('public/earth_elevation.jpg');
-  earthSpecular = loader.load('public/2k_earth_specular_map.tif');
-  earthEmissive = loader.load('public/2k_earth_nightmap.jpg');
-  earthCloud = loader.load('public/earth_clouds.png');
-  moonTexture = loader.load('public/2k_moon.jpg');
-  moonBumpTexture = loader.load('public/moon_elevation.jpg');
-  marsTexture = loader.load('public/2k_mars.jpg');
-  marsBumpTexture = loader.load('public/mars_elevation.jpg');
-  ceresTexture = loader.load('public/2k_ceres.jpg');
-  ceresBumpTexture = loader.load('public/ceres_elevation.png');
-  jupiterTexture = loader.load('public/2k_jupiter.jpg');
-  ioTexture = loader.load('public/io_texture.jpg');
-  ioBumpTexture = loader.load('public/io_elevation.png');
-  europaTexture = loader.load('public/europa_texture.png');
-  europaBumpTexture = loader.load('public/europa_elevation.jpg');
-  ganymedeTexture = loader.load('public/ganymede_texture.png');
-  ganymedeBumpTexture = loader.load('public/ganymede_elevation.jpg');
-  callistoTexture = loader.load('public/callisto_texture.jpg');
-  callistoBumpTexture = loader.load('public/callisto_elevation.jpg');
-  saturnTexture = loader.load('public/2k_saturn.jpg');
-  saturnRingTexture = loader.load('public/saturn_rings.png');
-  titanTexture = loader.load('public/titan_texture.png');
-  titanBumpTexture = loader.load('public/titan_elevation.png');
-  enceladusTexture = loader.load('public/enceladus_texture.jpg');
-  enceladusBumpTexture = loader.load('public/enceladus_elevation.png');
-  iapetusTexture = loader.load('public/iapetus_texture.png');
-  iapetusBumpTexture = loader.load('public/iapetus_elevation.png');
-  uranusTexture = loader.load('public/2k_uranus.jpg');
-  neptuneTexture = loader.load('public/2k_neptune.jpg');
-  tritonTexture = loader.load('public/triton_texture.png');
-  tritonBumpTexture = loader.load('public/triton_elevation.jpg');
-  plutoTexture = loader.load('public/2k_pluto.webp');
-  plutoBumpTexture = loader.load('public/pluto_elevation.png');
-  plutoSpecular = loader.load('public/pluto_spec.png');
-  makemakeTexture = loader.load('public/2k_makemake.jpg');
-  erisTexture = loader.load('public/2k_eris.jpg');
-  erisBumpTexture = loader.load('public/eris_elevation.jpg');
+  starTexture = loader.load('public/8k_stars_milky_way.jpg', () => {
+    loadingManager.itemEnd('starTexture');
+  });
+  sunTexture = loader.load('public/2k_sun.jpg', () => {
+    loadingManager.itemEnd('sunTexture');
+  });
+  mercuryTexture = loader.load('public/2k_mercury.jpg', () => {
+    loadingManager.itemEnd('mercuryTexture');
+  });
+  mercuryBumpTexture = loader.load('public/mercury_elevation.jpg', () => {
+    loadingManager.itemEnd('mercuryBumpTexture');
+  });
+  venusTexture = loader.load('public/2k_venus_surface.jpg', () => {
+    loadingManager.itemEnd('venusTexture');
+  });
+  venusBumpTexture = loader.load('public/venus_elevation.jpg', () => {
+    loadingManager.itemEnd('venusBumpTexture');
+  });
+  venusAtmo = loader.load('public/2k_venus_atmosphere.jpg', () => {
+    loadingManager.itemEnd('venusAtmo');
+  });
+  earthTexture = loader.load('public/8k_earth_daymap.jpg', () => {
+    loadingManager.itemEnd('earthTexture');
+  });
+  earthBumpTexture = loader.load('public/earth_elevation.jpg', () => {
+    loadingManager.itemEnd('earthBumpTexture');
+  });
+  earthSpecular = loader.load('public/2k_earth_specular_map.tif', () => {
+    loadingManager.itemEnd('earthSpecular');
+  });
+  earthEmissive = loader.load('public/2k_earth_nightmap.jpg', () => {
+    loadingManager.itemEnd('earthEmissive');
+  });
+  earthCloud = loader.load('public/earth_clouds.png', () => {
+    loadingManager.itemEnd('earthCloud');
+  });
+  moonTexture = loader.load('public/2k_moon.jpg', () => {
+    loadingManager.itemEnd('moonTexture');
+  });
+  moonBumpTexture = loader.load('public/moon_elevation.jpg', () => {
+    loadingManager.itemEnd('moonBumpTexture');
+  });
+  marsTexture = loader.load('public/2k_mars.jpg', () => {
+    loadingManager.itemEnd('marsTexture');
+  });
+  marsBumpTexture = loader.load('public/mars_elevation.jpg', () => {
+    loadingManager.itemEnd('marsBumpTexture');
+  });
+  ceresTexture = loader.load('public/2k_ceres.jpg', () => {
+    loadingManager.itemEnd('ceresTexture');
+  });
+  ceresBumpTexture = loader.load('public/ceres_elevation.png', () => {
+    loadingManager.itemEnd('ceresBumpTexture');
+  });
+  jupiterTexture = loader.load('public/2k_jupiter.jpg', () => {
+    loadingManager.itemEnd('jupiterTexture');
+  });
+  ioTexture = loader.load('public/io_texture.jpg', () => {
+    loadingManager.itemEnd('ioTexture');
+  });
+  ioBumpTexture = loader.load('public/io_elevation.png', () => {
+    loadingManager.itemEnd('ioBumpTexture');
+  });
+  europaTexture = loader.load('public/europa_texture.png', () => {
+    loadingManager.itemEnd('europaTexture');
+  });
+  europaBumpTexture = loader.load('public/europa_elevation.jpg', () => {
+    loadingManager.itemEnd('europaBumpTexture');
+  });
+  ganymedeTexture = loader.load('public/ganymede_texture.png', () => {
+    loadingManager.itemEnd('ganymedeTexture');
+  });
+  ganymedeBumpTexture = loader.load('public/ganymede_elevation.jpg', () => {
+    loadingManager.itemEnd('ganymedeBumpTexture');
+  });
+  callistoTexture = loader.load('public/callisto_texture.jpg', () => {
+    loadingManager.itemEnd('callistoTexture');
+  });
+  callistoBumpTexture = loader.load('public/callisto_elevation.jpg', () => {
+    loadingManager.itemEnd('callistoBumpTexture');
+  });
+  saturnTexture = loader.load('public/2k_saturn.jpg', () => {
+    loadingManager.itemEnd('saturnTexture');
+  });
+  saturnRingTexture = loader.load('public/saturn_rings.png', () => {
+    loadingManager.itemEnd('saturnRingTexture');
+  });
+  titanTexture = loader.load('public/titan_texture.png', () => {
+    loadingManager.itemEnd('titanTexture');
+  });
+  titanBumpTexture = loader.load('public/titan_elevation.png', () => {
+    loadingManager.itemEnd('titanBumpTexture');
+  });
+  enceladusTexture = loader.load('public/enceladus_texture.jpg', () => {
+    loadingManager.itemEnd('enceladusTexture');
+  });
+  enceladusBumpTexture = loader.load('public/enceladus_elevation.png', () => {
+    loadingManager.itemEnd('enceladusBumpTexture');
+  });
+  iapetusTexture = loader.load('public/iapetus_texture.png', () => {
+    loadingManager.itemEnd('iapetusTexture');
+  });
+  iapetusBumpTexture = loader.load('public/iapetus_elevation.png', () => {
+    loadingManager.itemEnd('iapetusBumpTexture');
+  });
+  uranusTexture = loader.load('public/2k_uranus.jpg', () => {
+    loadingManager.itemEnd('uranusTexture');
+  });
+  neptuneTexture = loader.load('public/2k_neptune.jpg', () => {
+    loadingManager.itemEnd('neptuneTexture');
+  });
+  tritonTexture = loader.load('public/triton_texture.png', () => {
+    loadingManager.itemEnd('tritonTexture');
+  });
+  tritonBumpTexture = loader.load('public/triton_elevation.jpg', () => {
+    loadingManager.itemEnd('tritonBumpTexture');
+  });
+  plutoTexture = loader.load('public/2k_pluto.webp', () => {
+    loadingManager.itemEnd('plutoTexture');
+  });
+  plutoBumpTexture = loader.load('public/pluto_elevation.png', () => {
+    loadingManager.itemEnd('plutoBumpTexture');
+  });
+  plutoSpecular = loader.load('public/pluto_spec.png', () => {
+    loadingManager.itemEnd('plutoSpecular');
+  });
+  makemakeTexture = loader.load('public/2k_makemake.jpg', () => {
+    loadingManager.itemEnd('makemakeTexture');
+  });
+  erisTexture = loader.load('public/2k_eris.jpg', () => {
+    loadingManager.itemEnd('erisTexture');
+  });
+  erisBumpTexture = loader.load('public/eris_elevation.jpg', () => {
+    loadingManager.itemEnd('erisBumpTexture');
+  });
+  loadingManager.itemStart('starTexture');
+  loadingManager.itemStart('sunTexture');
+  loadingManager.itemStart('mercuryTexture');
+  loadingManager.itemStart('mercuryBumpTexture');
+  loadingManager.itemStart('venusTexture');
+  loadingManager.itemStart('venusBumpTexture');
+  loadingManager.itemStart('venusAtmo');
+  loadingManager.itemStart('earthTexture');
+  loadingManager.itemStart('earthBumpTexture');
+  loadingManager.itemStart('earthSpecular');
+  loadingManager.itemStart('earthEmissive');
+  loadingManager.itemStart('earthCloud');
+  loadingManager.itemStart('moonTexture');
+  loadingManager.itemStart('moonBumpTexture');
+  loadingManager.itemStart('marsTexture');
+  loadingManager.itemStart('marsBumpTexture');
+  loadingManager.itemStart('ceresTexture');
+  loadingManager.itemStart('ceresBumpTexture');
+  loadingManager.itemStart('jupiterTexture');
+  loadingManager.itemStart('ioTexture');
+  loadingManager.itemStart('ioBumpTexture');
+  loadingManager.itemStart('europaTexture');
+  loadingManager.itemStart('europaBumpTexture');
+  loadingManager.itemStart('ganymedeTexture');
+  loadingManager.itemStart('ganymedeBumpTexture');
+  loadingManager.itemStart('callistoTexture');
+  loadingManager.itemStart('callistoBumpTexture');
+  loadingManager.itemStart('saturnTexture');
+  loadingManager.itemStart('saturnRingTexture');
+  loadingManager.itemStart('titanTexture');
+  loadingManager.itemStart('titanBumpTexture');
+  loadingManager.itemStart('enceladusTexture');
+  loadingManager.itemStart('enceladusBumpTexture');
+  loadingManager.itemStart('iapetusTexture');
+  loadingManager.itemStart('iapetusBumpTexture');
+  loadingManager.itemStart('uranusTexture');
+  loadingManager.itemStart('neptuneTexture');
+  loadingManager.itemStart('tritonTexture');
+  loadingManager.itemStart('tritonBumpTexture');
+  loadingManager.itemStart('plutoTexture');
+  loadingManager.itemStart('plutoBumpTexture');
+  loadingManager.itemStart('plutoSpecular');
+  loadingManager.itemStart('makemakeTexture');
+  loadingManager.itemStart('erisTexture');
+  loadingManager.itemStart('erisBumpTexture');
 }
 loadAllTextures();
+
+loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+  console.log(`Started loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
+};
+
+loadingManager.onLoad = () => {
+  console.log('Loading complete!');
+};
+
+loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+  console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
+  if (itemsLoaded === itemsTotal - 1) {
+    console.log("HI")
+    render()
+  }
+};
+
+loadingManager.onError = (url) => {
+  console.log(`Error loading file: ${url}`);
+};
 
 var mercuryDistance
 var venusDistance 
@@ -1838,5 +1997,3 @@ function startVR() {
     });
   });
 }
-// Start animation loop
-render();
