@@ -6,7 +6,9 @@ Visit the [GitHub Pages site](https://jarvisar.github.io/solar-system/) to acces
 
 This model includes 1 sun, 8 planets, 9 moons, 4 dwarf planets, and 2 asteroid belts.
 
-###### Note: Performance can be slow while loading all the textures. Disable moons and dwarf planets in Controls to improve performance.
+###### Note: Performance can be slow while loading multiple the textures and models. Disable moons and dwarf planets in Controls to improve performance.
+
+###### After all textures and models are loaded, FPS should stabilize.
 
 ### Explore Mode
 
