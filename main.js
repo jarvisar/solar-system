@@ -704,7 +704,7 @@ function createPlanets(){
 
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
-  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture, wireframe: true  });
+  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture, wireframe: false  });
   saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
   saturn.castShadow = true;
   saturn.receiveShadow = true;
