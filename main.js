@@ -1,6 +1,6 @@
 import GUI from "https://cdn.skypack.dev/lil-gui@0.18.0";
 import { MathUtils, Clock } from "https://cdn.skypack.dev/three@0.149.0";
-import { OrbitControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js"
 import { DragControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/DragControls'
 import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
 import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
@@ -704,7 +704,7 @@ function createPlanets(){
 
   // saturn
   const saturnGeometry = new THREE.SphereGeometry(80 * scale, 128, 128);
-  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture });
+  const saturnMaterial = new THREE.MeshPhongMaterial({ map: saturnTexture, wireframe: true  });
   saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
   saturn.castShadow = true;
   saturn.receiveShadow = true;
@@ -713,7 +713,7 @@ function createPlanets(){
 
   // saturn ring
   const saturnRingGeometry = new THREE.RingGeometry(100 * scale, 180 * scale, 256);
-  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true });
+  const saturnRingMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true});
   saturnRing = new THREE.Mesh(saturnRingGeometry, saturnRingMaterial);
   saturnRing.rotation.x = Math.PI / 2;
   saturnRing.receiveShadow = true;
@@ -1788,48 +1788,67 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
-// vr-button event listener
-// document.getElementById('vr-button').addEventListener('click', function() {
-//   if (vrMode) {
-//     renderer.xr.getSession().end();
-//   } else {
-//     vrMode = true;
-//     startVR();
-//   }
-// });
+//vr-button event listener
+document.getElementById('vr-button').addEventListener('click', function() {
+  if (vrMode) {
+    renderer.xr.getSession().end();
+  } else {
+    vrMode = true;
+    startVR();
+  }
+});
 
-// VR mode
+let frameOfRef;
+let xrSession;
+let leftEyeCamera, rightEyeCamera;
+let stereoCamera;
+let vrRenderer;
 function startVR() {
   navigator.xr.requestSession('immersive-vr', {requiredFeatures: ['local-floor']}).then((session) => {
+    xrSession = session;
+    session.requestReferenceSpace('viewer').then((refSpace) => {
+      frameOfRef = refSpace;
+      // create vrRenderer
+      vrRenderer = new THREE.WebGLRenderer({antialias: true});
+      vrRenderer.setPixelRatio(window.devicePixelRatio);
+      vrRenderer.setSize(window.innerWidth, window.innerHeight);
+      vrRenderer.xr.enabled = true;
+      vrRenderer.setAnimationLoop(animate);
+      vrRenderer.xr.setReferenceSpaceType('local-floor');
+      vrRenderer.xr.setSession(xrSession);
 
-    renderer.xr.setSession(session);
+      session.addEventListener('end', function() {
+        renderer.vr.enabled = false;
+        vrMode = false;
+      });
 
-    session.addEventListener('end', function() {
-      renderer.vr.enabled = false;
-      vrMode = false;
+      // Create a stereo camera
+      stereoCamera = new THREE.StereoCamera(0.1, 1000);
+
+      // Create two cameras for the left and right eyes
+      leftEyeCamera = new THREE.PerspectiveCamera();
+      rightEyeCamera = new THREE.PerspectiveCamera();
+
+      // Set the stereoEnabled property of each camera to true
+      leftEyeCamera.stereoEnabled = true;
+      rightEyeCamera.stereoEnabled = true;
+
+      // Set the eye property of each camera
+      leftEyeCamera.eye = 'left';
+      rightEyeCamera.eye = 'right';
+
+      // Request the first animation frame
+      //xrSession.requestAnimationFrame(animate);
     });
+  });
+}
 
-    session.requestAnimationFrame(function animate() {
+    function animate(time, frame) {
+      // Request the next animation frame
+      xrSession.requestAnimationFrame(animate);
+
+      // Set the VR mode flag
       vrMode = true;
-      // check for orbit control movement from keys
-      if (moveForward) {
-        controls.object.translateZ(-10);
-      }
-      if (moveBackward) {
-        controls.object.translateZ(10);
-      }
-      if (moveLeft) {
-        controls.object.translateX(-10);
-      }
-      if (moveRight) {
-        controls.object.translateX(10);
-      }
-      if (moveUp) {
-        controls.object.translateY(10);
-      }
-      if (moveDown) {
-        controls.object.translateY(-10);
-      }
       
       // rotate in place
       sun.rotation.y -= 0.0005 * rotationSpeed * 0.15;
@@ -1931,69 +1950,32 @@ function startVR() {
       erisAngle += 0.000015625 * rotationSpeed * 0.15;
       makemakeAngle += 0.000015625 * rotationSpeed * 0.15;
 
-      if (focusedPlanet) {
-
-        // Update the controls target to the position of the focused planet
-        if (focusedPlanet == spaceship) { // Flight enabled
-          enableFlight();
-        } else if (focusedPlanet == moon){ // need to check if focusedPlanet is a child
-          setMoonPosition(moon, 0);
-        } else if (focusedPlanet == phobos){
-          setMoonPosition(phobos, 0);
-        } else if (focusedPlanet == deimos){
-          setMoonPosition(deimos, 0);
-        } else if (focusedPlanet == io){
-          setMoonPosition(io, 0);
-        } else if (focusedPlanet == europa){
-          setMoonPosition(europa, 0);
-        } else if (focusedPlanet == ganymede){
-          setMoonPosition(ganymede, 0);
-        } else if (focusedPlanet == callisto){
-          setMoonPosition(callisto, 0);
-        } else if (focusedPlanet == titan){
-          setMoonPosition(titan, 0);
-        } else if (focusedPlanet == enceladus){
-          setMoonPosition(enceladus, 0);
-        } else if (focusedPlanet == iapetus){
-          setMoonPosition(iapetus, 0);
-        } else if (focusedPlanet == triton){
-          setMoonPosition(triton, 0);
-        } else if (focusedPlanet == null){
-          disableFlight();
-          controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
-          controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
-          controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
-          // move to sun
-          spaceship.position.x = lerp(spaceship.position.x, sun.position.x, lerpSpeed + 0.01);
-          spaceship.position.y = lerp(spaceship.position.y, sun.position.y + sun.geometry.parameters.radius + 240, lerpSpeed + 0.01);
-          spaceship.position.z = lerp(spaceship.position.z, sun.position.z, lerpSpeed + 0.01);
-        } else { // Flight disabled
-          disableFlight();
-          //lerp controls
-          controls.target.x = lerp(controls.target.x, focusedPlanet.position.x, lerpSpeed);
-          controls.target.y = lerp(controls.target.y, focusedPlanet.position.y, lerpSpeed);
-          controls.target.z = lerp(controls.target.z, focusedPlanet.position.z, lerpSpeed);
-          // move spaceship above planet with lerp
-          spaceship.position.x = lerp(spaceship.position.x, focusedPlanet.position.x, lerpSpeed + 0.01);
-          spaceship.position.y = lerp(spaceship.position.y, focusedPlanet.position.y + focusedPlanet.geometry.parameters.radius + 240, lerpSpeed + 0.01);
-          spaceship.position.z = lerp(spaceship.position.z, focusedPlanet.position.z, lerpSpeed + 0.01);
-        }
-        camera.position.copy(controls.object.position);
-      }
-      // Update the camera position
       
-      // Update the controls and render the scene
-      if (flyControls.enabled) {
-        flyControls.update(clock.getDelta()); // update position using fly controls
-        // move spaceship inside sun to hide
-        spaceship.position.x = sun.position.x;
-        spaceship.position.y = sun.position.y + 400000 * scale;
-        spaceship.position.z = sun.position.z;
-      } else {
-        controls.update(clock.getDelta()); // update position using orbit controls
-      }
-      renderer.render(scene, camera);
-      session.requestAnimationFrame(animate);
-    });
-  });
-}
+      // Get the XRViewerPose
+      const xrViewerPose = frame.getViewerPose(frameOfRef);
+
+      // Get the XRView
+      const xrView = xrViewerPose.views[0];
+
+      // Get the pose of the XRView relative to the reference space
+      const pose = xrView.transform;
+
+      // Get the position and orientation
+      const position = pose.position;
+      const orientation = pose.orientation;
+
+      // use leftEyeCamera, rightEyeCamera, and stereoCamera to render the scene
+      leftEyeCamera.position.set(position.x, position.y, position.z);
+      leftEyeCamera.quaternion.set(orientation.x, orientation.y, orientation.z, orientation.w);
+      leftEyeCamera.updateMatrixWorld();
+
+      rightEyeCamera.position.set(position.x, position.y, position.z);
+      rightEyeCamera.quaternion.set(orientation.x, orientation.y, orientation.z, orientation.w);
+      rightEyeCamera.updateMatrixWorld();
+
+
+      // render the scene
+      renderer.render(scene, leftEyeCamera);
+      renderer.render(scene, rightEyeCamera);
+
+    }
