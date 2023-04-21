@@ -133,7 +133,7 @@ systemSettings.add(guicontrols, "enableOrbits").onChange((value) => {
   if (value) {
     enableOrbits = true;
     // add all orbits
-    createOrbits();
+    createOrbits(orbitWidth);
     if (enableMoons) {
       createMoonOrbits();
     }
@@ -1486,15 +1486,25 @@ function render() {
   requestAnimationFrame(render);
   
   // set orbit width based on distance from camera to y=0 plane
-  // var distance = Math.abs(camera.position.y);
-  // if (distance < 9000 * scale) {
-  //   var neworbitWidth = distance / 900;
-  // } else {
-  //   var neworbitWidth = 30;
-  // }
-  // // update orbit width in dat gui
-  // guicontrols.orbitWidth = neworbitWidth;
-  //console.log(distance);
+  var distance = Math.abs(camera.position.y);
+  if (distance < 9000 * scale) {
+    orbitWidth = distance / 900;
+  } else {
+    orbitWidth = 30;
+  }
+  // check if orbtitWidth is different than guicontrols.orbitWidth
+  if (orbitWidth != guicontrols.orbitWidth) {
+    guicontrols.orbitWidth = orbitWidth;
+    removeOrbits();
+    removeDwarfOrbits();
+    if (enableOrbits) {
+      createOrbits();
+      if (enableDwarfs) {
+        createDwarfOrbits();
+      }
+    }
+  }
+  
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
