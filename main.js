@@ -1484,6 +1484,17 @@ function render() {
     controls.update(clock.getDelta()); // update position using orbit controls
   }
   requestAnimationFrame(render);
+  
+  // set orbit width based on distance from camera to y=0 plane
+  // var distance = Math.abs(camera.position.y);
+  // if (distance < 9000 * scale) {
+  //   var neworbitWidth = distance / 900;
+  // } else {
+  //   var neworbitWidth = 30;
+  // }
+  // // update orbit width in dat gui
+  // guicontrols.orbitWidth = neworbitWidth;
+  console.log(distance);
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
