@@ -1494,7 +1494,7 @@ function render() {
   // }
   // // update orbit width in dat gui
   // guicontrols.orbitWidth = neworbitWidth;
-  console.log(distance);
+  //console.log(distance);
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
