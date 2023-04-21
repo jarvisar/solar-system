@@ -1485,6 +1485,7 @@ function render() {
   }
   requestAnimationFrame(render);
   
+
   // set orbit width based on distance from camera to y=0 plane
   var distance = Math.abs(camera.position.y);
   if (distance < 9000 * scale) {
