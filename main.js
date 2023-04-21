@@ -1495,7 +1495,6 @@ function render() {
   // check if orbtitWidth is different than guicontrols.orbitWidth
   if (orbitWidth - guicontrols.orbitWidth > 1 || orbitWidth - guicontrols.orbitWidth < -1) {
     guicontrols.orbitWidth = orbitWidth;
-    console.log("hi")
     removeOrbits();
     removeDwarfOrbits();
     if (enableOrbits) {
