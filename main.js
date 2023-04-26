@@ -1492,26 +1492,55 @@ function render() {
     controls.update(clock.getDelta()); // update position using orbit controls
   }
   
-  // set orbit width based on distance from camera to y=0 plane
-  var distance = Math.abs(camera.position.y);
-  if (distance < 9000 * scale) {
-    orbitWidth = distance / 900;
+  if (focusedPlanet != pluto) {
+    // set orbit width based on distance from camera to y=0 plane
+    var distance = Math.abs(camera.position.y);
+    if (distance < 16000 * scale) {
+      orbitWidth = distance / 900;
+    } else {
+      orbitWidth = 65;
+    }
+    // check if orbtitWidth is different than guicontrols.orbitWidth
+    if (orbitWidth - guicontrols.orbitWidth > 1 || orbitWidth - guicontrols.orbitWidth < -1) {
+      guicontrols.orbitWidth = orbitWidth;
+      removeOrbits();
+      removeDwarfOrbits();
+      removeMoonOrbits();
+      if (enableOrbits) {
+        createOrbits();
+        if (enableDwarfs) {
+          createDwarfOrbits();
+        }
+        if (enableMoons) {
+          createMoonOrbits();
+        }
+      }
+    }
   } else {
-    orbitWidth = 30;
-  }
-  // check if orbtitWidth is different than guicontrols.orbitWidth
-  if (orbitWidth - guicontrols.orbitWidth > 1 || orbitWidth - guicontrols.orbitWidth < -1) {
-    guicontrols.orbitWidth = orbitWidth;
-    removeOrbits();
-    removeDwarfOrbits();
-    if (enableOrbits) {
-      createOrbits();
-      if (enableDwarfs) {
-        createDwarfOrbits();
+    // set orbit width based on y-distance from camera to pluto's y-plane
+    var distance = Math.abs(camera.position.y - pluto.position.y);
+    if (distance < 16000 * scale) {
+      orbitWidth = distance / 900;
+    } else {
+      orbitWidth = 65;
+    }
+    // check if orbtitWidth is different than guicontrols.orbitWidth
+    if (orbitWidth - guicontrols.orbitWidth > 1 || orbitWidth - guicontrols.orbitWidth < -1) {
+      guicontrols.orbitWidth = orbitWidth;
+      removeOrbits();
+      removeDwarfOrbits();
+      removeMoonOrbits();
+      if (enableOrbits) {
+        createOrbits();
+        if (enableDwarfs) {
+          createDwarfOrbits();
+        }
+        if (enableMoons) {
+          createMoonOrbits();
+        }
       }
     }
   }
-  
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
