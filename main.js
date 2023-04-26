@@ -463,8 +463,7 @@ loadingManager.onLoad = () => {
 loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
   console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
   if (itemsLoaded === itemsTotal - 1) {
-    console.log("HI")
-    render()
+    console.log("DONE")
   }
 };
 
@@ -1115,6 +1114,13 @@ createOrbits();
 createMoonOrbits();
 createDwarfOrbits();
 
+// prevent lag when first viewing an object and its children by uploading all textures to gpu
+scene.traverse(function (child) {
+  if (child instanceof THREE.Mesh) {
+    child.material.needsUpdate = true;
+  }
+});
+
 
 function removeMoons(){
   // remove moons from planets
@@ -1302,6 +1308,8 @@ function render() {
     return;
   }
 
+  requestAnimationFrame(render);
+
   // check for orbit control movement from keys
   if (moveForward) {
     controls.object.translateZ(-10);
@@ -1483,9 +1491,7 @@ function render() {
   } else {
     controls.update(clock.getDelta()); // update position using orbit controls
   }
-  requestAnimationFrame(render);
   
-
   // set orbit width based on distance from camera to y=0 plane
   var distance = Math.abs(camera.position.y);
   if (distance < 9000 * scale) {
@@ -1509,6 +1515,7 @@ function render() {
   renderer.render(scene, camera);
 }
 const clock = new THREE.Clock();
+render();
 
 function setMoonPosition(moon, offsetY) {
   disableFlight();
@@ -2001,3 +2008,5 @@ function startVR() {
       renderer.render(scene, rightEyeCamera);
 
     }
+
+render();
