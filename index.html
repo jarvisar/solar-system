@@ -36,7 +36,6 @@
 			<option value="earth">Earth</option>
 			<option value="moon" hidden>Moon</option>
 			<option value="mars">Mars</option>
-			<option value="ceres" hidden>Ceres</option> <!-- Hide dwarf planets -->
 			<option value="phobos" hidden>Phobos</option> 
 			<option value="deimos" hidden>Deimos</option>
 			<option value="jupiter">Jupiter</option>
@@ -52,8 +51,12 @@
 			<option value="neptune">Neptune</option>
 			<option value="triton" hidden>Triton</option>
 			<option value="pluto">Pluto</option>
-			<option value="eris" hidden>Eris</option>
-			<option value="makemake" hidden>Makemake</option>
+			<!-- Optgroup for dwarf -->
+			<optgroup label="Dwarf Planets">
+				<option value="ceres">Ceres</option>
+				<option value="eris">Eris</option>
+				<option value="makemake">Makemake</option>
+			</optgroup>
 			<option value="free" hidden>Free View</option>
 			<!-- Spaceship ption should not appear in drop down -->
 			<option value="spaceship" hidden>Flight Mode</option>
