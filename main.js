@@ -1,11 +1,7 @@
 import GUI from "https://cdn.skypack.dev/lil-gui@0.18.0";
-import { MathUtils, Clock } from "https://cdn.skypack.dev/three@0.149.0";
-import { OrbitControls } from "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js"
-import { DragControls } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/controls/DragControls'
-import * as THREE from "https://cdn.skypack.dev/three@0.149.0";
-import  { Perlin, FBM } from "https://cdn.skypack.dev/three-noise@1.1.2";
-import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
-import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.149.0/examples/jsm/loaders/GLTFLoader'
+import { OrbitControls } from "https://unpkg.com/three@0.140.0/examples/jsm/controls/OrbitControls.js"
+import * as THREE from "https://unpkg.com/three@0.140.0/build/three.module.js";
+import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.140.0/examples/jsm/loaders/GLTFLoader'
 import { FlyControls } from "./FlyControls.js";
 
 // Create a Three.js scene
